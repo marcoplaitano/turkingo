@@ -22,7 +22,7 @@ function nextExercise() {
     document.getElementById("feedback").textContent = "";
     document.getElementById("answers").innerHTML = "";
 
-    const types = [translation, matching, fillBlank, formPlural];
+    const types = [translation, translation_with_inputs, matching, fillBlank, formPlural];
     const random = types[Math.floor(Math.random() * types.length)];
     random();
 }
@@ -37,13 +37,49 @@ function translation() {
     const item = randomItem();
     const toTurkish = Math.random() > 0.5;
 
-    const question = toTurkish ? item["l-eng"][0] : item["l-turk"][0];
-    const correct = toTurkish ? item["l-turk"][0] : item["l-eng"][0];
+    const question = toTurkish ? item["l-eng"] : item["l-turk"];
+    const correct = toTurkish ? item["l-turk"] : item["l-eng"];
+    document.getElementById("question").textContent = question;
+
+    const input = document.createElement("input");
+    input.placeholder = "Type...";
+
+    input.addEventListener("keydown", e => { if (e.key === "Enter") checkResult(); });
+    document.getElementById("answers").appendChild(input);
+    input.focus();
+
+    const btn = document.createElement("button");
+    btn.textContent = "Check";
+    btn.onclick = checkResult;
+    document.getElementById("answers").appendChild(btn);
+
+    function checkResult() {
+        const inputText = input.value.trim().toLowerCase();
+        const feedback = document.getElementById("feedback");
+        if (inputText == correct) {
+            feedback.textContent = "✅ Correct!";
+        } else {
+            feedback.textContent = "❌ Correct answer: " + correct;
+        }
+        btn.remove();
+        input.disabled = true;
+        addNextButton();
+    }
+}
+
+function translation_with_inputs() {
+    document.getElementById("title").textContent = "Translate";
+
+    const item = randomItem();
+    const toTurkish = Math.random() > 0.5;
+
+    const question = toTurkish ? item["l-eng"] : item["l-turk"];
+    const correct = toTurkish ? item["l-turk"] : item["l-eng"];
 
     const wrong = shuffle(data)
         .filter(i => i !== item)
         .slice(0, 3)
-        .map(i => toTurkish ? i["l-turk"][0] : i["l-eng"][0]);
+        .map(i => toTurkish ? i["l-turk"] : i["l-eng"]);
 
     const options = shuffle([correct, ...wrong]);
 
@@ -72,8 +108,8 @@ function matching() {
     document.getElementById("question").textContent = "";
 
     const sample = shuffle([...data]).slice(0, 4);
-    const leftWords = sample.map(i => i["l-turk"][0]);
-    const rightWords = shuffle(sample.map(i => i["l-eng"][0]));
+    const leftWords = sample.map(i => i["l-turk"]);
+    const rightWords = shuffle(sample.map(i => i["l-eng"]));
 
     const app = document.getElementById("answers");
     app.innerHTML = "";
@@ -83,7 +119,6 @@ function matching() {
     const container = document.createElement("div");
     container.style.display = "flex";
     container.style.justifyContent = "space-between";
-    container.style.gap = "20px";
 
     const leftCol = document.createElement("div");
     const rightCol = document.createElement("div");
@@ -128,7 +163,7 @@ function matching() {
         let correctCount = 0;
         for (let turk in pairs) {
             const eng = pairs[turk];
-            const correct = sample.find(i => i["l-turk"][0] === turk)["l-eng"][0];
+            const correct = sample.find(i => i["l-turk"] === turk)["l-eng"];
 
             const leftBtn = [...leftCol.children].find(b => b.textContent === turk);
             const rightBtn = [...rightCol.children].find(b => b.textContent === eng);
@@ -310,7 +345,11 @@ function addNextButton() {
     btn.textContent = "Next";
     btn.className = "next";
     btn.onclick = nextExercise;
+    // btn.addEventListener("keydown", e => { if (e.key === "Enter") nextExercise();});
     document.getElementById("answers").appendChild(btn);
+    setTimeout(() => {
+        btn.focus();
+    }, 0);
 }
 
 
