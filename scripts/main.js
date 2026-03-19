@@ -41,10 +41,10 @@ function translation() {
     const correct = toTurkish ? item["l-turk"] : item["l-eng"];
     document.getElementById("question").textContent = question;
 
-    const btn = document.createElement("button");
-    btn.textContent = "Check";
-    btn.disabled = true;
-    btn.onclick = checkResult;
+    const checkBtn = document.createElement("button");
+    checkBtn.textContent = "Check";
+    checkBtn.disabled = true;
+    checkBtn.onclick = checkResult;
 
     const input = document.createElement("input");
     input.placeholder = "Type...";
@@ -54,24 +54,33 @@ function translation() {
             checkResult();
     });
     input.addEventListener("input", () => {
-        btn.disabled = input.value.trim() === "";
+        checkBtn.disabled = input.value.trim() === "";
     });
     document.getElementById("answers").appendChild(input);
-    document.getElementById("answers").appendChild(btn);
+    document.getElementById("answers").appendChild(checkBtn);
     input.focus();
 
     function checkResult() {
         const inputText = input.value.trim().toLowerCase();
         if (inputText === "") return;
-        const feedback = document.getElementById("feedback");
-        if (inputText == correct) {
-            feedback.textContent = "✅ Correct!";
-        } else {
-            feedback.textContent = "❌ " + correct;
-        }
-        btn.remove();
+
+        checkBtn.remove();
         input.disabled = true;
-        addNextButton(true);
+        const nextBtn = document.createElement("button");
+        nextBtn.textContent = "Next";
+        nextBtn.className = "next";
+        nextBtn.onclick = nextExercise;
+
+        if (inputText == correct) {
+            nextBtn.classList.add("correct");
+        } else {
+            nextBtn.classList.add("wrong");
+            document.getElementById("feedback").textContent = correct;
+        }
+        document.getElementById("answers").appendChild(nextBtn);
+        setTimeout(() => {
+            nextBtn.focus();
+        }, 200);
     }
 }
 
@@ -343,17 +352,15 @@ function highlightDifferences(correct, user) {
     return html;
 }
 
-function addNextButton(isTranslation=false) {
+function addNextButton() {
     const btn = document.createElement("button");
     btn.textContent = "Next";
     btn.className = "next";
     btn.onclick = nextExercise;
     document.getElementById("answers").appendChild(btn);
-    if (!isTranslation) {
-        setTimeout(() => {
-            btn.focus();
-        }, 0);
-    }
+    setTimeout(() => {
+        btn.focus();
+    }, 0);
 }
 
 

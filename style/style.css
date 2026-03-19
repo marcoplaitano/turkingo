@@ -211,7 +211,12 @@ button.guess.wrong {
 .next {
   margin-top: 15px;
   background: #6366f1;
-  color: white;
+}
+.next.correct {
+  background: #a7f3d0 !important;
+}
+.next.wrong {
+  background: #fecaca !important;
 }
 
 .match-btn {
