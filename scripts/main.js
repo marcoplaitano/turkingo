@@ -22,7 +22,7 @@ function nextExercise() {
     document.getElementById("feedback").textContent = "";
     document.getElementById("answers").innerHTML = "";
 
-    const types = [translation, translation_with_inputs, matching, fillBlank, formPlural];
+    const types = [translation, translation_with_guesses, matching];
     const random = types[Math.floor(Math.random() * types.length)];
     random();
 }
@@ -67,7 +67,7 @@ function translation() {
     }
 }
 
-function translation_with_inputs() {
+function translation_with_guesses() {
     document.getElementById("title").textContent = "Translate";
 
     const item = randomItem();
@@ -87,16 +87,27 @@ function translation_with_inputs() {
 
     options.forEach(opt => {
         const btn = document.createElement("button");
+        btn.classList.add("guess");
         btn.textContent = opt;
-
-        btn.onclick = () => showResult(btn, opt === correct, correct);
-
+        if (opt === correct)
+            correctOption = btn;
+        btn.onclick = () => showResult(btn, opt === correct);
         btn.addEventListener("keydown", e => {
-            if (e.key === "Enter") showResult(btn, opt === correct, correct);
+            if (e.key === "Enter") showResult(btn, opt === correct);
         });
-
         document.getElementById("answers").appendChild(btn);
     });
+
+    function showResult(element, isCorrect) {
+        if (isCorrect) {
+            element.classList.add("correct");
+        } else {
+            element.classList.add("wrong");
+            correctOption.classList.add("correct");
+        }
+        document.querySelectorAll("button").forEach(b => b.disabled = true);
+        addNextButton();
+    }
 }
 
 //////////////////////////////////////////////////
@@ -327,25 +338,11 @@ function highlightDifferences(correct, user) {
     return html;
 }
 
-function showResult(element, isCorrect, correctAnswer) {
-    const feedback = document.getElementById("feedback");
-    if (isCorrect) {
-        feedback.textContent = "✅ Correct!";
-        element.classList.add("correct");
-    } else {
-        feedback.textContent = "❌ Correct answer: " + correctAnswer;
-        element.classList.add("wrong");
-    }
-    document.querySelectorAll("button").forEach(b => b.disabled = true);
-    addNextButton();
-}
-
 function addNextButton() {
     const btn = document.createElement("button");
     btn.textContent = "Next";
     btn.className = "next";
     btn.onclick = nextExercise;
-    // btn.addEventListener("keydown", e => { if (e.key === "Enter") nextExercise();});
     document.getElementById("answers").appendChild(btn);
     setTimeout(() => {
         btn.focus();
