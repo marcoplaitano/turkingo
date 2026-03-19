@@ -13,6 +13,7 @@ It all started with a vibe-coding mindset, now shifting towards actual commitmen
 
 ### Exercises
 
++ normalize turkish special characters for all exercises
 + matching: enable opposite direction (select from the right column first and then left)
 + new exercise type: given a word form the plural
 + new exercise type: true/false about translation
@@ -23,8 +24,9 @@ It all started with a vibe-coding mindset, now shifting towards actual commitmen
 + increase dataset size
 + normalize some sentences (i.e. _su içiyorum_ -> _su içerim_)
 
-### UI
+### UX/UI
 
++ SKIP button at the bottom of the screen
 + default variables for buttons colors
 + dark theme for buttons
 + more modern footer style
