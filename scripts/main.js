@@ -42,8 +42,20 @@ function translation() {
         nextBtn.className = "next";
         nextBtn.onclick = nextExercise;
 
-        if (inputText == correct) {
+        const normalizedInput = normalizeTurkish(inputText);
+        const normalizedCorrect = normalizeTurkish(correct);
+        const distance = levenshtein(normalizedInput, normalizedCorrect);
+        const isCorrect = distance === 0;
+        const hasMinorTypo = distance > 0 && distance <= 1;
+
+        if (isCorrect || hasMinorTypo) {
             nextBtn.classList.add("correct");
+            if (hasMinorTypo) {
+                document.getElementById("feedback").textContent = "typo: " + correct;
+            } else if (inputText !== correct) {
+                // Correct after normalization but raw input differs
+                document.getElementById("feedback").textContent = correct;
+            }
         } else {
             nextBtn.classList.add("wrong");
             document.getElementById("feedback").textContent = correct;
