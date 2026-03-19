@@ -1,32 +1,3 @@
-let data = [];
-
-async function init() {
-    const res = await fetch("data/language_data.json");
-    data = await res.json();
-    nextExercise();
-}
-
-function randomItem() {
-    return data[Math.floor(Math.random() * data.length)];
-}
-
-function shuffle(arr) {
-    return arr.sort(() => Math.random() - 0.5);
-}
-
-//////////////////////////////////////////////////
-// MAIN FLOW
-//////////////////////////////////////////////////
-
-function nextExercise() {
-    document.getElementById("feedback").textContent = "";
-    document.getElementById("answers").innerHTML = "";
-
-    const types = [translation, translation_with_guesses, matching];
-    const random = types[Math.floor(Math.random() * types.length)];
-    random();
-}
-
 //////////////////////////////////////////////////
 // 1. TRANSLATION
 //////////////////////////////////////////////////
@@ -122,7 +93,7 @@ function translation_with_guesses() {
             element.classList.add("wrong");
             correctOption.classList.add("correct");
         }
-        document.querySelectorAll("button").forEach(b => b.disabled = true);
+        document.querySelectorAll(".guess").forEach(b => b.disabled = true);
         addNextButton();
     }
 }
@@ -231,7 +202,7 @@ function highlightSelection(selectedBtn, container) {
 // 3. FILL IN THE BLANK
 //////////////////////////////////////////////////
 
-function fillBlank() {
+function fillBlanks() {
     document.getElementById("title").textContent = "Fill in the blanks";
     document.getElementById("feedback").textContent = "";
     document.getElementById("answers").innerHTML = "";
@@ -328,6 +299,25 @@ function formPlural() {
 // UTILITY FUNCTIONS
 //////////////////////////////////////////////////
 
+function randomItem() {
+    return data[Math.floor(Math.random() * data.length)];
+}
+
+function shuffle(arr) {
+    return arr.sort(() => Math.random() - 0.5);
+}
+
+function addNextButton() {
+    const btn = document.createElement("button");
+    btn.textContent = "Next";
+    btn.className = "next";
+    btn.onclick = nextExercise;
+    document.getElementById("answers").appendChild(btn);
+    setTimeout(() => {
+        btn.focus();
+    }, 0);
+}
+
 function normalizeTurkish(str) {
     const map = { "ç": "c", "Ç": "C", "ğ": "g", "Ğ": "G", "ı": "i", "İ": "i", "ö": "o", "Ö": "O", "ş": "s", "Ş": "S", "ü": "u", "Ü": "U" };
     return str.split("").map(c => map[c] || c).join("").toLowerCase();
@@ -358,21 +348,31 @@ function highlightDifferences(correct, user) {
     return html;
 }
 
-function addNextButton() {
-    const btn = document.createElement("button");
-    btn.textContent = "Next";
-    btn.className = "next";
-    btn.onclick = nextExercise;
-    document.getElementById("answers").appendChild(btn);
-    setTimeout(() => {
-        btn.focus();
-    }, 0);
+//////////////////////////////////////////////////
+// MAIN FLOW
+//////////////////////////////////////////////////
+
+function nextExercise() {
+    document.getElementById("feedback").textContent = "";
+    document.getElementById("answers").innerHTML = "";
+
+    const types = [translation, translation_with_guesses, matching];
+    const random = types[Math.floor(Math.random() * types.length)];
+    random();
+
+    // translation();
+    // translation_with_guesses();
+    // matching();
+    // fillBlanks();
+    // formPlural();
 }
 
+let data = [];
 
-
-
-
-
+async function init() {
+    const res = await fetch("data/language_data.json");
+    data = await res.json();
+    nextExercise();
+}
 
 init();

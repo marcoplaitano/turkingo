@@ -25,9 +25,9 @@
   { "type": "phrase", "l-eng": "how are you?", "l-turk": "nasılsın" },
   { "type": "phrase", "l-eng": "i am fine", "l-turk": "iyiyim" },
   { "type": "phrase", "l-eng": "what is your name?", "l-turk": "adın ne" },
-  { "type": "phrase", "l-eng": "my name is...", "l-turk": "benim adım..." },
+  { "type": "phrase", "l-eng": "my name is", "l-turk": "benim adım" },
   { "type": "phrase", "l-eng": "nice to meet you", "l-turk": "memnun oldum" },
-  { "type": "phrase", "l-eng": "see you later", "l-turk": "sonra görüşürüz" },
+  { "type": "phrase", "l-eng": "see you later", "l-turk": "görüşürüz" },
   { "type": "phrase", "l-eng": "welcome", "l-turk": "hoş geldin" },
   { "type": "phrase", "l-eng": "goodbye", "l-turk": "hoşça kal" },
 
