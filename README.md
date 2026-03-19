@@ -1,15 +1,33 @@
 # Turkish language exercises
 
-Mostly vibe-coded, this project is a cheap copy of Duolingo exercises to help me practice Turkish.
+This project is a cheap copy of Duolingo-type exercises to help me practice Turkish.
+
+The website is free and available at: https://marcoyum.netlify.app
+
+**Disclaimer**  
+It all started with a vibe-coding mindset, now shifting towards actual commitment.
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 ## TODO
 
+### Exercises
+
++ matching: enable opposite direction (select from the right column first and then left)
++ new exercise type: given a word form the plural
++ new exercise type: true/false about translation
++ new exercise type: true/false about plural
+
+### Input data
+
 + increase dataset size
-+ exercise type: given a word form the plural
-+ exercise type: true/false about translation
-+ exercise type: true/false about plural
++ normalize some sentences (i.e. _su içiyorum_ -> _su içerim_)
+
+### UI
+
++ default variables for buttons colors
++ dark theme for buttons
++ more modern footer style
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
