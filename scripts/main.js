@@ -134,85 +134,91 @@ function translation_with_guesses() {
 function matching() {
     document.getElementById("title").textContent = "Match the pairs";
     document.getElementById("question").textContent = "";
-
-    const sample = shuffle([...data]).slice(0, 4);
-    const leftWords = sample.map(i => i["l-turk"]);
-    const rightWords = shuffle(sample.map(i => i["l-eng"]));
-
     const app = document.getElementById("answers");
     app.innerHTML = "";
 
-    let selectedLeft = null;
-    let pairs = {};
+    const sample = shuffle([...data]).slice(0, 4);
+    const leftWords  = sample.map(i => i["l-turk"]);
+    const rightWords = shuffle(sample.map(i => i["l-eng"]));
+
+    let selected = null; // { word, side }
+    const pairs = {};
+
     const container = document.createElement("div");
-    container.style.display = "flex";
-    container.style.justifyContent = "space-between";
+    container.style.cssText = "display:flex;justify-content:space-between";
 
-    const leftCol = document.createElement("div");
-    const rightCol = document.createElement("div");
+    const makeColumn = (words, side) => {
+        const col = document.createElement("div");
 
-    leftWords.forEach(word => {
-        const btn = document.createElement("button");
-        btn.textContent = word;
-        btn.className = "match-btn";
+        words.forEach(word => {
+            const btn = document.createElement("button");
+            btn.textContent = word;
+            btn.className = "match-btn";
 
-        btn.onclick = () => {
-            selectedLeft = word;
-            highlightSelection(btn, leftCol);
-        };
+            btn.onclick = () => handleClick(word, side, btn, col);
 
-        leftCol.appendChild(btn);
-    });
+            col.appendChild(btn);
+        });
 
-    rightWords.forEach(word => {
-        const btn = document.createElement("button");
-        btn.textContent = word;
-        btn.className = "match-btn";
+        return col;
+    };
 
-        btn.onclick = () => {
-            if (!selectedLeft) return;
+    const leftCol  = makeColumn(leftWords, "left");
+    const rightCol = makeColumn(rightWords, "right");
 
-            for (let key in pairs) {
-                if (pairs[key] === word) delete pairs[key];
-            }
-
-            pairs[selectedLeft] = word;
-            updateUI();
-            selectedLeft = null;
-        };
-
-        rightCol.appendChild(btn);
-    });
-
-    function updateUI() {
-        leftCol.querySelectorAll("button").forEach(btn => btn.classList.remove("correct", "wrong"));
-        rightCol.querySelectorAll("button").forEach(btn => btn.classList.remove("correct", "wrong"));
-
-        let correctCount = 0;
-        for (let turk in pairs) {
-            const eng = pairs[turk];
-            const correct = sample.find(i => i["l-turk"] === turk)["l-eng"];
-
-            const leftBtn = [...leftCol.children].find(b => b.textContent === turk);
-            const rightBtn = [...rightCol.children].find(b => b.textContent === eng);
-
-            if (eng === correct) {
-                leftBtn.classList.add("correct");
-                rightBtn.classList.add("correct");
-                correctCount++;
-            } else {
-                leftBtn.classList.add("wrong");
-                rightBtn.classList.add("wrong");
-            }
+    function handleClick(word, side, btn, col) {
+        if (!selected || selected.side === side) {
+            selected = { word, side };
+            highlightSelection(btn, col);
+            return;
         }
 
-        if (correctCount === sample.length) {
-            addNextButton();
-        }
+        // match
+        const [left, right] = side === "left"
+            ? [word, selected.word]
+            : [selected.word, word];
+
+        // remove previous conflicting matches
+        Object.keys(pairs).forEach(k => {
+            if (pairs[k] === right) delete pairs[k];
+        });
+
+        pairs[left] = right;
+
+        selected = null;
+        updateUI();
     }
 
-    container.appendChild(leftCol);
-    container.appendChild(rightCol);
+    function updateUI() {
+        [leftCol, rightCol].forEach(col =>
+            col.querySelectorAll("button")
+               .forEach(b => b.classList.remove("correct", "wrong"))
+        );
+
+        let correctCount = 0;
+
+        for (const [turk, eng] of Object.entries(pairs)) {
+            const correct = sample.find(i => i["l-turk"] === turk)["l-eng"];
+
+            const leftBtn  = [...leftCol.children].find(b => b.textContent === turk);
+            const rightBtn = [...rightCol.children].find(b => b.textContent === eng);
+
+            const isCorrect = eng === correct;
+
+            leftBtn.classList.add(isCorrect ? "correct" : "wrong");
+            rightBtn.classList.add(isCorrect ? "correct" : "wrong");
+
+            if (isCorrect) {
+                leftBtn.disabled = true;
+                rightBtn.disabled = true;
+                correctCount++;
+            }
+        }
+
+        if (correctCount === sample.length) addNextButton();
+    }
+
+    container.append(leftCol, rightCol);
     app.appendChild(container);
 }
 

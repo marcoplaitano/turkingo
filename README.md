@@ -11,10 +11,15 @@ It all started with a vibe-coding mindset, now shifting towards actual commitmen
 
 ## TODO
 
+### Website
+
++ home page
++ about page
++ specific exercise page
+
 ### Exercises
 
 + normalize turkish special characters for all exercises
-+ matching: enable opposite direction (select from the right column first and then left)
 + new exercise type: given a word form the plural
 + new exercise type: true/false about translation
 + new exercise type: true/false about plural
