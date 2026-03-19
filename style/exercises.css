@@ -1,0 +1,94 @@
+.app {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.app h2 {
+  margin-bottom: 4rem;
+}
+
+
+/* ***** INPUT FIELD ***** */
+input {
+  background-color: var(--color-background);
+  color: var(--color-text);
+  font-size: inherit;
+  outline: none;
+  border-radius: 10px;
+  border: 1px solid var(--color-text2);
+}
+input:focus {
+  outline: none;
+  border-color: var(--color-accent);
+}
+
+
+/* ***** BUTTONS ***** */
+main button {
+  display: block;
+  width: 100%;
+  margin: 8px 0;
+  padding: 12px;
+  border: none;
+  border-radius: 10px;
+  background: var(--color-accent);
+  color: var(--color-background);
+  cursor: pointer;
+  transition: 0.1s;
+}
+
+main button:hover {
+  filter: brightness(85%);
+}
+main button:disabled:hover {
+    filter: none;
+}
+
+button.guess.correct {
+  background: var(--color-green) !important;
+  opacity: 0.82;
+}
+
+button.guess.wrong {
+  background: var(--color-red) !important;
+  opacity: 0.82;
+}
+
+
+/* ***** NEXT BUTTON ***** */
+.next {
+  background: var(--color-accent);
+  color: white;
+  margin-bottom: 2.4rem;
+}
+
+.next:hover {
+  filter: brightness(85%);
+}
+
+.next.correct {
+  background: var(--color-green) !important;
+  color: white !important;
+}
+
+.next.wrong {
+  background: var(--color-red) !important;
+  color: white !important;
+}
+
+
+/* ***** MATCH PAIRS BUTTON ***** */
+.match-btn.correct {
+  background: var(--color-green) !important;
+}
+
+.match-btn.wrong {
+  background: var(--color-red) !important;
+}
+
+.selected {
+  outline: 2px solid var(--color-accent);
+  filter: brightness(82%);
+}

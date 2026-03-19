@@ -1,11 +1,11 @@
 # Turkish language exercises
 
-This project is a cheap copy of Duolingo-type exercises to help me practice Turkish.
+This website is a cheap copy of Duolingo with a collection of exercises to help me practice Turkish.
 
 The website is free and available at: https://turkingo.netlify.app
 
-**Disclaimer**  
-It all started with a vibe-coding mindset, now shifting towards actual commitment.
+I got the idea because I wanted to practice more without paying for a Duolingo Premium subscription.  
+The project started with a vibe-coding mindset, and it's now shifting towards actual commitment.
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -14,7 +14,6 @@ It all started with a vibe-coding mindset, now shifting towards actual commitmen
 ### Website
 
 + home page
-+ about page
 + specific exercise page
 
 ### Exercises
