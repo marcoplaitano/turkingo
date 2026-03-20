@@ -1,11 +1,11 @@
-# Turkish language exercises
+# TürKingo
 
-This website is a cheap copy of Duolingo with a collection of exercises to help me practice Turkish.
+This site is my scrappy, no-subscription alternative to Duolingo for English–Turkish language exercises.  
+I built it because I wanted to practice more without paying for Premium.
 
-The website is free and available at: https://turkingo.netlify.app
+It started as a vibe-coding experiment... and now it’s turning into something I actually care about.
 
-I got the idea because I wanted to practice more without paying for a Duolingo Premium subscription.  
-The project started with a vibe-coding mindset, and it's now shifting towards actual commitment.
+The website is available at https://turkingo.netlify.app.
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 

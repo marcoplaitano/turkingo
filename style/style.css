@@ -83,13 +83,11 @@ body {
   color: var(--color-text);
   background-color: var(--color-background);
   width: 100%;
-  height: 100%;
   margin: 0 auto;
   padding: 0 3rem;
   line-height: 1.6;
   display: flex;
   flex-direction: column;
-  justify-content: center;
   min-height: 100vh;
 }
 
@@ -127,17 +125,17 @@ main hr {
 /* ***** HEADER ***** */
 header#banner {
   display: flex;
-  flex-shrink: 0;
   justify-content: space-between;
   margin: 2rem 0 4rem;
 }
 header#banner h1 {
   font-size: 1.4em;
   margin: 0;
-  background: linear-gradient(to right, var(--color-accent) 0%, var(--color-text) 100%);
+  background: linear-gradient(to right, var(--color-accent), var(--color-red));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-
+  background-clip: text;
+  color: transparent;
 }
 header#banner h1 a {
   color: var(--color-text);
@@ -269,13 +267,11 @@ main p.post-info + p {
 /* Stretch main to fill all remaining space towards the bottom of the page. */
 main {
   flex: 1;
-  overflow-y: auto;
 }
 footer {
-  flex-shrink: 0;
   width: 100%;
-  margin: 5.6rem 0 1.2rem;
-  font-size: 1.8rem;
+  margin: 3.2rem 0 1.2rem;
+  font-size: 1.7rem;
   line-height: 1.7;
 }
 footer hr {
@@ -320,7 +316,7 @@ footer a {
 /* ***** MOBILE VERSION ***** */
 @media screen and (max-width:600px) {
   header#banner {
-    margin: 2rem 0 1.6rem;
+    margin: 2rem 0 2.8rem;
     display: block;
   }
 }
