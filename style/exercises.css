@@ -3,10 +3,17 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  overflow-y: auto;
 }
 
 .app h2 {
-  margin-bottom: 4rem;
+  margin-bottom: 2rem;
+}
+
+
+/* ***** QUESTION ***** */
+#question {
+  margin-bottom: 1.2rem;
 }
 
 
@@ -27,9 +34,10 @@ input:focus {
 
 /* ***** BUTTONS ***** */
 main button {
+  font-size: inherit;
   display: block;
   width: 100%;
-  margin: 8px 0;
+  margin: 0.2rem 0 1rem;
   padding: 12px;
   border: none;
   border-radius: 10px;
@@ -58,25 +66,29 @@ button.guess.wrong {
 
 
 /* ***** NEXT BUTTON ***** */
+.next-translation.correct {
+  background: var(--color-green) !important;
+}
+.next-translation.wrong {
+  background: var(--color-red) !important;
+}
+
 .next {
   background: var(--color-accent);
-  margin-bottom: 2.4rem;
+  margin: 2.4rem 0;
 }
 
 .next:hover {
   filter: brightness(85%);
 }
 
-.next.correct {
-  background: var(--color-green) !important;
-}
-
-.next.wrong {
-  background: var(--color-red) !important;
-}
-
 
 /* ***** MATCH PAIRS BUTTON ***** */
+#answers > div {
+  display: flex;
+  gap: 8px;
+}
+
 .match-btn.correct {
   background: var(--color-green) !important;
   opacity: 0.8;
@@ -90,4 +102,10 @@ button.guess.wrong {
 .selected {
   outline: 2px solid var(--color-accent);
   filter: brightness(82%);
+}
+
+
+/* ***** FEEDBACK ***** */
+#feedback {
+  margin-top: 1.2rem;
 }

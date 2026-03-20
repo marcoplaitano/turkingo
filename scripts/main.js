@@ -39,7 +39,7 @@ function translation() {
         input.disabled = true;
         const nextBtn = document.createElement("button");
         nextBtn.textContent = "Next";
-        nextBtn.className = "next";
+        nextBtn.className = "next-translation";
         nextBtn.onclick = nextExercise;
 
         const normalizedInput = normalizeTurkish(inputText);
@@ -68,7 +68,7 @@ function translation() {
 }
 
 function translation_with_guesses() {
-    document.getElementById("title").textContent = "Translate";
+    document.getElementById("title").textContent = "Match the translation";
 
     const item = randomItem();
     const toTurkish = Math.random() > 0.5;
@@ -85,18 +85,32 @@ function translation_with_guesses() {
 
     document.getElementById("question").textContent = question;
 
-    options.forEach(opt => {
-        const btn = document.createElement("button");
-        btn.classList.add("guess");
-        btn.textContent = opt;
-        if (opt === correct)
-            correctOption = btn;
-        btn.onclick = () => showResult(btn, opt === correct);
-        btn.addEventListener("keydown", e => {
-            if (e.key === "Enter") showResult(btn, opt === correct);
+    const container = document.createElement("div");
+    container.style.cssText = "display:flex;justify-content:space-between";
+    // container.style.cssText = "display:grid;grid-template-columns:1fr 1fr;gap:10px;";
+
+    const makeColumn = (words) => {
+        const col = document.createElement("div");
+        words.forEach(word => {
+            const btn = document.createElement("button");
+            btn.classList.add("guess");
+            btn.textContent = word;
+            if (word === correct)
+                correctOption = btn;
+            btn.onclick = () => showResult(btn, word === correct);
+            btn.addEventListener("keydown", e => {
+                if (e.key === "Enter") showResult(btn, word === correct);
+            });
+            col.appendChild(btn);
         });
-        document.getElementById("answers").appendChild(btn);
-    });
+        return col;
+    };
+
+    const leftCol  = makeColumn(options.slice(0,2));
+    const rightCol = makeColumn(options.slice(2));
+    container.append(leftCol, rightCol);
+
+    document.getElementById("answers").appendChild(container);
 
     function showResult(element, isCorrect) {
         if (isCorrect) {
@@ -132,6 +146,7 @@ function matching() {
 
     const makeColumn = (words, side) => {
         const col = document.createElement("div");
+        col.classList.add("match-col");
 
         words.forEach(word => {
             const btn = document.createElement("button");
@@ -190,6 +205,10 @@ function matching() {
 
             leftBtn.classList.add(isCorrect ? "correct" : "wrong");
             rightBtn.classList.add(isCorrect ? "correct" : "wrong");
+            container.querySelectorAll("button").forEach(btn => {
+                btn.classList.remove("selected");
+                setTimeout(() => btn.blur(), 0);
+            });
 
             if (isCorrect) {
                 leftBtn.disabled = true;

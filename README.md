@@ -13,7 +13,6 @@ The project started with a vibe-coding mindset, and it's now shifting towards ac
 
 ### Website
 
-+ home page
 + specific exercise page
 
 ### Exercises
@@ -31,9 +30,6 @@ The project started with a vibe-coding mindset, and it's now shifting towards ac
 ### UX/UI
 
 + SKIP button at the bottom of the screen
-+ default variables for buttons colors
-+ dark theme for buttons
-+ more modern footer style
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
