@@ -33,11 +33,4 @@ window.onload = function(){
   q.addEventListener("change", function(){
     if (!("theme" in localStorage)) setTheme(q.matches ? "dark" : "light", false, false)
   });
-  document.getElementById("btn-theme").addEventListener("click", function(){
-    classes=document.documentElement.classList;
-    if (classes.contains("auto")) newTheme="dark"
-    else if (classes.contains("dark")) newTheme="light"
-    else if (classes.contains("light")) newTheme="auto"
-    setTheme(newTheme, true, newTheme !== "auto")
-  });
 };
