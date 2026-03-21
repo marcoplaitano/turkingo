@@ -9,6 +9,12 @@ The website is available at https://turkingo.netlify.app.
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
+## Input data
+
+Asked a LLM model to give some examples and collect them in a JSON format for easy indexing.
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
 ## TODO
 
 ### Website
@@ -17,7 +23,6 @@ The website is available at https://turkingo.netlify.app.
 
 ### Exercises
 
-+ normalize turkish special characters for all exercises
 + new exercise type: given a word form the plural
 + new exercise type: true/false about translation
 + new exercise type: true/false about plural
@@ -26,10 +31,6 @@ The website is available at https://turkingo.netlify.app.
 
 + increase dataset size
 + normalize some sentences (i.e. _su içiyorum_ -> _su içerim_)
-
-### UX/UI
-
-+ SKIP button at the bottom of the screen
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
