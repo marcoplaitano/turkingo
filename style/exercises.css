@@ -13,6 +13,7 @@ main {
   overflow-y: auto;
 }
 footer {
+  margin-top: 2rem;
   flex-shrink: 0;
 }
 
@@ -50,11 +51,18 @@ input:focus {
 }
 
 
+/* ***** INPUT FIELD ***** */
+#hint {
+  text-align: center;
+  margin: 1rem 0 2rem;
+}
+
+
 /* ***** BUTTONS ***** */
 main button {
   font-size: inherit;
   display: block;
-  margin: 0.2rem 0 1rem;
+  /* margin: 0.2rem 0 1rem; */
   padding: 12px;
   border: none;
   border-radius: 10px;
@@ -73,18 +81,24 @@ main button:disabled:hover {
 
 #answers > div {
   display: flex;
-  flex-wrap: wrap;
   gap: 8px;
 }
 #answers {
   flex-wrap: wrap;
   justify-content: center;
 }
+#answers > div button {
+  flex: 1 1 120px;   /* grow | shrink | preferred width */
+  white-space: normal;
+  word-break: break-word;
+  text-align: center;
+}
 
 
 /* ***** GUESS TRANSLATION BUTTONS ***** */
 .btn-guess {
   width: 100%;
+  margin-bottom: 1rem;
 }
 .btn-guess.correct {
   background: var(--color-green) !important;
@@ -99,7 +113,7 @@ main button:disabled:hover {
 /* ***** NEXT/DELETE BUTTONS ***** */
 .app #buttons {
   width: 70%;
-  margin-top: 2rem;
+  margin-top: 2.4rem;
   display: flex;
   gap: 8px;
 }
@@ -118,6 +132,7 @@ main button:disabled:hover {
 /* ***** MATCH PAIRS BUTTONS ***** */
 .btn-match {
   width: 100%;
+  margin-bottom: 1rem;
 }
 .btn-match.correct {
   background: var(--color-green) !important;
@@ -138,4 +153,22 @@ main button:disabled:hover {
 /* ***** FEEDBACK ***** */
 #feedback {
   margin-top: 1.2rem;
+  font-weight: bold;
+}
+
+
+/* ***** SKIP BUTTON ***** */
+#btn-skip {
+  font-size: 2.4rem;
+  color: var(--color-skip-btn-fg);
+  background: var(--color-skip-btn-bg);
+  border: none;
+  border-radius: 10px;
+  padding: 0 12px 4px;
+  display: block;
+  margin-left: auto;
+}
+#btn-skip:enabled:hover {
+  filter: brightness(85%);
+  cursor: pointer;
 }

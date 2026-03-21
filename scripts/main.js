@@ -9,11 +9,12 @@ function translation() {
     const toTurkish = Math.random() > 0.5;
 
     const question = toTurkish ? item["l-eng"] : item["l-turk"];
-    const correct = toTurkish ? item["l-turk"] : item["l-eng"];
+    ANSWER = toTurkish ? item["l-turk"] : item["l-eng"];
     document.getElementById("question").textContent = question;
 
     const checkBtn = document.createElement("button");
     checkBtn.textContent = "Check";
+    checkBtn.classList.add("btn-check");
     checkBtn.disabled = true;
     checkBtn.onclick = checkResult;
 
@@ -36,48 +37,47 @@ function translation() {
 
         checkBtn.remove();
         input.disabled = true;
-        const nextBtn = document.createElement("button");
-        nextBtn.textContent = "Next";
-        nextBtn.className = "btn-next";
-        nextBtn.onclick = nextExercise;
 
         const normalizedInput = normalizeTurkish(inputText);
-        const normalizedCorrect = normalizeTurkish(correct);
-        const distance = levenshtein(normalizedInput, normalizedCorrect);
+        const normalizedAnswer = normalizeTurkish(ANSWER);
+        const distance = levenshtein(normalizedInput, normalizedAnswer);
         const isCorrect = distance === 0;
         const hasMinorTypo = distance > 0 && distance <= 1;
 
         if (isCorrect || hasMinorTypo) {
-            nextBtn.classList.add("correct");
             if (hasMinorTypo) {
-                document.getElementById("feedback").textContent = correct;
-            } else if (inputText !== correct) {
+                document.getElementById("feedback").textContent = ANSWER;
+            } else if (inputText !== ANSWER) {
                 // Correct after normalization but raw input differs
-                document.getElementById("feedback").textContent = correct;
+                document.getElementById("feedback").textContent = ANSWER;
             }
         } else {
-            nextBtn.classList.add("wrong");
-            document.getElementById("feedback").textContent = correct;
+            document.getElementById("feedback").textContent = ANSWER;
         }
-        document.getElementById("buttons").appendChild(nextBtn);
+        addNextButton(isCorrect || hasMinorTypo);
     }
 }
+
+//////////////////////////////////////////////////
+// 2. TRANSLATION WITH GUESSES
+//////////////////////////////////////////////////
 
 function translation_with_guesses() {
     document.getElementById("title").textContent = "Match the translation";
 
-    const item = randomItem();
+    const item = randomWordOrPhrase();
     const toTurkish = Math.random() > 0.5;
 
     const question = toTurkish ? item["l-eng"] : item["l-turk"];
-    const correct = toTurkish ? item["l-turk"] : item["l-eng"];
+    ANSWER = toTurkish ? item["l-turk"] : item["l-eng"];
 
-    const wrong = shuffle(data)
+    const wrong = shuffle(INPUT_DATA)
+        .filter(i => i.type !== "sentence")
         .filter(i => i !== item)
         .slice(0, 3)
         .map(i => toTurkish ? i["l-turk"] : i["l-eng"]);
 
-    const options = shuffle([correct, ...wrong]);
+    const options = shuffle([ANSWER, ...wrong]);
 
     document.getElementById("question").textContent = question;
 
@@ -91,11 +91,11 @@ function translation_with_guesses() {
             const btn = document.createElement("button");
             btn.classList.add("btn-guess");
             btn.textContent = word;
-            if (word === correct)
+            if (word === ANSWER)
                 correctOption = btn;
-            btn.onclick = () => showResult(btn, word === correct);
+            btn.onclick = () => showResult(btn, word === ANSWER);
             btn.addEventListener("keydown", e => {
-                if (e.key === "Enter") showResult(btn, word === correct);
+                if (e.key === "Enter") showResult(btn, word === ANSWER);
             });
             col.appendChild(btn);
         });
@@ -121,14 +121,16 @@ function translation_with_guesses() {
 }
 
 //////////////////////////////////////////////////
-// 2. MATCHING
+// 3. MATCHING
 //////////////////////////////////////////////////
 
 function matching() {
     document.getElementById("title").textContent = "Match the pairs";
     const answersDiv = document.getElementById("answers");
 
-    const sample = shuffle([...data]).slice(0, 4);
+    const sample = shuffle([...INPUT_DATA])
+        .filter(i => i.type !== "sentence")
+        .slice(0, 4);
     const leftWords = sample.map(i => i["l-turk"]);
     const rightWords = shuffle(sample.map(i => i["l-eng"]));
 
@@ -211,7 +213,8 @@ function matching() {
             }
         }
 
-        if (correctCount === sample.length) addNextButton();
+        if (correctCount === sample.length)
+            addNextButton();
     }
 
     container.append(leftCol, rightCol);
@@ -224,7 +227,7 @@ function highlightSelection(selectedBtn, container) {
 }
 
 //////////////////////////////////////////////////
-// 3. FILL IN THE BLANK
+// 4. FILL IN THE BLANK
 //////////////////////////////////////////////////
 
 function fillBlanks() {
@@ -235,18 +238,14 @@ function fillBlanks() {
     hintParagraph.style.display = "";
     const buttonsDiv = document.getElementById("buttons");
 
-    const sentences = data.filter(item => item.type === "sentence");
-    const item = sentences[Math.floor(Math.random() * sentences.length)];
+    const item = randomSentence();
     const sentence = item["l-turk"];
+    ANSWER = sentence;
     const words = sentence.split(" ");
 
     // Show English translation
     const englishTranslation = item["l-eng"];
     document.getElementById("question").innerHTML = englishTranslation;
-
-    const sentenceParagraph = document.createElement("p");
-    sentenceParagraph.style.textAlign = "center";
-    sentenceParagraph.style.marginBottom = "3.2rem";
 
     // Randomly select 1 or 2 words to blank out (but less than total words)
     const numBlanks = Math.min(Math.floor(Math.random() * 2) + 1, Math.max(1, words.length - 1))
@@ -272,10 +271,9 @@ function fillBlanks() {
         }
     }
 
-    sentenceParagraph.innerHTML = displaySentenceWords.join(" ");
-    hintParagraph.appendChild(sentenceParagraph);
+    hintParagraph.innerHTML = displaySentenceWords.join(" ");
 
-    const wrongGuesses = shuffle(data)
+    const wrongGuesses = shuffle(INPUT_DATA)
         .filter(i => i["type"] === "word")
         .filter(i => i !== item)
         .slice(0, 3)
@@ -294,12 +292,14 @@ function fillBlanks() {
 
     const deleteBtn = document.createElement("button");
     deleteBtn.textContent = "Delete";
+    deleteBtn.classList.add("btn-delete");
     deleteBtn.onclick = deleteWord;
     deleteBtn.disabled = true;
     buttonsDiv.appendChild(deleteBtn);
 
     const checkBtn = document.createElement("button");
     checkBtn.textContent = "Check";
+    checkBtn.classList.add("btn-check");
     checkBtn.onclick = checkResult;
     checkBtn.disabled = true;
     buttonsDiv.appendChild(checkBtn);
@@ -308,7 +308,7 @@ function fillBlanks() {
         const firstBlankIndex = displaySentenceWords.findIndex(str => str === blankStr);
         if (firstBlankIndex !== -1) {
             displaySentenceWords[firstBlankIndex] = word;
-            sentenceParagraph.innerHTML = displaySentenceWords.join(" ");
+            hintParagraph.innerHTML = displaySentenceWords.join(" ");
             deleteBtn.disabled = false;
             btn.disabled = true;
             numBlanksCovered++;
@@ -325,7 +325,7 @@ function fillBlanks() {
                 btn.disabled = false;
         }
         displaySentenceWords[lastWordIndex] = blankStr;
-        sentenceParagraph.innerHTML = displaySentenceWords.join(" ");
+        hintParagraph.innerHTML = displaySentenceWords.join(" ");
         numBlanksCovered--;
         if (numBlanksCovered === 0)
             deleteBtn.disabled = true;
@@ -333,28 +333,21 @@ function fillBlanks() {
     }
 
     function checkResult() {
-        const nextBtn = document.createElement("button");
-        nextBtn.textContent = "Next";
-        nextBtn.className = "btn-next";
-        nextBtn.onclick = nextExercise;
-
         for (btn of buttons)
             btn.disabled = true;
         deleteBtn.remove();
         checkBtn.remove();
         const result = displaySentenceWords.join(" ");
-        if (result === sentence) {
-            nextBtn.classList.add("correct");
-        } else {
-            nextBtn.classList.add("wrong");
-            document.getElementById("feedback").textContent = sentence;
+        if (result !== ANSWER) {
+            hintParagraph.textContent = ANSWER;
+            hintParagraph.style.fontWeight = "bold";
         }
-        buttonsDiv.appendChild(nextBtn);
+        addNextButton(result === ANSWER);
     }
 }
 
 //////////////////////////////////////////////////
-// 4. REORDER THE SENTENCE
+// 5. REORDER THE SENTENCE
 //////////////////////////////////////////////////
 
 function reorderSentence() {
@@ -365,9 +358,9 @@ function reorderSentence() {
     hintParagraph.style.display = "";
     const buttonsDiv = document.getElementById("buttons");
 
-    const sentences = data.filter(item => item.type === "sentence");
-    const item = sentences[Math.floor(Math.random() * sentences.length)];
+    const item = randomSentence();
     const sentence = item["l-turk"];
+    ANSWER = sentence;
     const words = sentence.split(" ");
     const shuffledWords = shuffle(words);
 
@@ -375,17 +368,12 @@ function reorderSentence() {
     const englishTranslation = item["l-eng"];
     document.getElementById("question").innerHTML = englishTranslation;
 
-    const sentenceParagraph = document.createElement("p");
-    sentenceParagraph.style.textAlign = "center";
-    sentenceParagraph.style.marginBottom = "3.2rem";
-
     const blankStr = "______";
     let blanks = [];
     for (let i = 0; i < words.length; i++) {
         blanks.push(blankStr);
     }
-    sentenceParagraph.innerHTML = blanks.join(" ");
-    hintParagraph.appendChild(sentenceParagraph);
+    hintParagraph.innerHTML = blanks.join(" ");
 
     const buttons = [];
     shuffledWords.forEach(word => {
@@ -398,12 +386,14 @@ function reorderSentence() {
 
     const deleteBtn = document.createElement("button");
     deleteBtn.textContent = "Delete";
+    deleteBtn.classList.add("btn-delete");
     deleteBtn.onclick = deleteWord;
     deleteBtn.disabled = true;
     buttonsDiv.appendChild(deleteBtn);
 
     const checkBtn = document.createElement("button");
     checkBtn.textContent = "Check";
+    checkBtn.classList.add("btn-check");
     checkBtn.onclick = checkResult;
     checkBtn.disabled = true;
     buttonsDiv.appendChild(checkBtn);
@@ -412,7 +402,7 @@ function reorderSentence() {
         const firstBlankIndex = blanks.findIndex(str => str === blankStr);
         if (firstBlankIndex !== -1) {
             blanks[firstBlankIndex] = word;
-            sentenceParagraph.innerHTML = blanks.join(" ");
+            hintParagraph.innerHTML = blanks.join(" ");
             deleteBtn.disabled = false;
             btn.disabled = true;
         }
@@ -432,28 +422,21 @@ function reorderSentence() {
                 btn.disabled = false;
         }
         blanks[lastWordIndex] = blankStr;
-        sentenceParagraph.innerHTML = blanks.join(" ");
+        hintParagraph.innerHTML = blanks.join(" ");
         if (lastWordIndex === 0)
             deleteBtn.disabled = true;
         checkBtn.disabled = true;
     }
 
     function checkResult() {
-        const nextBtn = document.createElement("button");
-        nextBtn.textContent = "Next";
-        nextBtn.className = "btn-next";
-        nextBtn.onclick = nextExercise;
-
         deleteBtn.remove();
         checkBtn.remove();
         const result = blanks.join(" ");
-        if (result === sentence) {
-            nextBtn.classList.add("correct");
-        } else {
-            nextBtn.classList.add("wrong");
-            document.getElementById("feedback").textContent = sentence;
+        if (result !== ANSWER) {
+            hintParagraph.textContent = ANSWER;
+            hintParagraph.style.fontWeight = "bold";
         }
-        buttonsDiv.appendChild(nextBtn);
+        addNextButton(result === ANSWER);
     }
 }
 
@@ -461,20 +444,41 @@ function reorderSentence() {
 // UTILITY FUNCTIONS
 //////////////////////////////////////////////////
 
+function addNextButton(correct=null) {
+    const nextBtn = document.createElement("button");
+    nextBtn.textContent = "Next";
+    nextBtn.className = "btn-next";
+    nextBtn.onclick = nextExercise;
+
+    if (correct !== null)
+        if (correct)
+            nextBtn.classList.add("correct");
+        else
+            nextBtn.classList.add("wrong");
+
+    document.getElementById("buttons").appendChild(nextBtn);
+    document.querySelectorAll(".btn-delete").forEach(el => el.remove());
+    document.querySelectorAll(".btn-check").forEach(el => el.remove());
+
+    skipDisable();
+}
+
 function randomItem() {
-    return data[Math.floor(Math.random() * data.length)];
+    return INPUT_DATA[Math.floor(Math.random() * INPUT_DATA.length)];
+}
+
+function randomWordOrPhrase() {
+    const samples = INPUT_DATA.filter(item => item.type !== "sentence");
+    return samples[Math.floor(Math.random() * samples.length)];
+}
+
+function randomSentence() {
+    const samples = INPUT_DATA.filter(item => item.type === "sentence");
+    return samples[Math.floor(Math.random() * samples.length)];
 }
 
 function shuffle(arr) {
     return arr.sort(() => Math.random() - 0.5);
-}
-
-function addNextButton() {
-    const btn = document.createElement("button");
-    btn.textContent = "Next";
-    btn.className = "btn-next";
-    btn.onclick = nextExercise;
-    document.getElementById("buttons").appendChild(btn);
 }
 
 function clearButtonsDiv() {
@@ -518,12 +522,15 @@ function highlightDifferences(correct, user) {
 //////////////////////////////////////////////////
 
 function nextExercise() {
+    ANSWER = null;
     document.getElementById("question").innerHTML = "";
     document.getElementById("hint").innerHTML = "";
     document.getElementById("hint").style.display = "none";
+    document.getElementById("hint").style.fontWeight = "normal";
     document.getElementById("answers").innerHTML = "";
     document.getElementById("feedback").textContent = "";
     clearButtonsDiv();
+    skipEnable();
 
     const types = [translation, translation_with_guesses, matching, fillBlanks, reorderSentence];
     const randomExercise = types[Math.floor(Math.random() * types.length)];
@@ -536,11 +543,26 @@ function nextExercise() {
     // reorderSentence();
 }
 
-let data = [];
+function skipExercise() {
+    nextExercise();
+}
+
+function skipEnable() {
+    document.getElementById("btn-skip").disabled = false;
+    setTimeout(() => { document.getElementById("btn-skip").blur(); }, 50);
+}
+
+function skipDisable() {
+    document.getElementById("btn-skip").disabled = true;
+}
+
+
+let INPUT_DATA = [];
+let ANSWER = null;
 
 async function init() {
     const res = await fetch("data/language_data.json");
-    data = await res.json();
+    INPUT_DATA = await res.json();
     nextExercise();
 }
 

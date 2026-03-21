@@ -12,6 +12,8 @@
   --color-accent: #7287FD;
   --color-green: #40A02B;
   --color-red: #E64553;
+  --color-skip-btn-fg: #7287FD;
+  --color-skip-btn-bg: #dce0e8;
   --color-highlight-bg: #DCE0E8;
   --color-border: #BCC0CC;
   --color-note-border: #DCE0E8;
@@ -34,6 +36,8 @@ html.dark {
   --color-accent: #B4BEFE;
   --color-green: #a6e3a1;
   --color-red: #F38BA8;
+  --color-skip-btn-fg: #B4BEFE;
+  --color-skip-btn-bg: #313244;
   --color-highlight-bg: #45475A;
   --color-hr: #45475A;
   --color-footer-hr: #45475A;
