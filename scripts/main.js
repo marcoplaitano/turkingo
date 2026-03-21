@@ -44,16 +44,8 @@ function translation() {
         const isCorrect = distance === 0;
         const hasMinorTypo = distance > 0 && distance <= 1;
 
-        if (isCorrect || hasMinorTypo) {
-            if (hasMinorTypo) {
-                document.getElementById("feedback").textContent = ANSWER;
-            } else if (inputText !== ANSWER) {
-                // Correct after normalization but raw input differs
-                document.getElementById("feedback").textContent = ANSWER;
-            }
-        } else {
+        if (inputText !== ANSWER)
             document.getElementById("feedback").textContent = ANSWER;
-        }
         addNextButton(isCorrect || hasMinorTypo);
     }
 }
