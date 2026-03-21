@@ -28,7 +28,7 @@ function translation() {
         checkBtn.disabled = input.value.trim() === "";
     });
     document.getElementById("answers").appendChild(input);
-    document.getElementById("answers").appendChild(checkBtn);
+    document.getElementById("buttons").appendChild(checkBtn);
 
     function checkResult() {
         const inputText = input.value.trim().toLowerCase();
@@ -38,7 +38,7 @@ function translation() {
         input.disabled = true;
         const nextBtn = document.createElement("button");
         nextBtn.textContent = "Next";
-        nextBtn.className = "next-translation";
+        nextBtn.className = "btn-next";
         nextBtn.onclick = nextExercise;
 
         const normalizedInput = normalizeTurkish(inputText);
@@ -50,7 +50,7 @@ function translation() {
         if (isCorrect || hasMinorTypo) {
             nextBtn.classList.add("correct");
             if (hasMinorTypo) {
-                document.getElementById("feedback").textContent = "typo: " + correct;
+                document.getElementById("feedback").textContent = correct;
             } else if (inputText !== correct) {
                 // Correct after normalization but raw input differs
                 document.getElementById("feedback").textContent = correct;
@@ -59,7 +59,7 @@ function translation() {
             nextBtn.classList.add("wrong");
             document.getElementById("feedback").textContent = correct;
         }
-        document.getElementById("answers").appendChild(nextBtn);
+        document.getElementById("buttons").appendChild(nextBtn);
     }
 }
 
@@ -102,7 +102,7 @@ function translation_with_guesses() {
         return col;
     };
 
-    const leftCol  = makeColumn(options.slice(0,2));
+    const leftCol = makeColumn(options.slice(0, 2));
     const rightCol = makeColumn(options.slice(2));
     container.append(leftCol, rightCol);
 
@@ -126,12 +126,10 @@ function translation_with_guesses() {
 
 function matching() {
     document.getElementById("title").textContent = "Match the pairs";
-    document.getElementById("question").textContent = "";
-    const app = document.getElementById("answers");
-    app.innerHTML = "";
+    const answersDiv = document.getElementById("answers");
 
     const sample = shuffle([...data]).slice(0, 4);
-    const leftWords  = sample.map(i => i["l-turk"]);
+    const leftWords = sample.map(i => i["l-turk"]);
     const rightWords = shuffle(sample.map(i => i["l-eng"]));
 
     let selected = null; // { word, side }
@@ -157,7 +155,7 @@ function matching() {
         return col;
     };
 
-    const leftCol  = makeColumn(leftWords, "left");
+    const leftCol = makeColumn(leftWords, "left");
     const rightCol = makeColumn(rightWords, "right");
 
     function handleClick(word, side, btn, col) {
@@ -194,7 +192,7 @@ function matching() {
         for (const [turk, eng] of Object.entries(pairs)) {
             const correct = sample.find(i => i["l-turk"] === turk)["l-eng"];
 
-            const leftBtn  = [...leftCol.children].find(b => b.textContent === turk);
+            const leftBtn = [...leftCol.children].find(b => b.textContent === turk);
             const rightBtn = [...rightCol.children].find(b => b.textContent === eng);
 
             const isCorrect = eng === correct;
@@ -217,7 +215,7 @@ function matching() {
     }
 
     container.append(leftCol, rightCol);
-    app.appendChild(container);
+    answersDiv.appendChild(container);
 }
 
 function highlightSelection(selectedBtn, container) {
@@ -306,20 +304,107 @@ function fillBlanks() {
 }
 
 //////////////////////////////////////////////////
-// 4. FORM THE PLURAL
+// 4. REORDER THE SENTENCE
 //////////////////////////////////////////////////
 
-function formPlural() {
-    document.getElementById("title").textContent = "Fill in the blanks";
-    document.getElementById("feedback").textContent = "";
-    document.getElementById("answers").innerHTML = "";
+function reorderSentence() {
+    document.getElementById("title").textContent = "Reorder the sentence";
+    const answersDiv = document.getElementById("answers");
+    answersDiv.style = "display: flex; gap: 8px;";
+    const hintParagraph = document.getElementById("hint");
+    hintParagraph.style.display = "";
+    const buttonsDiv = document.getElementById("buttons");
 
-    const words = data.filter(d => d.type === "sentence" || d.type === "phrase");
-    const item = words[Math.floor(Math.random() * words.length)];
-    const singular = item["l-turk"];
-    const singularEN = item["l-eng"];
+    const sentences = data.filter(item => item.type === "sentence");
+    const item = sentences[Math.floor(Math.random() * sentences.length)];
+    const sentence = item["l-turk"];
+    const words = sentence.split(" ");
+    const shuffledWords = shuffle(words);
 
-    addNextButton();
+    // Show English translation
+    const englishTranslation = item["l-eng"];
+    document.getElementById("question").innerHTML = englishTranslation;
+
+    const sentenceParagraph = document.createElement("p");
+    sentenceParagraph.style.textAlign = "center";
+    sentenceParagraph.style.marginBottom = "3.2rem";
+
+    const blankStr = "______";
+    let blanks = [];
+    for (word in words) {
+        blanks.push(blankStr);
+    }
+    sentenceParagraph.innerHTML = blanks.join(" ");
+    hintParagraph.appendChild(sentenceParagraph);
+
+    const buttons = [];
+    shuffledWords.forEach(word => {
+        const btn = document.createElement("button");
+        btn.textContent = word;
+        btn.onclick = () => { addWordToSentence(btn, word) };
+        buttons.push(btn);
+        answersDiv.appendChild(btn);
+    });
+
+    const deleteBtn = document.createElement("button");
+    deleteBtn.textContent = "Delete";
+    deleteBtn.onclick = deleteWord;
+    deleteBtn.disabled = true;
+    buttonsDiv.appendChild(deleteBtn);
+
+    const checkBtn = document.createElement("button");
+    checkBtn.textContent = "Check";
+    checkBtn.onclick = checkResult;
+    checkBtn.disabled = true;
+    buttonsDiv.appendChild(checkBtn);
+
+    function addWordToSentence(btn, word) {
+        const firstBlankIndex = blanks.findIndex(str => str === blankStr);
+        if (firstBlankIndex !== -1) {
+            blanks[firstBlankIndex] = word;
+            sentenceParagraph.innerHTML = blanks.join(" ");
+            deleteBtn.disabled = false;
+            btn.disabled = true;
+        }
+        if (firstBlankIndex == blanks.length - 1)
+            checkBtn.disabled = false;
+    }
+
+    function deleteWord() {
+        const firstBlankIndex = blanks.findIndex(str => str === blankStr);
+        let lastWordIndex = 0;
+        if (firstBlankIndex === -1)
+            lastWordIndex = blanks.length - 1;
+        else
+            lastWordIndex = firstBlankIndex - 1;
+        for (btn of buttons) {
+            if (btn.textContent === blanks[lastWordIndex])
+                btn.disabled = false;
+        }
+        blanks[lastWordIndex] = blankStr;
+        sentenceParagraph.innerHTML = blanks.join(" ");
+        if (lastWordIndex === 0)
+            deleteBtn.disabled = true;
+        checkBtn.disabled = true;
+    }
+
+    function checkResult() {
+        const nextBtn = document.createElement("button");
+        nextBtn.textContent = "Next";
+        nextBtn.className = "btn-next";
+        nextBtn.onclick = nextExercise;
+
+        deleteBtn.remove();
+        checkBtn.remove();
+        const result = blanks.join(" ");
+        if (result === sentence) {
+            nextBtn.classList.add("correct");
+        } else {
+            nextBtn.classList.add("wrong");
+            document.getElementById("feedback").textContent = sentence;
+        }
+        buttonsDiv.appendChild(nextBtn);
+    }
 }
 
 //////////////////////////////////////////////////
@@ -337,9 +422,15 @@ function shuffle(arr) {
 function addNextButton() {
     const btn = document.createElement("button");
     btn.textContent = "Next";
-    btn.className = "next";
+    btn.className = "btn-next";
     btn.onclick = nextExercise;
-    document.getElementById("answers").appendChild(btn);
+    document.getElementById("buttons").appendChild(btn);
+}
+
+function clearButtonsDiv() {
+    const buttonsDiv = document.getElementById("buttons");
+    const buttons = buttonsDiv.querySelectorAll("button");
+    buttons.forEach(btn => btn.remove());
 }
 
 function normalizeTurkish(str) {
@@ -377,10 +468,14 @@ function highlightDifferences(correct, user) {
 //////////////////////////////////////////////////
 
 function nextExercise() {
-    document.getElementById("feedback").textContent = "";
+    document.getElementById("question").innerHTML = "";
+    document.getElementById("hint").innerHTML = "";
+    document.getElementById("hint").style.display = "none";
     document.getElementById("answers").innerHTML = "";
+    document.getElementById("feedback").textContent = "";
+    clearButtonsDiv();
 
-    const types = [translation, translation_with_guesses, matching];
+    const types = [translation, translation_with_guesses, matching, reorderSentence];
     const random = types[Math.floor(Math.random() * types.length)];
     random();
 
@@ -388,7 +483,7 @@ function nextExercise() {
     // translation_with_guesses();
     // matching();
     // fillBlanks();
-    // formPlural();
+    // reorderSentence();
 }
 
 let data = [];

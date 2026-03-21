@@ -84,20 +84,18 @@ button.guess.wrong {
 
 
 /* ***** NEXT BUTTON ***** */
-.next-translation.correct {
+.app #buttons {
+  width: 100%;
+  margin-top: 2rem;
+  display: flex;
+  gap: 8px;
+}
+
+.btn-next.correct {
   background: var(--color-green) !important;
 }
-.next-translation.wrong {
+.btn-next.wrong {
   background: var(--color-red) !important;
-}
-
-.next {
-  background: var(--color-accent);
-  margin: 2.4rem 0;
-}
-
-.next:hover {
-  filter: brightness(85%);
 }
 
 
