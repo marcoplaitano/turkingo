@@ -1,8 +1,8 @@
 class ExerciseData {
     constructor(data) {
         this.data = data;
-        this.langEN = data["l-eng"];
-        this.langTR = data["l-turk"];
+        this.langEN = data["l-EN"];
+        this.langTR = data["l-TR"];
         this.type = data["type"];
     }
 
@@ -34,7 +34,6 @@ class ExerciseTranslation {
         this.data = new ExerciseData(randomItem());
         this.question = Math.random() > 0.5 ? this.data.getLanguageEN() : this.data.getLanguageTR();
         this.answer = this.data.getTranslation(this.question).trim().toLowerCase();
-        console.log("ANSWER:", this.answer);
     }
 
     do() {
@@ -94,12 +93,11 @@ class ExerciseTranslationWithGuesses {
         this.toTurkish = Math.random() > 0.5;
         this.question = this.toTurkish ? this.data.getLanguageEN() : this.data.getLanguageTR();
         this.answer = this.data.getTranslation(this.question);
-        console.log("ANSWER:", this.answer);
         this.wrongGuesses = shuffle(INPUT_DATA)
             .filter(i => i.type !== "sentence")
             .filter(i => i !== item)
             .slice(0, 3)
-            .map(i => this.toTurkish ? i["l-turk"] : i["l-eng"]);
+            .map(i => this.toTurkish ? i["l-TR"] : i["l-EN"]);
         this.correctOption = null;
     }
 
@@ -164,114 +162,111 @@ class ExerciseMatching {
         this.toTurkish = Math.random() > 0.5;
         this.question = this.toTurkish ? this.data.getLanguageEN() : this.data.getLanguageTR();
         this.answer = this.data.getTranslation(this.question);
-        console.log("ANSWER:", this.answer);
         this.wrongGuesses = shuffle(INPUT_DATA)
             .filter(i => i.type !== "sentence")
             .filter(i => i !== item)
             .slice(0, 3)
-            .map(i => this.toTurkish ? i["l-turk"] : i["l-eng"]);
+            .map(i => this.toTurkish ? i["l-TR"] : i["l-EN"]);
+        this.sample = shuffle([...INPUT_DATA])
+            .filter(i => i.type !== "sentence")
+            .slice(0, 4);
         this.correctOption = null;
+        this.selected = null; // { word, side }
+        this.leftCol = null;
+        this.rightCol = null;
+        this.pairs = {};
+        this.container = document.createElement("div");
     }
 
     do() {
         document.getElementById("title").textContent = "Match the pairs";
         const answersDiv = document.getElementById("answers");
 
-        const sample = shuffle([...INPUT_DATA])
-            .filter(i => i.type !== "sentence")
-            .slice(0, 4);
-        const leftWords = sample.map(i => i["l-turk"]);
-        const rightWords = shuffle(sample.map(i => i["l-eng"]));
+        const leftWords = this.sample.map(i => i["l-TR"]);
+        const rightWords = shuffle(this.sample.map(i => i["l-EN"]));
 
-        let selected = null; // { word, side }
-        const pairs = {};
+        this.container.style.cssText = "display:flex;justify-content:space-between";
 
-        const container = document.createElement("div");
-        container.style.cssText = "display:flex;justify-content:space-between";
+        this.leftCol = this.makeColumn(leftWords, "left");
+        this.rightCol = this.makeColumn(rightWords, "right");
 
-        const makeColumn = (words, side) => {
-            const col = document.createElement("div");
-            col.classList.add("match-col");
-
-            words.forEach(word => {
-                const btn = document.createElement("button");
-                btn.textContent = word;
-                btn.className = "btn-match";
-
-                btn.onclick = () => handleClick(word, side, btn, col);
-
-                col.appendChild(btn);
-            });
-
-            return col;
-        };
-
-        const leftCol = makeColumn(leftWords, "left");
-        const rightCol = makeColumn(rightWords, "right");
-
-        function handleClick(word, side, btn, col) {
-            if (!selected || selected.side === side) {
-                selected = { word, side };
-                highlightSelection(btn, col);
-                return;
-            }
-
-            // match
-            const [left, right] = side === "left"
-                ? [word, selected.word]
-                : [selected.word, word];
-
-            // remove previous conflicting matches
-            Object.keys(pairs).forEach(k => {
-                if (pairs[k] === right) delete pairs[k];
-            });
-
-            pairs[left] = right;
-
-            selected = null;
-            updateUI();
-        }
-
-        function updateUI() {
-            [leftCol, rightCol].forEach(col =>
-                col.querySelectorAll("button")
-                    .forEach(b => b.classList.remove("correct", "wrong"))
-            );
-
-            let correctCount = 0;
-
-            for (const [turk, eng] of Object.entries(pairs)) {
-                const correct = sample.find(i => i["l-turk"] === turk)["l-eng"];
-
-                const leftBtn = [...leftCol.children].find(b => b.textContent === turk);
-                const rightBtn = [...rightCol.children].find(b => b.textContent === eng);
-
-                const isCorrect = eng === correct;
-
-                leftBtn.classList.add(isCorrect ? "correct" : "wrong");
-                rightBtn.classList.add(isCorrect ? "correct" : "wrong");
-                container.querySelectorAll("button").forEach(btn => {
-                    btn.classList.remove("selected");
-                    setTimeout(() => btn.blur(), 0);
-                });
-
-                if (isCorrect) {
-                    leftBtn.disabled = true;
-                    rightBtn.disabled = true;
-                    correctCount++;
-                }
-            }
-
-            if (correctCount === sample.length)
-                addNextButton();
-        }
-
-        container.append(leftCol, rightCol);
-        answersDiv.appendChild(container);
+        this.container.append(this.leftCol, this.rightCol);
+        answersDiv.appendChild(this.container);
     }
 
-    highlightSelection(selectedBtn, container) {
-        container.querySelectorAll("button").forEach(btn => btn.classList.remove("selected"));
+    makeColumn(words, side) {
+        const col = document.createElement("div");
+        col.classList.add("match-col");
+
+        words.forEach(word => {
+            const btn = document.createElement("button");
+            btn.textContent = word;
+            btn.className = "btn-match";
+
+            btn.onclick = () => this.handleClick(word, side, btn, col);
+
+            col.appendChild(btn);
+        });
+
+        return col;
+    }
+
+    handleClick(word, side, btn, col) {
+        if (!this.selected || this.selected.side === side) {
+            this.selected = { word, side };
+            this.highlightSelection(btn, col);
+            return;
+        }
+
+        // match
+        const [left, right] = side === "left"
+            ? [word, this.selected.word]
+            : [this.selected.word, word];
+
+        // remove previous conflicting matches
+        Object.keys(this.pairs).forEach(k => {
+            if (this.pairs[k] === right) delete this.pairs[k];
+        });
+
+        this.pairs[left] = right;
+
+        this.selected = null;
+
+        [this.leftCol, this.rightCol].forEach(col =>
+            col.querySelectorAll("button")
+                .forEach(b => b.classList.remove("correct", "wrong"))
+        );
+
+        let correctCount = 0;
+
+        for (const [turk, eng] of Object.entries(this.pairs)) {
+            const correct = this.sample.find(i => i["l-TR"] === turk)["l-EN"];
+
+            const leftBtn = [...this.leftCol.children].find(b => b.textContent === turk);
+            const rightBtn = [...this.rightCol.children].find(b => b.textContent === eng);
+
+            const isCorrect = eng === correct;
+
+            leftBtn.classList.add(isCorrect ? "correct" : "wrong");
+            rightBtn.classList.add(isCorrect ? "correct" : "wrong");
+            this.container.querySelectorAll("button").forEach(btn => {
+                btn.classList.remove("selected");
+                setTimeout(() => btn.blur(), 0);
+            });
+
+            if (isCorrect) {
+                leftBtn.disabled = true;
+                rightBtn.disabled = true;
+                correctCount++;
+            }
+        }
+
+        if (correctCount === this.sample.length)
+            addNextButton();
+    }
+
+    highlightSelection(selectedBtn) {
+        this.container.querySelectorAll("button").forEach(btn => btn.classList.remove("selected"));
         selectedBtn.classList.add("selected");
     }
 }
@@ -281,215 +276,237 @@ class ExerciseMatching {
 // 4. FILL IN THE BLANK
 //////////////////////////////////////////////////
 
-function fillBlanks() {
-    document.getElementById("title").textContent = "Fill in the blanks";
-    const answersDiv = document.getElementById("answers");
-    answersDiv.style = "display: flex; gap: 8px;";
-    const hintParagraph = document.getElementById("hint");
-    hintParagraph.style.display = "";
-    const buttonsDiv = document.getElementById("buttons");
+class ExerciseFillBlanks {
+    constructor() {
+        this.item = randomSentence();
+        this.data = new ExerciseData(this.item);
+        this.question = this.data.getLanguageEN();
+        this.answer = this.data.getLanguageTR();
+        this.words = this.answer.split(" ");
 
-    const item = randomSentence();
-    const sentence = item["l-turk"];
-    ANSWER = sentence;
-    const words = sentence.split(" ");
+        this.numBlanks = Math.min(Math.floor(Math.random() * 2) + 1, Math.max(1, this.words.length - 1))
+        this.numBlanksCovered = 0;
+        this.blankIndices = [];
+        this.correctGuesses = [];
+        this.displaySentenceWords = [];
+        this.blankStr = "______";
 
-    // Show English translation
-    const englishTranslation = item["l-eng"];
-    document.getElementById("question").innerHTML = englishTranslation;
-
-    // Randomly select 1 or 2 words to blank out (but less than total words)
-    const numBlanks = Math.min(Math.floor(Math.random() * 2) + 1, Math.max(1, words.length - 1))
-    let numBlanksCovered = 0;
-    const blankIndices = [];
-    while (blankIndices.length < numBlanks) {
-        const idx = Math.floor(Math.random() * words.length);
-        if (!blankIndices.includes(idx)) {
-            blankIndices.push(idx);
+        // Randomly select 1 or 2 words to blank out (but less than total words)
+        while (this.blankIndices.length < this.numBlanks) {
+            const idx = Math.floor(Math.random() * this.words.length);
+            if (!this.blankIndices.includes(idx)) {
+                this.blankIndices.push(idx);
+            }
         }
-    }
-    blankIndices.sort((a, b) => a - b);
+        this.blankIndices.sort((a, b) => a - b);
 
-    const blankStr = "______";
-    let correctGuesses = [];
-    let displaySentenceWords = [];
-    for (let i = 0; i < words.length; i++) {
-        if (blankIndices.includes(i)) {
-            correctGuesses.push(words[i]);
-            displaySentenceWords.push(blankStr);
-        } else {
-            displaySentenceWords.push(words[i]);
-        }
+        this.hintParagraph = document.getElementById("hint");
+        this.hintParagraph.innerHTML = "";
+        this.deleteBtn = document.createElement("button");
+        this.checkBtn = document.createElement("button");
+        this.buttons = [];
     }
 
-    hintParagraph.innerHTML = displaySentenceWords.join(" ");
+    do() {
+        document.getElementById("title").textContent = "Fill in the blanks";
+        document.getElementById("question").innerHTML = this.question;
+        const answersDiv = document.getElementById("answers");
+        answersDiv.style = "display: flex; gap: 8px;";
+        this.hintParagraph.style.display = "";
+        const buttonsDiv = document.getElementById("buttons");
 
-    const wrongGuesses = shuffle(INPUT_DATA)
-        .filter(i => i["type"] === "word")
-        .filter(i => i !== item)
-        .slice(0, 3)
-        .map(i => i["l-turk"]);
+        this.numBlanksCovered = 0;
+        this.correctGuesses = [];
+        this.displaySentenceWords = [];
+        for (let i = 0; i < this.words.length; i++) {
+            if (this.blankIndices.includes(i)) {
+                this.correctGuesses.push(this.words[i]);
+                this.displaySentenceWords.push(this.blankStr);
+            } else {
+                this.displaySentenceWords.push(this.words[i]);
+            }
+        }
 
-    const options = shuffle([...correctGuesses, ...wrongGuesses]);
+        this.hintParagraph.innerHTML = this.displaySentenceWords.join(" ");
 
-    const buttons = [];
-    options.forEach(word => {
-        const btn = document.createElement("button");
-        btn.textContent = word;
-        btn.onclick = () => { addWordToSentence(btn, word) };
-        buttons.push(btn);
-        answersDiv.appendChild(btn);
-    });
+        const wrongGuesses = shuffle(INPUT_DATA)
+            .filter(i => i["type"] === "word")
+            .filter(i => i !== this.item)
+            .slice(0, 3)
+            .map(i => i["l-TR"]);
 
-    const deleteBtn = document.createElement("button");
-    deleteBtn.textContent = "Delete";
-    deleteBtn.classList.add("btn-delete");
-    deleteBtn.onclick = deleteWord;
-    deleteBtn.disabled = true;
-    buttonsDiv.appendChild(deleteBtn);
+        const options = shuffle([...this.correctGuesses, ...wrongGuesses]);
 
-    const checkBtn = document.createElement("button");
-    checkBtn.textContent = "Check";
-    checkBtn.classList.add("btn-check");
-    checkBtn.onclick = checkResult;
-    checkBtn.disabled = true;
-    buttonsDiv.appendChild(checkBtn);
+        options.forEach(word => {
+            const btn = document.createElement("button");
+            btn.textContent = word;
+            btn.onclick = () => { this.addWordToSentence(btn, word) };
+            this.buttons.push(btn);
+            answersDiv.appendChild(btn);
+        });
 
-    function addWordToSentence(btn, word) {
-        const firstBlankIndex = displaySentenceWords.findIndex(str => str === blankStr);
+        this.deleteBtn.textContent = "Delete";
+        this.deleteBtn.classList.add("btn-delete");
+        this.deleteBtn.onclick = () => { this.deleteWord() };
+        this.deleteBtn.disabled = true;
+        buttonsDiv.appendChild(this.deleteBtn);
+
+        this.checkBtn.textContent = "Check";
+        this.checkBtn.classList.add("btn-check");
+        this.checkBtn.onclick = () => { this.checkResult() };
+        this.checkBtn.disabled = true;
+        buttonsDiv.appendChild(this.checkBtn);
+    }
+
+    addWordToSentence(btn, word) {
+        const firstBlankIndex = this.displaySentenceWords.findIndex(str => str === this.blankStr);
         if (firstBlankIndex !== -1) {
-            displaySentenceWords[firstBlankIndex] = word;
-            hintParagraph.innerHTML = displaySentenceWords.join(" ");
-            deleteBtn.disabled = false;
+            this.displaySentenceWords[firstBlankIndex] = word;
+            this.hintParagraph.innerHTML = this.displaySentenceWords.join(" ");
+            this.deleteBtn.disabled = false;
             btn.disabled = true;
-            numBlanksCovered++;
+            this.numBlanksCovered++;
         }
-        if (numBlanksCovered === numBlanks) {
-            checkBtn.disabled = false;
+        if (this.numBlanksCovered === this.numBlanks) {
+            this.checkBtn.disabled = false;
         }
     }
 
-    function deleteWord() {
-        let lastWordIndex = blankIndices[numBlanksCovered - 1];
-        for (btn of buttons) {
-            if (btn.textContent === displaySentenceWords[lastWordIndex])
+    deleteWord() {
+        let lastWordIndex = this.blankIndices[this.numBlanksCovered - 1];
+        this.buttons.forEach(btn => {
+            if (btn.textContent === this.displaySentenceWords[lastWordIndex])
                 btn.disabled = false;
-        }
-        displaySentenceWords[lastWordIndex] = blankStr;
-        hintParagraph.innerHTML = displaySentenceWords.join(" ");
-        numBlanksCovered--;
-        if (numBlanksCovered === 0)
-            deleteBtn.disabled = true;
-        checkBtn.disabled = true;
+        });
+        this.displaySentenceWords[lastWordIndex] = this.blankStr;
+        this.hintParagraph.innerHTML = this.displaySentenceWords.join(" ");
+        this.numBlanksCovered--;
+        if (this.numBlanksCovered === 0)
+            this.deleteBtn.disabled = true;
+        this.checkBtn.disabled = true;
     }
 
-    function checkResult() {
-        for (btn of buttons)
+    checkResult() {
+        this.buttons.forEach(btn => {
             btn.disabled = true;
-        deleteBtn.remove();
-        checkBtn.remove();
-        const result = displaySentenceWords.join(" ");
-        if (result !== ANSWER) {
-            hintParagraph.textContent = ANSWER;
-            hintParagraph.style.fontWeight = "bold";
+        });
+        this.deleteBtn.remove();
+        this.checkBtn.remove();
+        const result = this.displaySentenceWords.join(" ");
+        if (result !== this.answer) {
+            this.hintParagraph.textContent = this.answer;
+            this.hintParagraph.style.fontWeight = "bold";
+            saveMistake(this);
         }
-        addNextButton(result === ANSWER);
+        addNextButton(result === this.answer);
     }
 }
+
 
 //////////////////////////////////////////////////
 // 5. REORDER THE SENTENCE
 //////////////////////////////////////////////////
 
-function reorderSentence() {
-    document.getElementById("title").textContent = "Reorder the sentence";
-    const answersDiv = document.getElementById("answers");
-    answersDiv.style = "display: flex; gap: 8px;";
-    const hintParagraph = document.getElementById("hint");
-    hintParagraph.style.display = "";
-    const buttonsDiv = document.getElementById("buttons");
+class ExerciseReorderSentence {
+    constructor() {
+        this.item = randomSentence();
+        this.data = new ExerciseData(this.item);
+        this.question = this.data.getLanguageEN();
+        this.answer = this.data.getLanguageTR();
+        this.words = this.answer.split(" ");
+        this.shuffledWords = shuffle(this.words);
 
-    const item = randomSentence();
-    const sentence = item["l-turk"];
-    ANSWER = sentence;
-    const words = sentence.split(" ");
-    const shuffledWords = shuffle(words);
+        this.numBlanks = Math.min(Math.floor(Math.random() * 2) + 1, Math.max(1, this.words.length - 1))
+        this.blanks = [];
+        this.blankStr = "______";
 
-    // Show English translation
-    const englishTranslation = item["l-eng"];
-    document.getElementById("question").innerHTML = englishTranslation;
-
-    const blankStr = "______";
-    let blanks = [];
-    for (let i = 0; i < words.length; i++) {
-        blanks.push(blankStr);
+        this.hintParagraph = document.getElementById("hint");
+        this.hintParagraph.innerHTML = "";
+        this.deleteBtn = document.createElement("button");
+        this.checkBtn = document.createElement("button");
+        this.buttons = [];
     }
-    hintParagraph.innerHTML = blanks.join(" ");
 
-    const buttons = [];
-    shuffledWords.forEach(word => {
-        const btn = document.createElement("button");
-        btn.textContent = word;
-        btn.onclick = () => { addWordToSentence(btn, word) };
-        buttons.push(btn);
-        answersDiv.appendChild(btn);
-    });
+    do() {
+        document.getElementById("title").textContent = "Reorder the sentence";
+        const answersDiv = document.getElementById("answers");
+        answersDiv.style = "display: flex; gap: 8px;";
+        this.hintParagraph.style.display = "";
+        const buttonsDiv = document.getElementById("buttons");
 
-    const deleteBtn = document.createElement("button");
-    deleteBtn.textContent = "Delete";
-    deleteBtn.classList.add("btn-delete");
-    deleteBtn.onclick = deleteWord;
-    deleteBtn.disabled = true;
-    buttonsDiv.appendChild(deleteBtn);
+        // Show English translation
+        document.getElementById("question").innerHTML = this.question;
 
-    const checkBtn = document.createElement("button");
-    checkBtn.textContent = "Check";
-    checkBtn.classList.add("btn-check");
-    checkBtn.onclick = checkResult;
-    checkBtn.disabled = true;
-    buttonsDiv.appendChild(checkBtn);
+        this.blanks = [];
+        for (let i = 0; i < this.words.length; i++) {
+            this.blanks.push(this.blankStr);
+        }
+        this.hintParagraph.innerHTML = this.blanks.join(" ");
 
-    function addWordToSentence(btn, word) {
-        const firstBlankIndex = blanks.findIndex(str => str === blankStr);
+        this.shuffledWords.forEach(word => {
+            const btn = document.createElement("button");
+            btn.textContent = word;
+            btn.onclick = () => { this.addWordToSentence(btn, word) };
+            this.buttons.push(btn);
+            answersDiv.appendChild(btn);
+        });
+
+        this.deleteBtn.textContent = "Delete";
+        this.deleteBtn.classList.add("btn-delete");
+        this.deleteBtn.onclick = () => { this.deleteWord() };
+        this.deleteBtn.disabled = true;
+        buttonsDiv.appendChild(this.deleteBtn);
+
+        this.checkBtn.textContent = "Check";
+        this.checkBtn.classList.add("btn-check");
+        this.checkBtn.onclick = () => { this.checkResult() };
+        this.checkBtn.disabled = true;
+        buttonsDiv.appendChild(this.checkBtn);
+    }
+
+    addWordToSentence(btn, word) {
+        const firstBlankIndex = this.blanks.findIndex(str => str === this.blankStr);
         if (firstBlankIndex !== -1) {
-            blanks[firstBlankIndex] = word;
-            hintParagraph.innerHTML = blanks.join(" ");
-            deleteBtn.disabled = false;
+            this.blanks[firstBlankIndex] = word;
+            this.hintParagraph.innerHTML = this.blanks.join(" ");
+            this.deleteBtn.disabled = false;
             btn.disabled = true;
         }
-        if (firstBlankIndex == blanks.length - 1)
-            checkBtn.disabled = false;
+        if (firstBlankIndex == this.blanks.length - 1)
+            this.checkBtn.disabled = false;
     }
 
-    function deleteWord() {
-        const firstBlankIndex = blanks.findIndex(str => str === blankStr);
+    deleteWord() {
+        const firstBlankIndex = this.blanks.findIndex(str => str === this.blankStr);
         let lastWordIndex = 0;
         if (firstBlankIndex === -1)
-            lastWordIndex = blanks.length - 1;
+            lastWordIndex = this.blanks.length - 1;
         else
             lastWordIndex = firstBlankIndex - 1;
-        for (btn of buttons) {
-            if (btn.textContent === blanks[lastWordIndex])
+        this.buttons.forEach(btn => {
+            if (btn.textContent === this.blanks[lastWordIndex])
                 btn.disabled = false;
-        }
-        blanks[lastWordIndex] = blankStr;
-        hintParagraph.innerHTML = blanks.join(" ");
+        });
+        this.blanks[lastWordIndex] = this.blankStr;
+        this.hintParagraph.innerHTML = this.blanks.join(" ");
         if (lastWordIndex === 0)
-            deleteBtn.disabled = true;
-        checkBtn.disabled = true;
+            this.deleteBtn.disabled = true;
+        this.checkBtn.disabled = true;
     }
 
-    function checkResult() {
-        deleteBtn.remove();
-        checkBtn.remove();
-        const result = blanks.join(" ");
-        if (result !== ANSWER) {
-            hintParagraph.textContent = ANSWER;
-            hintParagraph.style.fontWeight = "bold";
+    checkResult() {
+        this.deleteBtn.remove();
+        this.checkBtn.remove();
+        const result = this.blanks.join(" ");
+        if (result !== this.answer) {
+            this.hintParagraph.textContent = this.answer;
+            this.hintParagraph.style.fontWeight = "bold";
+            saveMistake(this);
         }
-        addNextButton(result === ANSWER);
+        addNextButton(result === this.answer);
     }
 }
+
 
 //////////////////////////////////////////////////
 // UTILITY FUNCTIONS
@@ -568,12 +585,12 @@ function highlightDifferences(correct, user) {
     return html;
 }
 
+
 //////////////////////////////////////////////////
 // MAIN FLOW
 //////////////////////////////////////////////////
 
 function nextExercise() {
-    ANSWER = null;
     document.getElementById("question").innerHTML = "";
     document.getElementById("hint").innerHTML = "";
     document.getElementById("hint").style.display = "none";
@@ -583,14 +600,12 @@ function nextExercise() {
     clearButtonsDiv();
     skipEnable();
 
-    console.log("DONE:", numExercisesDone)
-    if (numExercisesDone > 0 && numExercisesDone % 3 === 0) {
+    if (numExercisesDone > 0 && numExercisesDone % NUM_EXERCISES_BEFORE_REVIEW === 0) {
         if (failedExercises.length == 0) {
             numExercisesDone = 0;
             nextExercise();
             return;
         }
-        console.log("REPEATING EXERCISE");
         repeatMistake();
         return;
     }
@@ -598,11 +613,11 @@ function nextExercise() {
     const types = [ExerciseTranslation, ExerciseTranslationWithGuesses, ExerciseMatching];
     const randomExercise = types[Math.floor(Math.random() * types.length)];
     exercise = new randomExercise();
-    // exercise.do();
+    exercise.do();
 
     // exercise = new ExerciseTranslation(); exercise.do();
     // exercise = new ExerciseTranslationWithGuesses(); exercise.do();
-    exercise = new ExerciseMatching(); exercise.do();
+    // exercise = new ExerciseMatching(); exercise.do();
     // exercise = new ExerciseFillBlanks(); exercise.do();
     // exercise = new ExerciseReorderSentence(); exercise.do();
 
@@ -623,7 +638,7 @@ function skipDisable() {
 }
 
 function saveMistake(exercise) {
-    if (failedExercises.length < 10)
+    if (failedExercises.length < MAX_FAILED_EXERCISES)
         failedExercises.push(exercise);
 }
 
@@ -635,8 +650,9 @@ function repeatMistake() {
 
 
 let INPUT_DATA = [];
-let ANSWER = null;
 let numExercisesDone = 0;
+const NUM_EXERCISES_BEFORE_REVIEW = 10;
+const MAX_FAILED_EXERCISES = 10;
 let failedExercises = [];
 
 async function init() {

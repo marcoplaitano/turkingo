@@ -18,7 +18,6 @@ Asked a LLM model to give some examples that I then collected in JSON format for
 ### Website
 
 + show answer when skipping exercise
-+ keep track of mistakes. after 10 lessons review mistakes
 
 ### Exercises
 
