@@ -36,6 +36,11 @@ class ExerciseTranslation {
         this.answer = this.data.getTranslation(this.question).trim().toLowerCase();
     }
 
+    showAnswer() {
+        this.input.disabled = true;
+        document.getElementById("feedback").textContent = this.answer;
+    }
+
     do() {
         this.checkBtn = document.createElement("button");
         this.input = document.createElement("input");
@@ -45,13 +50,13 @@ class ExerciseTranslation {
         this.checkBtn.textContent = "Check";
         this.checkBtn.classList.add("btn-check");
         this.checkBtn.disabled = true;
-        this.checkBtn.onclick = () => this.checkResult(this.input.value.trim().toLowerCase(), this.answer);
+        this.checkBtn.onclick = () => this.checkResult(this.input.value.trim().toLowerCase());
 
         this.input.placeholder = "Type...";
 
         this.input.addEventListener("keydown", e => {
             if (e.key === "Enter")
-                this.checkResult(this.input.value.trim().toLowerCase(), this.answer);
+                this.checkResult(this.input.value.trim().toLowerCase());
         });
         this.input.addEventListener("input", () => {
             this.checkBtn.disabled = this.input.value.trim() === "";
@@ -60,20 +65,20 @@ class ExerciseTranslation {
         document.getElementById("buttons").appendChild(this.checkBtn);
     }
 
-    checkResult(input, answer) {
+    checkResult(input) {
         if (input === "") return;
 
         this.checkBtn.remove();
         this.input.disabled = true;
 
         const normalizedInput = normalizeTurkish(input);
-        const normalizedAnswer = normalizeTurkish(answer);
+        const normalizedAnswer = normalizeTurkish(this.answer);
         const distance = levenshtein(normalizedInput, normalizedAnswer);
         const isCorrect = distance === 0;
         const hasMinorTypo = distance > 0 && distance <= 1;
 
-        if (input !== answer) {
-            document.getElementById("feedback").textContent = answer;
+        if (input !== this.answer) {
+            this.showAnswer();
         }
         if (!(isCorrect || hasMinorTypo))
             saveMistake(this);
@@ -99,6 +104,10 @@ class ExerciseTranslationWithGuesses {
             .slice(0, 3)
             .map(i => this.toTurkish ? i["l-TR"] : i["l-EN"]);
         this.correctOption = null;
+    }
+
+    showAnswer() {
+        this.correctOption.classList.add("correct");
     }
 
     do() {
@@ -142,7 +151,7 @@ class ExerciseTranslationWithGuesses {
             element.classList.add("correct");
         } else {
             element.classList.add("wrong");
-            this.correctOption.classList.add("correct");
+            this.showAnswer();
             saveMistake(this);
         }
         document.querySelectorAll(".btn-guess").forEach(b => b.disabled = true);
@@ -177,6 +186,8 @@ class ExerciseMatching {
         this.pairs = {};
         this.container = document.createElement("div");
     }
+
+    showAnswer() {}
 
     do() {
         document.getElementById("title").textContent = "Match the pairs";
@@ -307,6 +318,14 @@ class ExerciseFillBlanks {
         this.buttons = [];
     }
 
+    showAnswer() {
+        this.buttons.forEach(btn => {
+            btn.disabled = true;
+        });
+        this.hintParagraph.textContent = this.answer;
+        this.hintParagraph.style.fontWeight = "bold";
+    }
+
     do() {
         document.getElementById("title").textContent = "Fill in the blanks";
         document.getElementById("question").innerHTML = this.question;
@@ -394,8 +413,7 @@ class ExerciseFillBlanks {
         this.checkBtn.remove();
         const result = this.displaySentenceWords.join(" ");
         if (result !== this.answer) {
-            this.hintParagraph.textContent = this.answer;
-            this.hintParagraph.style.fontWeight = "bold";
+            this.showAnswer();
             saveMistake(this);
         }
         addNextButton(result === this.answer);
@@ -425,6 +443,14 @@ class ExerciseReorderSentence {
         this.deleteBtn = document.createElement("button");
         this.checkBtn = document.createElement("button");
         this.buttons = [];
+    }
+
+    showAnswer() {
+        this.buttons.forEach(btn => {
+            btn.disabled = true;
+        });
+        this.hintParagraph.textContent = this.answer;
+        this.hintParagraph.style.fontWeight = "bold";
     }
 
     do() {
@@ -499,8 +525,7 @@ class ExerciseReorderSentence {
         this.checkBtn.remove();
         const result = this.blanks.join(" ");
         if (result !== this.answer) {
-            this.hintParagraph.textContent = this.answer;
-            this.hintParagraph.style.fontWeight = "bold";
+            this.showAnswer();
             saveMistake(this);
         }
         addNextButton(result === this.answer);
@@ -612,20 +637,21 @@ function nextExercise() {
 
     const types = [ExerciseTranslation, ExerciseTranslationWithGuesses, ExerciseMatching];
     const randomExercise = types[Math.floor(Math.random() * types.length)];
-    exercise = new randomExercise();
-    exercise.do();
+    EXERCISE = new randomExercise();
+    EXERCISE.do();
 
-    // exercise = new ExerciseTranslation(); exercise.do();
-    // exercise = new ExerciseTranslationWithGuesses(); exercise.do();
-    // exercise = new ExerciseMatching(); exercise.do();
-    // exercise = new ExerciseFillBlanks(); exercise.do();
-    // exercise = new ExerciseReorderSentence(); exercise.do();
+    // EXERCISE = new ExerciseTranslation(); EXERCISE.do();
+    // EXERCISE = new ExerciseTranslationWithGuesses(); EXERCISE.do();
+    // EXERCISE = new ExerciseMatching(); EXERCISE.do();
+    // EXERCISE = new ExerciseFillBlanks(); EXERCISE.do();
+    // EXERCISE = new ExerciseReorderSentence(); EXERCISE.do();
 
     numExercisesDone++;
 }
 
 function skipExercise() {
-    nextExercise();
+    EXERCISE.showAnswer();
+    addNextButton();
 }
 
 function skipEnable() {
@@ -643,13 +669,14 @@ function saveMistake(exercise) {
 }
 
 function repeatMistake() {
-    exercise = failedExercises.at(0);
-    exercise.do();
+    EXERCISE = failedExercises.at(0);
+    EXERCISE.do();
     failedExercises.shift();
 }
 
 
 let INPUT_DATA = [];
+let EXERCISE = null;
 let numExercisesDone = 0;
 const NUM_EXERCISES_BEFORE_REVIEW = 10;
 const MAX_FAILED_EXERCISES = 10;

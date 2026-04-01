@@ -17,7 +17,8 @@ Asked a LLM model to give some examples that I then collected in JSON format for
 
 ### Website
 
-+ show answer when skipping exercise
++ Show exercise/error bar  
+    Count 10 exercises. If 10 correct show "good job". If any mistake, revise it.
 
 ### Exercises
 
