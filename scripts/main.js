@@ -24,6 +24,13 @@ class ExerciseData {
 }
 
 
+const ExerciseResult = {
+    CORRECT: "correct",
+    FAILED: "failed",
+    SKIPPED: "skipped"
+};
+
+
 
 //////////////////////////////////////////////////
 // 1. TRANSLATION
@@ -80,8 +87,7 @@ class ExerciseTranslation {
         if (input !== this.answer) {
             this.showAnswer();
         }
-        if (!(isCorrect || hasMinorTypo))
-            saveMistake(this);
+        saveResult((isCorrect || hasMinorTypo) ? ExerciseResult.CORRECT : ExerciseResult.FAILED);
         addNextButton(isCorrect || hasMinorTypo);
     }
 }
@@ -153,9 +159,9 @@ class ExerciseTranslationWithGuesses {
         } else {
             element.classList.add("wrong");
             this.showAnswer();
-            saveMistake(this);
         }
         document.querySelectorAll(".btn-guess").forEach(b => b.disabled = true);
+        saveResult(isCorrect ? ExerciseResult.CORRECT : ExerciseResult.FAILED);
         addNextButton();
     }
 }
@@ -273,8 +279,10 @@ class ExerciseMatching {
             }
         }
 
-        if (correctCount === this.sample.length)
+        if (correctCount === this.sample.length) {
+            saveResult(ExerciseResult.CORRECT);
             addNextButton();
+        }
     }
 
     highlightSelection(selectedBtn) {
@@ -415,8 +423,8 @@ class ExerciseFillBlanks {
         const result = this.displaySentenceWords.join(" ");
         if (result !== this.answer) {
             this.showAnswer();
-            saveMistake(this);
         }
+        saveResult(result !== this.answer ? ExerciseResult.FAILED : ExerciseResult.CORRECT);
         addNextButton(result === this.answer);
     }
 }
@@ -527,8 +535,8 @@ class ExerciseReorderSentence {
         const result = this.blanks.join(" ");
         if (result !== this.answer) {
             this.showAnswer();
-            saveMistake(this);
         }
+        saveResult(result !== this.answer ? ExerciseResult.FAILED : ExerciseResult.CORRECT);
         addNextButton(result === this.answer);
     }
 }
@@ -557,11 +565,25 @@ function addNextButton(correct=null) {
     skipDisable();
 }
 
+let step = 0;
 function updateProgressBar() {
-  const bar = document.getElementById("progress-bar");
-  bar.style.width = ((numExercisesDone / NUM_EXERCISES_PER_LESSON) * 100) + "%";
-  const label = document.getElementById("progress-label");
-  label.textContent = numExercisesDone + "/" + NUM_EXERCISES_PER_LESSON;
+    if (THIS_RESULT === null)
+        return;
+
+    const label = document.getElementById("progress-label");
+    label.textContent = numExercisesDone + "/" + NUM_EXERCISES_PER_LESSON;
+
+    const bar = document.getElementById("progress-bar");
+
+    const color = THIS_RESULT === ExerciseResult.CORRECT ? "var(--color-green)" : THIS_RESULT === ExerciseResult.FAILED ? "var(--color-red)" : "var(--color-text2)";
+    const segWidth = (bar.clientWidth - PROGRESS_BAR_GAP) / NUM_EXERCISES_PER_LESSON;
+    const seg = document.createElement("div");
+    seg.className = "progress-bar-segment";
+    seg.style.width = segWidth + "px";
+    seg.style.minWidth = segWidth + "px";
+    seg.style.background = color;
+    bar.appendChild(seg);
+
 }
 
 function clearButtonsDiv() {
@@ -574,6 +596,8 @@ function showEndLessonScreen() {
     document.getElementById("title").textContent = "Lesson Completed!";
     document.getElementById("question").textContent = "You completed the lesson! You can start again now";
     document.getElementById("progress-main-container").style.display = "none";
+    const progressBarSegments = document.getElementsByClassName("progress-bar-segment");
+    progressBarSegments.forEach(seg => seg.remove());
     addNextButton();
 }
 
@@ -648,8 +672,6 @@ function nextExercise() {
     updateProgressBar();
 
     if (numExercisesDone > 0 && numExercisesDone % NUM_EXERCISES_PER_LESSON === 0) {
-        if (numFailedExercises === 0)
-            numFailedExercises = failedExercises.length;
         if (failedExercises.length == 0) {
             endLesson();
             return;
@@ -674,6 +696,7 @@ function nextExercise() {
 
 function skipExercise() {
     EXERCISE.showAnswer();
+    saveResult(ExerciseResult.SKIPPED);
     addNextButton();
 }
 
@@ -697,11 +720,21 @@ function repeatMistake() {
     failedExercises.shift();
 }
 
+function saveResult(result) {
+    THIS_RESULT = result;
+    if (result === ExerciseResult.FAILED) {
+        saveMistake(EXERCISE);
+        numFailedExercises++;
+    }
+}
+
 
 const NUM_EXERCISES_PER_LESSON = 10;
 const MAX_FAILED_EXERCISES = 10;
+const PROGRESS_BAR_GAP = 3 * (NUM_EXERCISES_PER_LESSON - 1);
 let INPUT_DATA = [];
 let EXERCISE = null;
+let THIS_RESULT = null;
 
 let numExercisesDone = 0;
 let failedExercises = [];
