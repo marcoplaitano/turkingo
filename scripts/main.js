@@ -670,11 +670,27 @@ function clearButtonsDiv() {
     buttons.forEach(btn => btn.remove());
 }
 
-async function showEndLessonScreen() {
+async function showEndLessonScreen(offerRevise = false) {
     document.getElementById("title").textContent = "Lesson Completed!";
     document.getElementById("question").textContent = getEndMessage(numExercisesFailed, numExercisesSkipped, NUM_EXERCISES_PER_LESSON);
     return new Promise((resolve) => {
-        addNextButton(resolve);
+        if (offerRevise) {
+            const reviseBtn = document.createElement("button");
+            reviseBtn.textContent = "Revise mistakes";
+            reviseBtn.className = "btn-next";
+            reviseBtn.onclick = () => resolve("revise");
+
+            const nextLessonBtn = document.createElement("button");
+            nextLessonBtn.textContent = "Next lesson";
+            nextLessonBtn.className = "btn-next";
+            nextLessonBtn.onclick = () => resolve("next");
+
+            document.getElementById("buttons").appendChild(reviseBtn);
+            document.getElementById("buttons").appendChild(nextLessonBtn);
+            skipDisable();
+        } else {
+            addNextButton(resolve);
+        }
     });
 }
 
@@ -683,24 +699,24 @@ async function showEndLessonScreen() {
 // MAIN FLOW
 //////////////////////////////////////////////////
 
-async function startLesson() {
+function resetLessonProgress() {
     THIS_RESULT = null;
     numExercisesDone = 0;
     numExercisesFailed = 0;
     failedExercises = [];
     numExercisesSkipped = 0;
+    lessonEndedWithReviseChoice = false;
     updateProgressBar();
+}
+
+async function startLesson() {
+    resetLessonProgress();
     await cycleExercises();
 }
 
 async function endLesson() {
     await showEndLessonScreen();
-    THIS_RESULT = null;
-    numExercisesDone = 0;
-    numExercisesFailed = 0;
-    failedExercises = [];
-    numExercisesSkipped = 0;
-    updateProgressBar();
+    resetLessonProgress();
 }
 
 async function cycleExercises() {
@@ -717,10 +733,23 @@ async function cycleExercises() {
         skipEnable();
 
         if (numExercisesDone === NUM_EXERCISES_PER_LESSON) {
-            if (failedExercises.length == 0) {
-                await endLesson();
+            if (failedExercises.length === 0) {
+                if (lessonEndedWithReviseChoice) {
+                    resetLessonProgress();
+                } else {
+                    await endLesson();
+                }
                 continue;
             }
+            if (!lessonEndedWithReviseChoice) {
+                const choice = await showEndLessonScreen(true);
+                if (choice === "next") {
+                    resetLessonProgress();
+                    continue;
+                }
+            }
+            lessonEndedWithReviseChoice = true;
+            clearButtonsDiv();
             await reviseMistake();
             continue;
         }
@@ -795,6 +824,8 @@ let numExercisesDone = 0;
 let failedExercises = [];
 let numExercisesFailed = 0;
 let numExercisesSkipped = 0;
+/** True after the two-button lesson end was shown with mistakes pending (skip duplicate completion screen when queue clears). */
+let lessonEndedWithReviseChoice = false;
 
 async function init() {
     const label = document.getElementById("progress-label");

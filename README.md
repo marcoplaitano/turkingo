@@ -17,8 +17,6 @@ Asked a LLM model to give some examples that I then collected in JSON format for
 
 ### Website
 
-+ Ask user whether to revise mistakes or go to next lesson
-
 ### Exercises
 
 + new exercise type: given a word form the plural
@@ -29,6 +27,7 @@ Asked a LLM model to give some examples that I then collected in JSON format for
 
 + increase dataset size
 + categorize by topic/difficulty
++ more end-of-lesson sentences
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
