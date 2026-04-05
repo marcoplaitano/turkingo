@@ -15,7 +15,7 @@ function setTheme(theme, save=false) {
     setTheme(q.matches ? "dark" : "light", false)
   } else return
   try {
-    document.querySelector('meta[name="theme-color"]').setAttribute("content", theme === "dark" ? "#18191A" : "#F8F9FA")
+    document.querySelector('meta[name="theme-color"]').setAttribute("content", theme === "dark" ? "#1E1E2E" : "#EFF1F5")
   }
   catch {}
 }
