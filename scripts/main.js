@@ -746,9 +746,11 @@ async function skipExercise() {
     await new Promise((resolve) => {
         addNextButton(resolve);
     });
-    numExercisesDone++;
-    numExercisesSkipped++;
-    updateProgressBar();
+    if (numExercisesDone < NUM_EXERCISES_PER_LESSON) {
+        numExercisesDone++;
+        numExercisesSkipped++;
+        updateProgressBar();
+    }
     await cycleExercises();
 }
 
