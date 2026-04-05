@@ -565,7 +565,6 @@ function addNextButton(correct=null) {
     skipDisable();
 }
 
-let step = 0;
 function updateProgressBar() {
     if (THIS_RESULT === null)
         return;
@@ -574,7 +573,6 @@ function updateProgressBar() {
     label.textContent = numExercisesDone + "/" + NUM_EXERCISES_PER_LESSON;
 
     const bar = document.getElementById("progress-bar");
-
     const color = THIS_RESULT === ExerciseResult.CORRECT ? "var(--color-green)" : THIS_RESULT === ExerciseResult.FAILED ? "var(--color-red)" : "var(--color-text2)";
     const segWidth = (bar.clientWidth - PROGRESS_BAR_GAP) / NUM_EXERCISES_PER_LESSON;
     const seg = document.createElement("div");
@@ -583,7 +581,6 @@ function updateProgressBar() {
     seg.style.minWidth = segWidth + "px";
     seg.style.background = color;
     bar.appendChild(seg);
-
 }
 
 function clearButtonsDiv() {
@@ -596,7 +593,7 @@ function showEndLessonScreen() {
     document.getElementById("title").textContent = "Lesson Completed!";
     document.getElementById("question").textContent = "You completed the lesson! You can start again now";
     document.getElementById("progress-main-container").style.display = "none";
-    const progressBarSegments = document.getElementsByClassName("progress-bar-segment");
+    const progressBarSegments = document.querySelectorAll(".progress-bar-segment");
     progressBarSegments.forEach(seg => seg.remove());
     addNextButton();
 }
@@ -648,6 +645,7 @@ function levenshtein(a, b) {
 //////////////////////////////////////////////////
 
 function startLesson() {
+    THIS_RESULT = null;
     numExercisesDone = 0;
     numFailedExercises = 0;
     failedExercises = [];
@@ -655,7 +653,6 @@ function startLesson() {
 }
 
 function endLesson() {
-    numExercisesDone = 0;
     showEndLessonScreen();
 }
 
@@ -671,12 +668,12 @@ function nextExercise() {
     skipEnable();
     updateProgressBar();
 
-    if (numExercisesDone > 0 && numExercisesDone % NUM_EXERCISES_PER_LESSON === 0) {
+    if (numExercisesDone === NUM_EXERCISES_PER_LESSON) {
         if (failedExercises.length == 0) {
             endLesson();
             return;
         }
-        repeatMistake();
+        reviseMistake();
         return;
     }
 
@@ -714,7 +711,7 @@ function saveMistake(exercise) {
         failedExercises.push(exercise);
 }
 
-function repeatMistake() {
+function reviseMistake() {
     EXERCISE = failedExercises.at(0);
     EXERCISE.do();
     failedExercises.shift();
@@ -730,7 +727,7 @@ function saveResult(result) {
 
 
 const NUM_EXERCISES_PER_LESSON = 10;
-const MAX_FAILED_EXERCISES = 10;
+const MAX_FAILED_EXERCISES = NUM_EXERCISES_PER_LESSON;
 const PROGRESS_BAR_GAP = 3 * (NUM_EXERCISES_PER_LESSON - 1);
 let INPUT_DATA = [];
 let EXERCISE = null;
