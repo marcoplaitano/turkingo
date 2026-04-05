@@ -1,3 +1,47 @@
+
+
+
+//////////////////////////////////////////////////
+// UTILITY FUNCTIONS
+//////////////////////////////////////////////////
+
+function randomItem() {
+    return INPUT_DATA[Math.floor(Math.random() * INPUT_DATA.length)];
+}
+
+function randomWordOrPhrase() {
+    const samples = INPUT_DATA.filter(item => item.type !== "sentence");
+    return samples[Math.floor(Math.random() * samples.length)];
+}
+
+function randomSentence() {
+    const samples = INPUT_DATA.filter(item => item.type === "sentence");
+    return samples[Math.floor(Math.random() * samples.length)];
+}
+
+function shuffle(arr) {
+    return arr.sort(() => Math.random() - 0.5);
+}
+
+function normalizeTurkish(str) {
+    const map = { "ç": "c", "Ç": "C", "ğ": "g", "Ğ": "G", "ı": "i", "İ": "i", "ö": "o", "Ö": "O", "ş": "s", "Ş": "S", "ü": "u", "Ü": "U" };
+    return str.split("").map(c => map[c] || c).join("").toLowerCase();
+}
+
+function levenshtein(a, b) {
+    const matrix = Array(b.length + 1).fill().map(() => Array(a.length + 1).fill(0));
+    for (let i = 0; i <= a.length; i++) matrix[0][i] = i;
+    for (let j = 0; j <= b.length; j++) matrix[j][0] = j;
+    for (let j = 1; j <= b.length; j++) {
+        for (let i = 1; i <= a.length; i++) {
+            const cost = a[i - 1] === b[j - 1] ? 0 : 1;
+            matrix[j][i] = Math.min(matrix[j][i - 1] + 1, matrix[j - 1][i] + 1, matrix[j - 1][i - 1] + cost);
+        }
+    }
+    return matrix[b.length][a.length];
+}
+
+
 class ExerciseData {
     constructor(data) {
         this.data = data;
@@ -49,30 +93,35 @@ class ExerciseTranslation {
     }
 
     do() {
-        this.checkBtn = document.createElement("button");
-        this.input = document.createElement("input");
-        document.getElementById("title").textContent = "Translate";
-        document.getElementById("question").textContent = this.question;
+        return new Promise((resolve) => {
+            this.checkBtn = document.createElement("button");
+            this.input = document.createElement("input");
+            document.getElementById("title").textContent = "Translate";
+            document.getElementById("question").textContent = this.question;
 
-        this.checkBtn.textContent = "Check";
-        this.checkBtn.classList.add("btn-check");
-        this.checkBtn.disabled = true;
-        this.checkBtn.onclick = () => this.checkResult(this.input.value.trim().toLowerCase());
+            this.checkBtn.textContent = "Check";
+            this.checkBtn.classList.add("btn-check");
+            this.checkBtn.disabled = true;
+            this.checkBtn.onclick = () => {
+                this.checkResult(this.input.value.trim().toLowerCase(), resolve);
+            };
 
-        this.input.placeholder = "Type...";
+            this.input.placeholder = "Type...";
 
-        this.input.addEventListener("keydown", e => {
-            if (e.key === "Enter")
-                this.checkResult(this.input.value.trim().toLowerCase());
+            this.input.addEventListener("keydown", e => {
+                if (e.key === "Enter") {
+                    this.checkResult(this.input.value.trim().toLowerCase(), resolve);
+                }
+            });
+            this.input.addEventListener("input", () => {
+                this.checkBtn.disabled = this.input.value.trim() === "";
+            });
+            document.getElementById("answers").appendChild(this.input);
+            document.getElementById("buttons").appendChild(this.checkBtn);
         });
-        this.input.addEventListener("input", () => {
-            this.checkBtn.disabled = this.input.value.trim() === "";
-        });
-        document.getElementById("answers").appendChild(this.input);
-        document.getElementById("buttons").appendChild(this.checkBtn);
     }
 
-    checkResult(input) {
+    checkResult(input, resolve) {
         if (input === "") return;
 
         this.checkBtn.remove();
@@ -88,7 +137,7 @@ class ExerciseTranslation {
             this.showAnswer();
         }
         saveResult((isCorrect || hasMinorTypo) ? ExerciseResult.CORRECT : ExerciseResult.FAILED);
-        addNextButton(isCorrect || hasMinorTypo);
+        addNextButton(resolve);
     }
 }
 
@@ -118,25 +167,27 @@ class ExerciseTranslationWithGuesses {
     }
 
     do() {
-        this.checkBtn = document.createElement("button");
-        this.input = document.createElement("input");
-        document.getElementById("title").textContent = "Match the translation";
+        return new Promise((resolve) => {
+            this.checkBtn = document.createElement("button");
+            this.input = document.createElement("input");
+            document.getElementById("title").textContent = "Match the translation";
 
-        const options = shuffle([this.answer, ...this.wrongGuesses]);
+            const options = shuffle([this.answer, ...this.wrongGuesses]);
 
-        document.getElementById("question").textContent = this.question;
+            document.getElementById("question").textContent = this.question;
 
-        const container = document.createElement("div");
-        container.style.cssText = "display:flex;justify-content:space-between";
+            const container = document.createElement("div");
+            container.style.cssText = "display:flex;justify-content:space-between";
 
-        const leftCol = this.makeColumn(options.slice(0, 2));
-        const rightCol = this.makeColumn(options.slice(2));
-        container.append(leftCol, rightCol);
+            const leftCol = this.makeColumn(options.slice(0, 2), resolve);
+            const rightCol = this.makeColumn(options.slice(2), resolve);
+            container.append(leftCol, rightCol);
 
-        document.getElementById("answers").appendChild(container);
+            document.getElementById("answers").appendChild(container);
+        });
     }
 
-    makeColumn(words) {
+    makeColumn(words, resolve) {
         const col = document.createElement("div");
         words.forEach(word => {
             const btn = document.createElement("button");
@@ -144,16 +195,17 @@ class ExerciseTranslationWithGuesses {
             btn.textContent = word;
             if (word === this.answer)
                 this.correctOption = btn;
-            btn.onclick = () => this.showResult(btn, word === this.answer);
+            btn.onclick = () => this.showResult(btn, word === this.answer, resolve);
             btn.addEventListener("keydown", e => {
-                if (e.key === "Enter") this.showResult(btn, word === this.answer);
+                if (e.key === "Enter")
+                    this.showResult(btn, word === this.answer, resolve);
             });
             col.appendChild(btn);
         });
         return col;
     }
 
-    showResult(element, isCorrect) {
+    showResult(element, isCorrect, resolve) {
         if (isCorrect) {
             element.classList.add("correct");
         } else {
@@ -162,7 +214,7 @@ class ExerciseTranslationWithGuesses {
         }
         document.querySelectorAll(".btn-guess").forEach(b => b.disabled = true);
         saveResult(isCorrect ? ExerciseResult.CORRECT : ExerciseResult.FAILED);
-        addNextButton();
+        addNextButton(resolve);
     }
 }
 
@@ -197,22 +249,24 @@ class ExerciseMatching {
     showAnswer() {}
 
     do() {
-        document.getElementById("title").textContent = "Match the pairs";
-        const answersDiv = document.getElementById("answers");
+        return new Promise((resolve) => {
+            document.getElementById("title").textContent = "Match the pairs";
+            const answersDiv = document.getElementById("answers");
 
-        const leftWords = this.sample.map(i => i["l-TR"]);
-        const rightWords = shuffle(this.sample.map(i => i["l-EN"]));
+            const leftWords = this.sample.map(i => i["l-TR"]);
+            const rightWords = shuffle(this.sample.map(i => i["l-EN"]));
 
-        this.container.style.cssText = "display:flex;justify-content:space-between";
+            this.container.style.cssText = "display:flex;justify-content:space-between";
 
-        this.leftCol = this.makeColumn(leftWords, "left");
-        this.rightCol = this.makeColumn(rightWords, "right");
+            this.leftCol = this.makeColumn(leftWords, "left", resolve);
+            this.rightCol = this.makeColumn(rightWords, "right", resolve);
 
-        this.container.append(this.leftCol, this.rightCol);
-        answersDiv.appendChild(this.container);
+            this.container.append(this.leftCol, this.rightCol);
+            answersDiv.appendChild(this.container);
+        });
     }
 
-    makeColumn(words, side) {
+    makeColumn(words, side, resolve) {
         const col = document.createElement("div");
         col.classList.add("match-col");
 
@@ -221,7 +275,7 @@ class ExerciseMatching {
             btn.textContent = word;
             btn.className = "btn-match";
 
-            btn.onclick = () => this.handleClick(word, side, btn, col);
+            btn.onclick = () => this.handleClick(word, side, btn, col, resolve);
 
             col.appendChild(btn);
         });
@@ -229,7 +283,7 @@ class ExerciseMatching {
         return col;
     }
 
-    handleClick(word, side, btn, col) {
+    handleClick(word, side, btn, col, resolve) {
         if (!this.selected || this.selected.side === side) {
             this.selected = { word, side };
             this.highlightSelection(btn, col);
@@ -281,7 +335,7 @@ class ExerciseMatching {
 
         if (correctCount === this.sample.length) {
             saveResult(ExerciseResult.CORRECT);
-            addNextButton();
+            addNextButton(resolve);
         }
     }
 
@@ -336,54 +390,58 @@ class ExerciseFillBlanks {
     }
 
     do() {
-        document.getElementById("title").textContent = "Fill in the blanks";
-        document.getElementById("question").innerHTML = this.question;
-        const answersDiv = document.getElementById("answers");
-        answersDiv.style = "display: flex; gap: 8px;";
-        this.hintParagraph.style.display = "";
-        const buttonsDiv = document.getElementById("buttons");
+        return new Promise((resolve) => {
+            document.getElementById("title").textContent = "Fill in the blanks";
+            document.getElementById("question").innerHTML = this.question;
+            const answersDiv = document.getElementById("answers");
+            answersDiv.style = "display: flex; gap: 8px;";
+            this.hintParagraph.style.display = "";
+            const buttonsDiv = document.getElementById("buttons");
 
-        this.numBlanksCovered = 0;
-        this.correctGuesses = [];
-        this.displaySentenceWords = [];
-        for (let i = 0; i < this.words.length; i++) {
-            if (this.blankIndices.includes(i)) {
-                this.correctGuesses.push(this.words[i]);
-                this.displaySentenceWords.push(this.blankStr);
-            } else {
-                this.displaySentenceWords.push(this.words[i]);
+            this.numBlanksCovered = 0;
+            this.correctGuesses = [];
+            this.displaySentenceWords = [];
+            for (let i = 0; i < this.words.length; i++) {
+                if (this.blankIndices.includes(i)) {
+                    this.correctGuesses.push(this.words[i]);
+                    this.displaySentenceWords.push(this.blankStr);
+                } else {
+                    this.displaySentenceWords.push(this.words[i]);
+                }
             }
-        }
 
-        this.hintParagraph.innerHTML = this.displaySentenceWords.join(" ");
+            this.hintParagraph.innerHTML = this.displaySentenceWords.join(" ");
 
-        const wrongGuesses = shuffle(INPUT_DATA)
-            .filter(i => i["type"] === "word")
-            .filter(i => i !== this.item)
-            .slice(0, 3)
-            .map(i => i["l-TR"]);
+            const wrongGuesses = shuffle(INPUT_DATA)
+                .filter(i => i["type"] === "word")
+                .filter(i => i !== this.item)
+                .slice(0, 3)
+                .map(i => i["l-TR"]);
 
-        const options = shuffle([...this.correctGuesses, ...wrongGuesses]);
+            const options = shuffle([...this.correctGuesses, ...wrongGuesses]);
 
-        options.forEach(word => {
-            const btn = document.createElement("button");
-            btn.textContent = word;
-            btn.onclick = () => { this.addWordToSentence(btn, word) };
-            this.buttons.push(btn);
-            answersDiv.appendChild(btn);
+            options.forEach(word => {
+                const btn = document.createElement("button");
+                btn.textContent = word;
+                btn.onclick = () => { this.addWordToSentence(btn, word) };
+                this.buttons.push(btn);
+                answersDiv.appendChild(btn);
+            });
+
+            this.deleteBtn.textContent = "Delete";
+            this.deleteBtn.classList.add("btn-delete");
+            this.deleteBtn.onclick = () => { this.deleteWord() };
+            this.deleteBtn.disabled = true;
+            buttonsDiv.appendChild(this.deleteBtn);
+
+            this.checkBtn.textContent = "Check";
+            this.checkBtn.classList.add("btn-check");
+            this.checkBtn.onclick = () => {
+                this.checkResult(resolve);
+            };
+            this.checkBtn.disabled = true;
+            buttonsDiv.appendChild(this.checkBtn);
         });
-
-        this.deleteBtn.textContent = "Delete";
-        this.deleteBtn.classList.add("btn-delete");
-        this.deleteBtn.onclick = () => { this.deleteWord() };
-        this.deleteBtn.disabled = true;
-        buttonsDiv.appendChild(this.deleteBtn);
-
-        this.checkBtn.textContent = "Check";
-        this.checkBtn.classList.add("btn-check");
-        this.checkBtn.onclick = () => { this.checkResult() };
-        this.checkBtn.disabled = true;
-        buttonsDiv.appendChild(this.checkBtn);
     }
 
     addWordToSentence(btn, word) {
@@ -414,7 +472,7 @@ class ExerciseFillBlanks {
         this.checkBtn.disabled = true;
     }
 
-    checkResult() {
+    checkResult(resolve) {
         this.buttons.forEach(btn => {
             btn.disabled = true;
         });
@@ -425,7 +483,7 @@ class ExerciseFillBlanks {
             this.showAnswer();
         }
         saveResult(result !== this.answer ? ExerciseResult.FAILED : ExerciseResult.CORRECT);
-        addNextButton(result === this.answer);
+        addNextButton(resolve);
     }
 }
 
@@ -463,40 +521,44 @@ class ExerciseReorderSentence {
     }
 
     do() {
-        document.getElementById("title").textContent = "Reorder the sentence";
-        const answersDiv = document.getElementById("answers");
-        answersDiv.style = "display: flex; gap: 8px;";
-        this.hintParagraph.style.display = "";
-        const buttonsDiv = document.getElementById("buttons");
+        return new Promise((resolve) => {
+            document.getElementById("title").textContent = "Reorder the sentence";
+            const answersDiv = document.getElementById("answers");
+            answersDiv.style = "display: flex; gap: 8px;";
+            this.hintParagraph.style.display = "";
+            const buttonsDiv = document.getElementById("buttons");
 
-        // Show English translation
-        document.getElementById("question").innerHTML = this.question;
+            // Show English translation
+            document.getElementById("question").innerHTML = this.question;
 
-        this.blanks = [];
-        for (let i = 0; i < this.words.length; i++) {
-            this.blanks.push(this.blankStr);
-        }
-        this.hintParagraph.innerHTML = this.blanks.join(" ");
+            this.blanks = [];
+            for (let i = 0; i < this.words.length; i++) {
+                this.blanks.push(this.blankStr);
+            }
+            this.hintParagraph.innerHTML = this.blanks.join(" ");
 
-        this.shuffledWords.forEach(word => {
-            const btn = document.createElement("button");
-            btn.textContent = word;
-            btn.onclick = () => { this.addWordToSentence(btn, word) };
-            this.buttons.push(btn);
-            answersDiv.appendChild(btn);
+            this.shuffledWords.forEach(word => {
+                const btn = document.createElement("button");
+                btn.textContent = word;
+                btn.onclick = () => { this.addWordToSentence(btn, word) };
+                this.buttons.push(btn);
+                answersDiv.appendChild(btn);
+            });
+
+            this.deleteBtn.textContent = "Delete";
+            this.deleteBtn.classList.add("btn-delete");
+            this.deleteBtn.onclick = () => { this.deleteWord() };
+            this.deleteBtn.disabled = true;
+            buttonsDiv.appendChild(this.deleteBtn);
+
+            this.checkBtn.textContent = "Check";
+            this.checkBtn.classList.add("btn-check");
+            this.checkBtn.onclick = () => {
+                this.checkResult(resolve);
+            };
+            this.checkBtn.disabled = true;
+            buttonsDiv.appendChild(this.checkBtn);
         });
-
-        this.deleteBtn.textContent = "Delete";
-        this.deleteBtn.classList.add("btn-delete");
-        this.deleteBtn.onclick = () => { this.deleteWord() };
-        this.deleteBtn.disabled = true;
-        buttonsDiv.appendChild(this.deleteBtn);
-
-        this.checkBtn.textContent = "Check";
-        this.checkBtn.classList.add("btn-check");
-        this.checkBtn.onclick = () => { this.checkResult() };
-        this.checkBtn.disabled = true;
-        buttonsDiv.appendChild(this.checkBtn);
     }
 
     addWordToSentence(btn, word) {
@@ -529,7 +591,7 @@ class ExerciseReorderSentence {
         this.checkBtn.disabled = true;
     }
 
-    checkResult() {
+    checkResult(resolve) {
         this.deleteBtn.remove();
         this.checkBtn.remove();
         const result = this.blanks.join(" ");
@@ -537,7 +599,7 @@ class ExerciseReorderSentence {
             this.showAnswer();
         }
         saveResult(result !== this.answer ? ExerciseResult.FAILED : ExerciseResult.CORRECT);
-        addNextButton(result === this.answer);
+        addNextButton(resolve);
     }
 }
 
@@ -546,17 +608,18 @@ class ExerciseReorderSentence {
 // UI FUNCTIONS
 //////////////////////////////////////////////////
 
-function addNextButton(correct=null) {
+function addNextButton(resolve) {
     const nextBtn = document.createElement("button");
     nextBtn.textContent = "Next";
     nextBtn.className = "btn-next";
-    nextBtn.onclick = nextExercise;
+    nextBtn.onclick = () => {
+        resolve();
+    };
 
-    if (correct !== null)
-        if (correct)
-            nextBtn.classList.add("correct");
-        else
-            nextBtn.classList.add("wrong");
+    if (THIS_RESULT === ExerciseResult.CORRECT)
+        nextBtn.classList.add("correct");
+    else if (THIS_RESULT === ExerciseResult.FAILED)
+        nextBtn.classList.add("wrong");
 
     document.getElementById("buttons").appendChild(nextBtn);
     document.querySelectorAll(".btn-delete").forEach(el => el.remove());
@@ -566,11 +629,11 @@ function addNextButton(correct=null) {
 }
 
 function updateProgressBar() {
-    if (THIS_RESULT === null)
-        return;
-
     const label = document.getElementById("progress-label");
     label.textContent = numExercisesDone + "/" + NUM_EXERCISES_PER_LESSON;
+
+    if (THIS_RESULT === null)
+        return;
 
     const bar = document.getElementById("progress-bar");
     const color = THIS_RESULT === ExerciseResult.CORRECT ? "var(--color-green)" : THIS_RESULT === ExerciseResult.FAILED ? "var(--color-red)" : "var(--color-text2)";
@@ -589,54 +652,15 @@ function clearButtonsDiv() {
     buttons.forEach(btn => btn.remove());
 }
 
-function showEndLessonScreen() {
+async function showEndLessonScreen() {
     document.getElementById("title").textContent = "Lesson Completed!";
     document.getElementById("question").textContent = "You completed the lesson! You can start again now";
     document.getElementById("bottom-menu-container").style.display = "none";
     const progressBarSegments = document.querySelectorAll(".progress-bar-segment");
     progressBarSegments.forEach(seg => seg.remove());
-    addNextButton();
-}
-
-
-//////////////////////////////////////////////////
-// UTILITY FUNCTIONS
-//////////////////////////////////////////////////
-
-function randomItem() {
-    return INPUT_DATA[Math.floor(Math.random() * INPUT_DATA.length)];
-}
-
-function randomWordOrPhrase() {
-    const samples = INPUT_DATA.filter(item => item.type !== "sentence");
-    return samples[Math.floor(Math.random() * samples.length)];
-}
-
-function randomSentence() {
-    const samples = INPUT_DATA.filter(item => item.type === "sentence");
-    return samples[Math.floor(Math.random() * samples.length)];
-}
-
-function shuffle(arr) {
-    return arr.sort(() => Math.random() - 0.5);
-}
-
-function normalizeTurkish(str) {
-    const map = { "ç": "c", "Ç": "C", "ğ": "g", "Ğ": "G", "ı": "i", "İ": "i", "ö": "o", "Ö": "O", "ş": "s", "Ş": "S", "ü": "u", "Ü": "U" };
-    return str.split("").map(c => map[c] || c).join("").toLowerCase();
-}
-
-function levenshtein(a, b) {
-    const matrix = Array(b.length + 1).fill().map(() => Array(a.length + 1).fill(0));
-    for (let i = 0; i <= a.length; i++) matrix[0][i] = i;
-    for (let j = 0; j <= b.length; j++) matrix[j][0] = j;
-    for (let j = 1; j <= b.length; j++) {
-        for (let i = 1; i <= a.length; i++) {
-            const cost = a[i - 1] === b[j - 1] ? 0 : 1;
-            matrix[j][i] = Math.min(matrix[j][i - 1] + 1, matrix[j - 1][i] + 1, matrix[j - 1][i - 1] + cost);
-        }
-    }
-    return matrix[b.length][a.length];
+    return new Promise((resolve) => {
+        addNextButton(resolve);
+    });
 }
 
 
@@ -644,57 +668,70 @@ function levenshtein(a, b) {
 // MAIN FLOW
 //////////////////////////////////////////////////
 
-function startLesson() {
+async function startLesson() {
     THIS_RESULT = null;
     numExercisesDone = 0;
     numFailedExercises = 0;
     failedExercises = [];
-    nextExercise();
-}
-
-function endLesson() {
-    showEndLessonScreen();
-}
-
-function nextExercise() {
-    document.getElementById("question").innerHTML = "";
-    document.getElementById("hint").innerHTML = "";
-    document.getElementById("hint").style.display = "none";
-    document.getElementById("hint").style.fontWeight = "normal";
-    document.getElementById("answers").innerHTML = "";
-    document.getElementById("feedback").textContent = "";
-    document.getElementById("bottom-menu-container").style.display = "";
-    clearButtonsDiv();
-    skipEnable();
     updateProgressBar();
-
-    if (numExercisesDone === NUM_EXERCISES_PER_LESSON) {
-        if (failedExercises.length == 0) {
-            endLesson();
-            return;
-        }
-        reviseMistake();
-        return;
-    }
-
-    const types = [ExerciseTranslation, ExerciseTranslationWithGuesses, ExerciseMatching, ExerciseFillBlanks, ExerciseReorderSentence];
-    const randomExercise = types[Math.floor(Math.random() * types.length)];
-    EXERCISE = new randomExercise();
-    EXERCISE.do();
-
-    // EXERCISE = new ExerciseTranslation(); EXERCISE.do();
-    // EXERCISE = new ExerciseTranslationWithGuesses(); EXERCISE.do();
-    // EXERCISE = new ExerciseMatching(); EXERCISE.do();
-    // EXERCISE = new ExerciseFillBlanks(); EXERCISE.do();
-    // EXERCISE = new ExerciseReorderSentence(); EXERCISE.do();
-
-    numExercisesDone++;
+    await cycleExercises();
 }
 
-function skipExercise() {
+async function endLesson() {
+    THIS_RESULT = null;
+    numExercisesDone = 0;
+    numFailedExercises = 0;
+    failedExercises = [];
+    updateProgressBar();
+    await showEndLessonScreen();
+}
+
+async function cycleExercises() {
+    while (true) {
+        THIS_RESULT = null;
+        document.getElementById("question").innerHTML = "";
+        document.getElementById("hint").innerHTML = "";
+        document.getElementById("hint").style.display = "none";
+        document.getElementById("hint").style.fontWeight = "normal";
+        document.getElementById("answers").innerHTML = "";
+        document.getElementById("feedback").textContent = "";
+        document.getElementById("bottom-menu-container").style.display = "";
+        clearButtonsDiv();
+        skipEnable();
+
+        if (numExercisesDone === NUM_EXERCISES_PER_LESSON) {
+            if (failedExercises.length == 0) {
+                await endLesson();
+                continue;
+            }
+            await reviseMistake();
+            continue;
+        }
+
+        const types = [ExerciseTranslation, ExerciseTranslationWithGuesses, ExerciseMatching, ExerciseFillBlanks, ExerciseReorderSentence];
+        const randomExercise = types[Math.floor(Math.random() * types.length)];
+        EXERCISE = new randomExercise();
+        // EXERCISE = new ExerciseTranslation();
+        // EXERCISE = new ExerciseTranslationWithGuesses();
+        // EXERCISE = new ExerciseMatching();
+        // EXERCISE = new ExerciseFillBlanks();
+        // EXERCISE = new ExerciseReorderSentence();
+        await EXERCISE.do();
+
+        numExercisesDone++;
+        updateProgressBar();
+    }
+}
+
+async function skipExercise() {
     EXERCISE.showAnswer();
     saveResult(ExerciseResult.SKIPPED);
-    addNextButton();
+    await new Promise((resolve) => {
+        addNextButton(resolve);
+    });
+    numExercisesDone++;
+    updateProgressBar();
+    await cycleExercises();
 }
 
 function skipEnable() {
@@ -711,9 +748,9 @@ function saveMistake(exercise) {
         failedExercises.push(exercise);
 }
 
-function reviseMistake() {
+async function reviseMistake() {
     EXERCISE = failedExercises.at(0);
-    EXERCISE.do();
+    await EXERCISE.do();
     failedExercises.shift();
 }
 
@@ -742,7 +779,7 @@ async function init() {
     label.textContent = 0 + "/" + NUM_EXERCISES_PER_LESSON;
     const res = await fetch("data/language_data.json");
     INPUT_DATA = await res.json();
-    startLesson();
+    await startLesson();
 }
 
 init();
