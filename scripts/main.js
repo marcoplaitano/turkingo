@@ -592,7 +592,7 @@ function clearButtonsDiv() {
 function showEndLessonScreen() {
     document.getElementById("title").textContent = "Lesson Completed!";
     document.getElementById("question").textContent = "You completed the lesson! You can start again now";
-    document.getElementById("progress-main-container").style.display = "none";
+    document.getElementById("bottom-menu-container").style.display = "none";
     const progressBarSegments = document.querySelectorAll(".progress-bar-segment");
     progressBarSegments.forEach(seg => seg.remove());
     addNextButton();
@@ -663,7 +663,7 @@ function nextExercise() {
     document.getElementById("hint").style.fontWeight = "normal";
     document.getElementById("answers").innerHTML = "";
     document.getElementById("feedback").textContent = "";
-    document.getElementById("progress-main-container").style.display = "";
+    document.getElementById("bottom-menu-container").style.display = "";
     clearButtonsDiv();
     skipEnable();
     updateProgressBar();

@@ -13,7 +13,7 @@ main {
   overflow-y: auto;
 }
 footer {
-  margin-top: 2rem;
+  margin-top: 0;
   flex-shrink: 0;
 }
 
@@ -162,8 +162,7 @@ main button:disabled:hover {
 
 
 /* ***** PROGRESS BAR ***** */
-#progress-main-container {
-  padding: 2rem;
+#bottom-menu-container {
   display: flex;
   flex-direction: column;
   align-items: center;
