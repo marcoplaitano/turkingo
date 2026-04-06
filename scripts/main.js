@@ -49,14 +49,14 @@ function getEndMessage(mistakes, skips, total) {
     const ratioMistake = mistakes / total;
     const ratioSkip = skips / total;
 
-    if (ratioSkip >= 0.5) return pickRandomMessage(END_LESSON_MESSAGES.skipped_most);
-    if (ratioSkip >= 0.2) return pickRandomMessage(END_LESSON_MESSAGES.skipped_some);
-    if (ratioMistake === 0)  return pickRandomMessage(END_LESSON_MESSAGES.lesson_perfect);
-    if (ratioMistake <= 0.1) return pickRandomMessage(END_LESSON_MESSAGES.lesson_excellent);
-    if (ratioMistake <= 0.3) return pickRandomMessage(END_LESSON_MESSAGES.lesson_great);
-    if (ratioMistake <= 0.5) return pickRandomMessage(END_LESSON_MESSAGES.lesson_okay);
-    if (ratioMistake <= 0.7) return pickRandomMessage(END_LESSON_MESSAGES.lesson_poor);
-    else return pickRandomMessage(END_LESSON_MESSAGES.lesson_terrible);
+    if (ratioSkip >= 0.5) return pickRandomMessage(MESSAGES_DATA.skipped_most);
+    if (ratioSkip >= 0.2) return pickRandomMessage(MESSAGES_DATA.skipped_some);
+    if (ratioMistake === 0)  return pickRandomMessage(MESSAGES_DATA.lesson_perfect);
+    if (ratioMistake <= 0.1) return pickRandomMessage(MESSAGES_DATA.lesson_excellent);
+    if (ratioMistake <= 0.3) return pickRandomMessage(MESSAGES_DATA.lesson_great);
+    if (ratioMistake <= 0.5) return pickRandomMessage(MESSAGES_DATA.lesson_okay);
+    if (ratioMistake <= 0.7) return pickRandomMessage(MESSAGES_DATA.lesson_poor);
+    else return pickRandomMessage(MESSAGES_DATA.lesson_terrible);
 }
 
 
@@ -672,7 +672,7 @@ function clearButtonsDiv() {
 
 async function showReivisonScreen() {
     document.getElementById("title").textContent = "Mistakes revision";
-    document.getElementById("question").textContent = pickRandomMessage(END_LESSON_MESSAGES.repeat_mistakes);
+    document.getElementById("question").textContent = pickRandomMessage(MESSAGES_DATA.repeat_mistakes);
     skipDisable();
     return new Promise((resolve) => {
         const startRevisionBtn = document.createElement("button");
@@ -747,6 +747,7 @@ async function cycleExercises() {
             if (!startedRevision) {
                 // Show screen prompting the user to revise their mistakes.
                 await showReivisonScreen();
+                skipEnable();
             }
             // Start/continue mistakes revision.
             startedRevision = true;
@@ -820,10 +821,10 @@ function saveResult(result) {
 }
 
 
-const NUM_EXERCISES_PER_LESSON = 10;
+const NUM_EXERCISES_PER_LESSON = 2;
 const PROGRESS_BAR_GAP = 3 * (NUM_EXERCISES_PER_LESSON - 1);
 let INPUT_DATA = [];
-let END_LESSON_MESSAGES = {};
+let MESSAGES_DATA = {};
 // Exercise object with question and answer. Saved in case the user makes a mistake and this has to be run again.
 let EXERCISE = null;
 // Result of last exercise done by user.
@@ -839,10 +840,10 @@ let startedRevision = false;
 async function init() {
     const [langRes, endMsgRes] = await Promise.all([
         fetch("data/language_data.json"),
-        fetch("data/end_lesson_messages.json"),
+        fetch("data/messages.json"),
     ]);
     INPUT_DATA = await langRes.json();
-    END_LESSON_MESSAGES = await endMsgRes.json();
+    MESSAGES_DATA = await endMsgRes.json();
     await startLesson();
 }
 
