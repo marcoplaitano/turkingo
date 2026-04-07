@@ -705,8 +705,10 @@ function updateStreak() {
     // Only update streak once per day.
     if (getStreakDate() === TODAY_DATE)
         return;
-    localStorage.setItem("streakNum", (getStreak() + 1).toString());
+    let streakNum = getStreak() + 1;
+    localStorage.setItem("streakNum", streakNum.toString());
     localStorage.setItem("streakLastDate", TODAY_DATE);
+    streakAnimationStart(streakNum);
 }
 
 function getStreak() {
@@ -722,6 +724,43 @@ function resetStreak() {
     localStorage.removeItem("streakLastDate");
 }
 
+let closeTimer;
+function streakAnimationStart(streakNum) {
+    const overlayNum = document.getElementById("overlay-num");
+    overlayNum.textContent = streakNum;
+    const overlayLabel = document.getElementById("overlay-label");
+    if (streakNum === 1)
+        overlayLabel.textContent = "day streak";
+    else
+        overlayLabel.textContent = "days streak";
+
+    const overlay = document.getElementById("overlay-container");
+    overlay.classList.add("show");
+    document.body.classList.add("overlay-open");
+
+    clearTimeout(closeTimer);
+    closeTimer = setTimeout(streakAnimationEnd, 2400);
+
+    setTimeout(() => {
+        document.addEventListener("keydown", endAnimationESC);
+        document.addEventListener("click", endAnimationClick);
+        document.addEventListener("touchstart", endAnimationClick);
+    }, 50);
+}
+function streakAnimationEnd() {
+    const overlay = document.getElementById("overlay-container");
+    overlay.classList.remove("show");
+    document.body.classList.remove("overlay-open");
+    clearTimeout(closeTimer);
+
+    document.removeEventListener("keydown", endAnimationESC);
+    document.removeEventListener("click", endAnimationClick);
+    document.removeEventListener("touchstart", endAnimationClick);
+}
+function endAnimationESC(e) { if (e.key === "Escape") streakAnimationEnd(); }
+function endAnimationClick() { streakAnimationEnd(); }
+
+
 function showStreak() {
     // If last date is older than yesterday, reset streak.
     const streakLastDate = localStorage.getItem("streakLastDate");
@@ -730,6 +769,7 @@ function showStreak() {
     const yesterdayStr = yesterday.toISOString().split('T')[0];
     if (streakLastDate === null || streakLastDate < yesterdayStr) {
         resetStreak();
+        streakAnimationStart(0);
     }
 
     const streakNum = getStreak();
@@ -756,6 +796,9 @@ function saveLessonScore() {
 function resetLessonProgress() {
     LESSON_RESULTS = {};
     LESSON_RESULTS.date = TODAY_DATE;
+    LESSON_RESULTS.correct = 0;
+    LESSON_RESULTS.failed = 0;
+    LESSON_RESULTS.skipped = 0;
     THIS_RESULT = null;
     numExercisesDone = 0;
     numExercisesFailed = 0;
@@ -871,9 +914,11 @@ async function reviseMistake() {
 
 function saveResult(result) {
     THIS_RESULT = result;
-    LESSON_RESULTS.correct = (LESSON_RESULTS.correct || 0) + (result === ExerciseResult.CORRECT ? 1 : 0);
-    LESSON_RESULTS.failed = (LESSON_RESULTS.failed || 0) + (result === ExerciseResult.FAILED ? 1 : 0);
-    LESSON_RESULTS.skipped = (LESSON_RESULTS.skipped || 0) + (result === ExerciseResult.SKIPPED ? 1 : 0);
+    if (!startedRevision) {
+        LESSON_RESULTS.correct = (LESSON_RESULTS.correct || 0) + (result === ExerciseResult.CORRECT ? 1 : 0);
+        LESSON_RESULTS.failed = (LESSON_RESULTS.failed || 0) + (result === ExerciseResult.FAILED ? 1 : 0);
+        LESSON_RESULTS.skipped = (LESSON_RESULTS.skipped || 0) + (result === ExerciseResult.SKIPPED ? 1 : 0);
+    }
     if (result === ExerciseResult.FAILED) {
         saveMistake(EXERCISE);
         numExercisesFailed++;

@@ -3,8 +3,6 @@
   --font-sans-serif: -apple-system, BlinkMacSystemFont, avenir next, avenir, segoe ui, helvetica neue, helvetica, Cantarell, Ubuntu, roboto, noto, arial, sans-serif;
   --font-serif: Iowan Old Style, Apple Garamond, Baskerville, Times New Roman, Droid Serif, Times, Source Serif Pro, serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol;
   --font-monospace: Menlo, Consolas, Monaco, Liberation Mono, Lucida Console, monospace;
-  --image-shadow: 2px 4px 16px #e6e6e6;
-  --card-shadow: 0 10px 30px #0000000F;
   --color-background: #EFF1F5;
   --color-text: #4C4F69;
   --color-text2: #6C6F85;
@@ -14,20 +12,12 @@
   --color-red: #E64553;
   --color-skip-btn-fg: #7287FD;
   --color-skip-btn-bg: #dce0e8;
-  --color-highlight-bg: #DCE0E8;
-  --color-border: #BCC0CC;
-  --color-note-border: #DCE0E8;
-  --color-note-border: #BCC0CC88;
-  --color-sticky-title-underline: #DCE0E8;
+  --color-streak-overlay-fg: #EFF1F5;
   --color-hr: #DCE0E8;
   --color-placeholder: #9CA0B0;
   --color-footer-hr: #BCC0CC;
-  --color-code-bg: var(--color-background);
-  --color-code-fg: #4C4F69;
 }
 html.dark {
-  --image-shadow: 2px 4px 16px #313244;
-  --card-shadow: 0 10px 30px #3132442F;
   --color-background: #1E1E2E;
   --color-text: #CDD6F4;
   --color-text2: #A6ADC8;
@@ -38,25 +28,9 @@ html.dark {
   --color-red: #F38BA8;
   --color-skip-btn-fg: #B4BEFE;
   --color-skip-btn-bg: #313244;
-  --color-highlight-bg: #45475A;
+  --color-streak-overlay-fg: #CDD6F4;
   --color-hr: #45475A;
   --color-footer-hr: #45475A;
-  --color-border: #45475A;
-  --color-note-border: #45475A99;
-  --color-sticky-title-underline: #45475A99;
-  --color-code-bg: var(--color-background);
-  --color-code-fg: var(--color-text);
-}
-
-/* ***** LOWERCASE ***** */
-h1, h2, h3, h4, h5,
-.navbar-item,
-#tags-list li,
-.posts-list li,
-.pages-list li a,
-.post-info
-{
-  /* text-transform: lowercase; */
 }
 
 

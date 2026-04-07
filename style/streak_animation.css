@@ -1,0 +1,71 @@
+body.overlay-open {
+  overflow: hidden;
+}
+
+#overlay-container {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(0px);
+
+  opacity: 0;
+  pointer-events: none;
+  visibility: hidden;
+
+  /* smooth fade-in/out with delayed hiding */
+  transition:
+    opacity 0.3s ease,
+    backdrop-filter 0.3s ease,
+    visibility 0s linear 0.3s; /* delay hiding for fade-out */
+}
+
+#overlay-container.show {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: all;
+  backdrop-filter: blur(8px);
+
+  /* no delay when showing */
+  transition:
+    opacity 0.3s ease,
+    backdrop-filter 0.3s ease,
+    visibility 0s;
+}
+
+#overlay {
+  text-align: center;
+  transform: scale(0.4);
+  opacity: 0;
+  transition: transform 2s ease, opacity 2s ease;
+}
+
+#overlay-container.show #overlay {
+  transform: scale(1);
+  opacity: 1;
+}
+
+#overlay .fire {
+  display: block;
+  line-height: 1;
+  font-size: 8rem;
+}
+
+#overlay .text {
+  font-size: 2rem;
+  color: var(--color-streak-overlay-fg);
+  margin-top: 1rem;
+  display: flex;
+  align-items: baseline;
+  gap: 1rem;
+  white-space: nowrap;
+}
+
+#overlay-num {
+  font-weight: bolder;
+}

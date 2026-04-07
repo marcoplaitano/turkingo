@@ -23,6 +23,7 @@
   <meta name="theme-color" content="#1E1E2E" media="(prefers-color-scheme: dark)">
   <link rel="stylesheet" href="/style/style.css">
   <link rel="stylesheet" href="/style/index.css">
+  <link rel="stylesheet" href="/style/streak_animation.css">
   <script type="text/javascript" src="/scripts/theme.js"></script>
   <title>TürKingo</title>
 </head>
@@ -50,6 +51,16 @@
       <p id="feedback"></p>
     </div>
   </main>
+
+  <div id="overlay-container">
+    <div id="overlay">
+      <span class="fire">🔥</span>
+      <div class="text">
+        <span id="overlay-num">0</span>
+        <span id="overlay-label">days streak</span>
+      </div>
+    </div>
+  </div>
 
   <div id="bottom-menu-container">
     <div id="progress-and-skip-container">
