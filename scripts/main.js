@@ -778,8 +778,8 @@ function showStreak() {
     }
 
     const streakNum = getStreak();
-    const streakDiv = document.getElementById("streak");
-    streakDiv.textContent = `🔥 Streak: ${streakNum}`;
+    const streakDiv = document.getElementById("streak-num");
+    streakDiv.textContent = `${streakNum}`;
     streakDiv.style.display = "";
 }
 
