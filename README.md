@@ -7,6 +7,16 @@ The website is available at https://turkingo.netlify.app.
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
+## Main features
+
++ 10 exercises per lesson
++ Skip exercise button
++ Mistakes revision
++ Lessons scoreboard
++ Daily streak counter
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
 ## Input data
 
 Asked a LLM model to give some examples that I then collected in JSON format for easy indexing.
@@ -17,6 +27,7 @@ Asked a LLM model to give some examples that I then collected in JSON format for
 
 ### Website
 
++ fire emoji with catppuccin palette colors
 
 ### Exercises
 
@@ -28,7 +39,6 @@ Asked a LLM model to give some examples that I then collected in JSON format for
 
 + increase dataset size
 + categorize by topic/difficulty
-+ more end-of-lesson sentences
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
