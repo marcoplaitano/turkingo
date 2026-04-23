@@ -27,7 +27,8 @@ Asked a LLM model to give some examples that I then collected in JSON format for
 
 ### Website
 
-+ fire emoji with catppuccin palette colors
++ streak save if user skips a day
++ more streak saves for every lesson with 80%+ correct answers
 
 ### Exercises
 
