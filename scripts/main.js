@@ -698,31 +698,8 @@ async function showEndLessonScreen() {
 
 
 //////////////////////////////////////////////////
-// STREAK AND SCORES
+// STREAK AND SCORES GRAPHIC
 //////////////////////////////////////////////////
-
-function updateStreak() {
-    // Only update streak once per day.
-    if (getStreakDate() === TODAY_DATE)
-        return;
-    let streakNum = getStreak() + 1;
-    localStorage.setItem("streakNum", streakNum.toString());
-    localStorage.setItem("streakLastDate", TODAY_DATE);
-    streakAnimationStart(streakNum);
-}
-
-function getStreak() {
-    return parseInt(localStorage.getItem("streakNum")) || 0;
-}
-
-function getStreakDate() {
-    return localStorage.getItem("streakLastDate");
-}
-
-function resetStreak() {
-    localStorage.setItem("streakNum", "0");
-    localStorage.removeItem("streakLastDate");
-}
 
 let closeTimer;
 function streakAnimationStart(streakNum) {
@@ -735,6 +712,8 @@ function streakAnimationStart(streakNum) {
         overlayLabel.textContent = "day streak";
     else
         overlayLabel.textContent = "days streak";
+    if (isFireFreezed())
+        overlayLabel.textContent += " (freezed)";
 
     const overlay = document.getElementById("overlay-container");
     overlay.classList.add("show");
@@ -765,16 +744,44 @@ function streakAnimationEnd() {
 function endAnimationESC(e) { if (e.key === "Escape") streakAnimationEnd(); }
 function endAnimationClick() { streakAnimationEnd(); }
 
+function setFireFreezed(freezed) {
+    document.querySelectorAll(".fire-icon").forEach(element => {
+        if (freezed)
+            element.classList.add("fire-freezed");
+        else
+            element.classList.remove("fire-freezed");
+    });
+}
+
+function isFireFreezed() {
+    return document.querySelector(".fire-freezed") !== null;
+}
+
+
+//////////////////////////////////////////////////
+// STREAK AND SCORES
+//////////////////////////////////////////////////
 
 function showStreak() {
     // If last date is older than yesterday, reset streak.
-    const streakLastDate = localStorage.getItem("streakLastDate");
     const yesterday = new Date();
     yesterday.setDate(yesterday.getDate() - 1);
     const yesterdayStr = yesterday.toISOString().split('T')[0];
-    if (streakLastDate === null || streakLastDate < yesterdayStr) {
+    const streakLastDate = localStorage.getItem("streakLastDate");
+    // First time the user opens the app, initialize streak.
+    if (streakLastDate === null) {
         resetStreak();
-        if (streakLastDate < yesterdayStr) streakAnimationStart(0);
+    }
+    // User missed streak. Either freeze it or loose it depending on number
+    // of streak freezes left.
+    if (streakLastDate < yesterdayStr) {
+        if (getNumFreezes() > 0) {
+            setFireFreezed(true);
+            decreaseStreakFreezes();
+        }
+        else
+            resetStreak();
+        streakAnimationStart(getStreak());
     }
 
     const streakNum = getStreak();
@@ -791,6 +798,9 @@ function saveLessonScore() {
     if (lessons.length > MAX_LESSONS_SAVED)
         lessons.length = MAX_LESSONS_SAVED;
     localStorage.setItem("lessonScores", JSON.stringify(lessons));
+    // If number of correct exercises is > 80% the user gets a streak
+    if (LESSON_RESULTS.correct > NUM_EXERCISES_PER_LESSON * 0.8)
+        increaseStreakFreezes();
 }
 
 
@@ -931,7 +941,6 @@ function saveResult(result) {
 }
 
 
-const TODAY_DATE = new Date().toISOString().split('T')[0]; // "YYYY-MM-DD"
 const NUM_EXERCISES_PER_LESSON = 10;
 const PROGRESS_BAR_GAP = 3 * (NUM_EXERCISES_PER_LESSON - 1);
 let INPUT_DATA = [];

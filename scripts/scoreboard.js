@@ -1,3 +1,19 @@
+//////////////////////////////////////////////////
+// STREAK AND SCORES
+//////////////////////////////////////////////////
+
+function showStreakNumbers() {
+    const spanStreakNum = document.getElementById("curr-streak");
+    spanStreakNum.textContent = getStreak();
+    const spanStreakFreezesNum = document.getElementById("curr-streak-freezes");
+    spanStreakFreezesNum.textContent = getNumFreezes();
+}
+
+
+//////////////////////////////////////////////////
+// SCORES
+//////////////////////////////////////////////////
+
 function formatDate(dateStr) {
     const date = new Date(dateStr);
     const formatted = date.toLocaleDateString("en-GB", {
@@ -16,7 +32,6 @@ function createEntryBar(correct, failed, skipped) {
     const bar = document.createElement("div");
     bar.className = "scorebar";
     const total = correct + failed + skipped;
-    console.log("TOTAL:", total);
     const correctWidth = (correct / total) * 100;
     const failedWidth = (failed / total) * 100;
     const skippedWidth = (skipped / total) * 100;
@@ -87,4 +102,6 @@ function showScoreboard() {
 
 let lastDate = null;
 
+
+showStreakNumbers();
 showScoreboard();
