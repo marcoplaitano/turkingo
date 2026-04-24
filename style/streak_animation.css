@@ -50,7 +50,7 @@ body.overlay-open {
   opacity: 1;
 }
 
-#overlay .fire {
+#overlay .fire-icon {
   display: block;
   line-height: 1;
   font-size: 8rem;

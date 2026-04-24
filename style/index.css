@@ -38,7 +38,7 @@ footer {
 
 /* ***** STREAK ***** */
 .fire-freezed {
-  /* filter: hue-rotate(190deg) saturate(1.5); */
+  filter: hue-rotate(190deg) saturate(1.5);
 }
 .title-streak-container {
   display: flex;
