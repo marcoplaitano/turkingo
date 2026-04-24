@@ -14,6 +14,7 @@ The website is available at https://turkingo.netlify.app.
 + Mistakes revision
 + Lessons scoreboard
 + Daily streak counter
++ Streak Freeze
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
