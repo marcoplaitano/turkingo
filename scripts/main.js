@@ -712,7 +712,8 @@ function streakAnimationStart(streakNum) {
         overlayLabel.textContent = "day streak";
     else
         overlayLabel.textContent = "days streak";
-    if (isFireFreezed())
+    const isFreezed = isFireFreezed();
+    if (isFreezed)
         overlayLabel.textContent += " (freezed)";
 
     const overlay = document.getElementById("overlay-container");
@@ -728,7 +729,10 @@ function streakAnimationStart(streakNum) {
         document.addEventListener("touchstart", endAnimationClick);
     }, 50);
 
-    sessionStorage.setItem("animationDone", true);
+    // If the animation was just showed because the user lost the streak, or because it got freezed,
+    // then it can be shown again in the same session.
+    if (streakNum > 0 && !isFreezed)
+        sessionStorage.setItem("animationDone", true);
 }
 
 function streakAnimationEnd() {
@@ -786,7 +790,7 @@ function showStreak() {
 
     const streakNum = getStreak();
     const streakDiv = document.getElementById("streak-num");
-    streakDiv.textContent = `${streakNum}`;
+    streakDiv.textContent = `\u00A0${streakNum}`;
     streakDiv.style.display = "";
 }
 

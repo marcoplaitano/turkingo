@@ -317,10 +317,6 @@ footer a {
   main {
     line-height: 1.65;
   }
-  footer {
-    margin-bottom: 0;
-    padding-bottom: 0.4rem;
-  }
 }
 
 @media screen and (max-width:370px) {
