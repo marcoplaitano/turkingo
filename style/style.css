@@ -109,9 +109,9 @@ main hr {
 
 /* ***** HEADER ***** */
 header#banner {
-  display: flex;
+  display: block;
   justify-content: space-between;
-  margin: 2rem 0 4rem;
+  margin: 2rem 0 3.2rem;
 }
 header#banner h1 {
   display: inline-block;
@@ -130,6 +130,7 @@ header#banner h1 a {
 header#banner nav {
   display: flex;
   align-items: center;
+  margin-top: 0.4rem;
 }
 header#banner nav a {
   color: var(--color-text2);
@@ -298,14 +299,6 @@ footer a {
   }
   header#banner {
     line-height: 1.4;
-  }
-}
-
-/* ***** MOBILE VERSION ***** */
-@media screen and (max-width:600px) {
-  header#banner {
-    margin: 2rem 0 2.8rem;
-    display: block;
   }
 }
 
