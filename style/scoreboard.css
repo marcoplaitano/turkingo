@@ -30,3 +30,9 @@
 .scorebar-skipped {
   background: var(--color-text2);
 }
+.scoreboard-text-correct,
+.scoreboard-text-failed,
+.scoreboard-text-skipped {
+  display: inline-block;
+  width: 2ch;
+}
