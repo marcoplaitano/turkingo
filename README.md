@@ -28,6 +28,8 @@ Asked a LLM model to give some examples that I then collected in JSON format for
 
 ### Website
 
++ search in /learn/ page
+
 ### Exercises
 
 + new exercise type: given a word form the plural

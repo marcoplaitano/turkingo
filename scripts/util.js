@@ -67,7 +67,7 @@ function getEndMessage(MESSAGES_DATA, mistakes, skips, total) {
 // EXERCISE CLASS
 //////////////////////////////////////////////////
 
-class ExerciseData {
+class LanguageItemData {
     constructor(data) {
         this.data = data;
         this.langEN = getLanguageValue(data["l-EN"]);

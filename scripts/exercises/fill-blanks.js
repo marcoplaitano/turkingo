@@ -1,7 +1,7 @@
 class ExerciseFillBlanks {
     constructor(INPUT_DATA) {
         this.item = randomSentence(INPUT_DATA);
-        this.data = new ExerciseData(this.item);
+        this.data = new LanguageItemData(this.item);
         this.question = this.data.getLanguageEN();
         this.answer = this.data.getLanguageTR();
         this.words = this.answer.split(" ");

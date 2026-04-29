@@ -1,7 +1,7 @@
 class ExerciseMatchTranslation {
     constructor(INPUT_DATA) {
         const item = randomItem(INPUT_DATA);
-        this.data = new ExerciseData(item);
+        this.data = new LanguageItemData(item);
         this.toTurkish = Math.random() > 0.5;
         this.question = this.toTurkish ? this.data.getLanguageEN() : this.data.getLanguageTR();
         this.answer = this.data.getTranslation(this.question);

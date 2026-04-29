@@ -7,12 +7,12 @@
   <link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/favicon/favicon-16x16.png">
   <link rel="manifest" href="/favicon/site.webmanifest">
-  <link rel="canonical" href="https://turkingo.netlify.app/about/">
+  <link rel="canonical" href="https://turkingo.netlify.app/learn/">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="referrer" content="strict-origin-when-cross-origin">
 
-  <meta property="og:title" content="About - TürKingo">
-  <meta property="twitter:title" content="About - TürKingo">
+  <meta property="og:title" content="Learn - TürKingo">
+  <meta property="twitter:title" content="Learn - TürKingo">
   <meta property="og:description" content="A scrappy, no-subscription alternative to Duolingo for English–Turkish practice.">
   <meta property="twitter:description" content="A scrappy, no-subscription alternative to Duolingo for English–Turkish practice.">
   <meta property="og:url" content="https://turkingo.netlify.app">
@@ -22,8 +22,9 @@
   <meta name="theme-color" content="#EFF1F5" media="(prefers-color-scheme: light)">
   <meta name="theme-color" content="#1E1E2E" media="(prefers-color-scheme: dark)">
   <link rel="stylesheet" href="/style/style.css">
+  <link rel="stylesheet" href="/style/learn.css">
   <script type="text/javascript" src="/scripts/theme.js"></script>
-  <title>About - TürKingo</title>
+  <title>Learn - TürKingo</title>
 </head>
 
 <body id="top">
@@ -32,20 +33,38 @@
     <nav>
       <a class="navbar-item" href="/">Home</a>
       <a class="navbar-item" href="/scoreboard/">Scores</a>
-      <a class="navbar-item" href="/learn/">Learn</a>
-      <a class="navbar-item" id="navbar-curr-page">About</a>
+      <a class="navbar-item" id="navbar-curr-page">Learn</a>
+      <a class="navbar-item" href="/about/">About</a>
     </nav>
   </header>
 
   <main>
     <article>
-      <h1>About</h1>
-      <p>A scrappy, no-subscription alternative to Duolingo for English–Turkish language exercises.<br>
-        I built it because I wanted to practice more without paying for Premium.</p>
-      <p>The source code is available on <a href="https://github.com/marcoplaitano/turkingo">Github</a>.</p>
+      <h1>Learn</h1>
 
-      <h2>Input data</h2>
-      <p>Asked a LLM model to give some examples that I then collected in JSON format for easy indexing.</p>
+      <h3>Words</h3>
+      <div class="table-wrapper">
+        <table id="table-words">
+          <thead><tr><th>English</th><th>Turkish</th></tr></thead>
+          <tbody id="table-words-body"></tbody>
+        </table>
+      </div>
+
+      <h3>Phrases</h3>
+      <div class="table-wrapper">
+        <table id="table-phrases">
+          <thead><tr><th>English</th><th>Turkish</th></tr></thead>
+          <tbody id="table-phrases-body"></tbody>
+        </table>
+      </div>
+
+      <h3>Sentences</h3>
+      <div class="table-wrapper">
+        <table id="table-sentences">
+          <thead><tr><th>English</th><th>Turkish</th></tr></thead>
+          <tbody id="table-sentences-body"></tbody>
+        </table>
+      </div>
     </article>
   </main>
 
@@ -54,5 +73,8 @@
     <p><span translate="no">© 2026 Marco Plaitano</span></p>
   </footer>
 </body>
+
+<script type="text/javascript" src="/scripts/util.js"></script>
+<script type="text/javascript" src="/scripts/learn.js"></script>
 
 </html>

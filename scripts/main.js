@@ -344,8 +344,8 @@ let startedRevision = false;
 async function init() {
     showStreak();
     const [langRes, endMsgRes] = await Promise.all([
-        fetch("data/language_data.json"),
-        fetch("data/messages.json"),
+        fetch("/data/language_data.json"),
+        fetch("/data/messages.json"),
     ]);
     INPUT_DATA = await langRes.json();
     MESSAGES_DATA = await endMsgRes.json();

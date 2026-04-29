@@ -1,6 +1,6 @@
 class ExerciseTranslation {
     constructor(INPUT_DATA) {
-        this.data = new ExerciseData(randomItem(INPUT_DATA));
+        this.data = new LanguageItemData(randomItem(INPUT_DATA));
         this.question = Math.random() > 0.5 ? this.data.getLanguageEN() : this.data.getLanguageTR();
         this.answer = this.data.getTranslation(this.question).trim().toLowerCase();
     }
