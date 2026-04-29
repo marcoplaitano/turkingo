@@ -1,3 +1,5 @@
+const MAX_STREAK_FREEZES = 3;
+
 function updateStreak() {
     // Only update streak once per day.
     if (getStreakDate() === TODAY_DATE)
@@ -27,14 +29,15 @@ function getNumFreezes() {
 }
 
 function increaseStreakFreezes() {
-    localStorage.setItem("streakFreezes", getNumFreezes() + 1);
+    const currNumStreakFreezes = getNumFreezes();
+    if (currNumStreakFreezes < MAX_STREAK_FREEZES)
+        localStorage.setItem("streakFreezes", currNumStreakFreezes + 1);
 }
 
 function decreaseStreakFreezes() {
-    let currNum = getNumFreezes();
-    if (currNum > 0) {
-        localStorage.setItem("streakFreezes", currNum - 1);
-    }
+    const currNumStreakFreezes = getNumFreezes();
+    if (currNumStreakFreezes > 0)
+        localStorage.setItem("streakFreezes", currNumStreakFreezes - 1);
 }
 
 

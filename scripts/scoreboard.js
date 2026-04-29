@@ -7,6 +7,8 @@ function showStreakNumbers() {
     spanStreakNum.textContent = getStreak();
     const spanStreakFreezesNum = document.getElementById("curr-streak-freezes");
     spanStreakFreezesNum.textContent = getNumFreezes();
+    const spanMaxStreakFreezes = document.getElementById("max-streak-freezes");
+    spanMaxStreakFreezes.textContent = MAX_STREAK_FREEZES;
 }
 
 
