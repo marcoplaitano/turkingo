@@ -656,9 +656,14 @@ const MAX_FAILED_EXERCISES = 10;
 let failedExercises = [];
 
 async function init() {
-    const res = await fetch("data/language_data.json");
-    INPUT_DATA = await res.json();
-    nextExercise();
+    showStreak();
+    const [langRes, endMsgRes] = await Promise.all([
+        fetch("/data/language_data.json"),
+        fetch("/data/messages.json"),
+    ]);
+    INPUT_DATA = await langRes.json();
+    MESSAGES_DATA = await endMsgRes.json();
+    await startLesson();
 }
 
 init();
