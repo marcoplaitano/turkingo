@@ -81,7 +81,9 @@ async function showEndLessonScreen() {
 
 let closeTimer;
 function streakAnimationStart(streakNum) {
-    if (sessionStorage.getItem("animationDone"))
+    if (streakNum > 0 && sessionStorage.getItem("animationUpdateDone"))
+        return;
+    if (streakNum === 0 && sessionStorage.getItem("animationStartDone"))
         return;
     const overlayNum = document.getElementById("overlay-num");
     overlayNum.textContent = streakNum;
@@ -107,10 +109,14 @@ function streakAnimationStart(streakNum) {
         document.addEventListener("touchstart", endAnimationClick);
     }, 50);
 
-    // If the animation was just showed because the user lost the streak, or because it got freezed,
-    // then it can be shown again in the same session.
-    if (streakNum > 0 && !isFreezed)
-        sessionStorage.setItem("animationDone", true);
+    // If the animation was shown because the user lost the streak, or because it got freezed,
+    // then it cannot be shown again in the same session.
+    if (streakNum === 0)
+        sessionStorage.setItem("animationStartDone", true);
+    // If the animation was shown because the user just completed a lesson and the streak got updated,
+    // then it should not be shown again.
+    if (streakNum > 0)
+        sessionStorage.setItem("animationUpdateDone", true);
 }
 
 function streakAnimationEnd() {
