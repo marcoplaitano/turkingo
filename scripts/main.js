@@ -81,9 +81,10 @@ async function showEndLessonScreen() {
 
 let closeTimer;
 function streakAnimationStart(streakNum) {
+    const isFreezed = isFireFreezed();
     if (streakNum > 0 && sessionStorage.getItem("animationUpdateDone"))
         return;
-    if (streakNum === 0 && sessionStorage.getItem("animationStartDone"))
+    if ((streakNum === 0 || isFreezed) && sessionStorage.getItem("animationStartDone"))
         return;
     const overlayNum = document.getElementById("overlay-num");
     overlayNum.textContent = streakNum;
@@ -92,7 +93,6 @@ function streakAnimationStart(streakNum) {
         overlayLabel.textContent = "day streak";
     else
         overlayLabel.textContent = "days streak";
-    const isFreezed = isFireFreezed();
     if (isFreezed)
         overlayLabel.textContent += " (freezed)";
 
@@ -111,11 +111,11 @@ function streakAnimationStart(streakNum) {
 
     // If the animation was shown because the user lost the streak, or because it got freezed,
     // then it cannot be shown again in the same session.
-    if (streakNum === 0)
+    if (streakNum === 0 || isFreezed)
         sessionStorage.setItem("animationStartDone", true);
     // If the animation was shown because the user just completed a lesson and the streak got updated,
     // then it should not be shown again.
-    if (streakNum > 0)
+    else if (streakNum > 0)
         sessionStorage.setItem("animationUpdateDone", true);
 }
 
@@ -133,6 +133,7 @@ function endAnimationESC(e) { if (e.key === "Escape") streakAnimationEnd(); }
 function endAnimationClick() { streakAnimationEnd(); }
 
 function setFireFreezed(freezed) {
+    sessionStorage.setItem("freezed", true);
     document.querySelectorAll(".fire-icon").forEach(element => {
         if (freezed)
             element.classList.add("fire-freezed");
@@ -142,13 +143,13 @@ function setFireFreezed(freezed) {
 }
 
 function isFireFreezed() {
-    return document.querySelector(".fire-freezed") !== null;
+    return sessionStorage.getItem("freezed");
 }
 
 function useStreakFreeze() {
     setFireFreezed(true);
     decreaseStreakFreezes();
-    sessionStorage.setItem("freezed", true);
+    console.log("IS FREEZED?", sessionStorage.getItem("freezed"));
 }
 
 
@@ -161,7 +162,7 @@ function showStreak() {
     const yesterday = new Date();
     yesterday.setDate(yesterday.getDate() - 1);
     const yesterdayStr = yesterday.toISOString().split('T')[0];
-    const streakLastDate = localStorage.getItem("streakLastDate");
+    const streakLastDate = getStreakDate();
     // First time the user opens the app, initialize streak.
     if (streakLastDate === null) {
         resetStreak();
