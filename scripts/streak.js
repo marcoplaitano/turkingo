@@ -41,3 +41,6 @@ function decreaseStreakFreezes() {
     if (currNumStreakFreezes > 0)
         localStorage.setItem("streakFreezes", currNumStreakFreezes - 1);
 }
+
+
+const TODAY_DATE = new Date().toISOString().split('T')[0]; // "YYYY-MM-DD"
