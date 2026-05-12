@@ -132,26 +132,6 @@ function streakAnimationEnd() {
 function endAnimationESC(e) { if (e.key === "Escape") streakAnimationEnd(); }
 function endAnimationClick() { streakAnimationEnd(); }
 
-function setFireFreezed(freezed) {
-    sessionStorage.setItem("freezed", true);
-    document.querySelectorAll(".fire-icon").forEach(element => {
-        if (freezed)
-            element.classList.add("fire-freezed");
-        else
-            element.classList.remove("fire-freezed");
-    });
-}
-
-function isFireFreezed() {
-    return sessionStorage.getItem("freezed");
-}
-
-function useStreakFreeze() {
-    setFireFreezed(true);
-    decreaseStreakFreezes();
-    console.log("IS FREEZED?", sessionStorage.getItem("freezed"));
-}
-
 
 //////////////////////////////////////////////////
 // STREAK AND SCORES
@@ -223,11 +203,11 @@ async function startLesson() {
 }
 
 async function endLesson() {
+    updateStreak();
+    showStreak();
     await showEndLessonScreen();
     saveLessonScore();
     resetLessonProgress();
-    updateStreak();
-    showStreak();
 }
 
 async function cycleExercises() {

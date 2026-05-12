@@ -12,12 +12,10 @@ function updateStreak() {
 }
 
 function getStreak() {
-    console.log("STREAK NUM:", localStorage.getItem("streakNum"));
     return parseInt(localStorage.getItem("streakNum")) || 0;
 }
 
 function getStreakDate() {
-    console.log("STREAK DATE:", localStorage.getItem("streakLastDate"));
     return localStorage.getItem("streakLastDate");
 }
 
@@ -40,6 +38,25 @@ function decreaseStreakFreezes() {
     const currNumStreakFreezes = getNumFreezes();
     if (currNumStreakFreezes > 0)
         localStorage.setItem("streakFreezes", currNumStreakFreezes - 1);
+}
+
+function setFireFreezed(freezed) {
+    sessionStorage.setItem("freezed", freezed);
+    document.querySelectorAll(".fire-icon").forEach(element => {
+        if (freezed)
+            element.classList.add("fire-freezed");
+        else
+            element.classList.remove("fire-freezed");
+    });
+}
+
+function isFireFreezed() {
+    return sessionStorage.getItem("freezed");
+}
+
+function useStreakFreeze() {
+    setFireFreezed(true);
+    decreaseStreakFreezes();
 }
 
 
