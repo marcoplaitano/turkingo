@@ -42,28 +42,40 @@
     <article>
       <h1>Learn</h1>
 
-      <h3>Words</h3>
-      <div class="table-wrapper">
-        <table id="table-words">
-          <thead><tr><th>English</th><th>Turkish</th></tr></thead>
-          <tbody id="table-words-body"></tbody>
-        </table>
+      <div class="search-container">
+        <input type="text" maxlength="40" placeholder="Search..." autocomplete="off" oninput="search()" id="search-input">
       </div>
 
-      <h3>Phrases</h3>
-      <div class="table-wrapper">
-        <table id="table-phrases">
-          <thead><tr><th>English</th><th>Turkish</th></tr></thead>
-          <tbody id="table-phrases-body"></tbody>
-        </table>
+      <p id="no-result-p" style="display: none">No results.</p>
+
+      <div class="section">
+        <h3>Words</h3>
+        <div class="list-wrapper">
+          <table id="list-words">
+            <thead><tr><th>English</th><th>Turkish</th></tr></thead>
+            <tbody class="list" id="list-words-body"></tbody>
+          </table>
+        </div>
       </div>
 
-      <h3>Sentences</h3>
-      <div class="table-wrapper">
-        <table id="table-sentences">
-          <thead><tr><th>English</th><th>Turkish</th></tr></thead>
-          <tbody id="table-sentences-body"></tbody>
-        </table>
+      <div class="section">
+        <h3>Phrases</h3>
+        <div class="list-wrapper">
+          <table id="list-phrases">
+            <thead><tr><th>English</th><th>Turkish</th></tr></thead>
+            <tbody class="list" id="list-phrases-body"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="section">
+        <h3>Sentences</h3>
+        <div class="list-wrapper">
+          <table id="list-sentences">
+            <thead><tr><th>English</th><th>Turkish</th></tr></thead>
+            <tbody class="list" id="list-sentences-body"></tbody>
+          </table>
+        </div>
       </div>
     </article>
   </main>

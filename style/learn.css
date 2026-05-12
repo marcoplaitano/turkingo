@@ -1,5 +1,21 @@
-.table-wrapper {
-  max-width: 600px;
+.search-container {
+  margin: 1.6em 0;
+}
+input {
+  background-color: var(--color-background);
+  color: var(--color-text);
+  font-size: inherit;
+  width: 100%;
+  outline: none;
+  border: 1px solid var(--color-text2);
+  display: table;
+}
+input:focus {
+  outline: none;
+  border-color: var(--color-accent);
+}
+
+.list-wrapper {
   border: 1px solid var(--color-text2);
 }
 
