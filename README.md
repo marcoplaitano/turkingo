@@ -1,6 +1,6 @@
 # TürKingo
 
-This site is my scrappy, no-subscription alternative to Duolingo for English–Turkish language exercises.  
+This site is my no-subscription alternative to Duolingo for English–Turkish language exercises.  
 I built it because I wanted to practice more without paying for Premium.
 
 The website is available at https://turkingo.netlify.app.
