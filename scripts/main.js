@@ -80,14 +80,14 @@ async function showEndLessonScreen() {
 //////////////////////////////////////////////////
 
 let closeTimer;
-function streakAnimationStart(streakNum) {
-    const isFreezed = isFireFreezed();
-    if (streakNum > 0 && sessionStorage.getItem("animationUpdateDone"))
+function streakAnimationStart(isUpdate=false) {
+    const streakNum = getStreak();
+    const isFreezed = isStreakFreezed();
+    if (isUpdate && sessionStorage.getItem("animationUpdateDone"))
         return;
-    if ((streakNum === 0 || isFreezed) && sessionStorage.getItem("animationStartDone"))
+    if (!isUpdate && sessionStorage.getItem("animationStartDone"))
         return;
-    const overlayNum = document.getElementById("overlay-num");
-    overlayNum.textContent = streakNum;
+    document.getElementById("overlay-num").textContent = streakNum;
     const overlayLabel = document.getElementById("overlay-label");
     if (streakNum === 1)
         overlayLabel.textContent = "day streak";
@@ -111,11 +111,11 @@ function streakAnimationStart(streakNum) {
 
     // If the animation was shown because the user lost the streak, or because it got freezed,
     // then it cannot be shown again in the same session.
-    if (streakNum === 0 || isFreezed)
+    if (!isUpdate)
         sessionStorage.setItem("animationStartDone", true);
     // If the animation was shown because the user just completed a lesson and the streak got updated,
     // then it should not be shown again.
-    else if (streakNum > 0)
+    else
         sessionStorage.setItem("animationUpdateDone", true);
 }
 
@@ -149,13 +149,12 @@ function showStreak() {
     }
     // User missed streak. Either freeze it or loose it depending on number
     // of streak freezes left.
-    if (streakLastDate < yesterdayStr) {
-        if (getNumFreezes() > 0) {
+    else if (streakLastDate < yesterdayStr) {
+        if (getNumFreezes() > 0)
             useStreakFreeze();
-        }
-        else if (!sessionStorage.getItem("freeze"))
+        else if (!isStreakFreezed())
             resetStreak();
-        streakAnimationStart(getStreak());
+        streakAnimationStart();
     }
 
     const streakNum = getStreak();

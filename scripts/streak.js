@@ -5,10 +5,10 @@ function updateStreak() {
     if (getStreakDate() === TODAY_DATE)
         return;
     let streakNum = getStreak() + 1;
-    localStorage.setItem("streakNum", streakNum.toString());
+    localStorage.setItem("streakNum", streakNum);
     localStorage.setItem("streakLastDate", TODAY_DATE);
-    setFireFreezed(false);
-    streakAnimationStart(streakNum);
+    setStreakFreezed(false);
+    streakAnimationStart(true);
 }
 
 function getStreak() {
@@ -20,7 +20,7 @@ function getStreakDate() {
 }
 
 function resetStreak() {
-    localStorage.setItem("streakNum", "0");
+    localStorage.setItem("streakNum", 0);
     localStorage.removeItem("streakLastDate");
 }
 
@@ -40,7 +40,7 @@ function decreaseStreakFreezes() {
         localStorage.setItem("streakFreezes", currNumStreakFreezes - 1);
 }
 
-function setFireFreezed(freezed) {
+function setStreakFreezed(freezed) {
     sessionStorage.setItem("freezed", freezed);
     document.querySelectorAll(".fire-icon").forEach(element => {
         if (freezed)
@@ -50,12 +50,15 @@ function setFireFreezed(freezed) {
     });
 }
 
-function isFireFreezed() {
-    return sessionStorage.getItem("freezed");
+function isStreakFreezed() {
+    const isFreezed = sessionStorage.getItem("freezed");
+    if (!isFreezed)
+        return false;
+    return isFreezed === "true";
 }
 
 function useStreakFreeze() {
-    setFireFreezed(true);
+    setStreakFreezed(true);
     decreaseStreakFreezes();
 }
 
