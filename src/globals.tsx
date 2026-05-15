@@ -20,6 +20,46 @@ export const TODAY_DATE = new Date().toISOString().split('T')[0]; // "YYYY-MM-DD
 
 
 //////////////////////////////////////////////////
+// TYPES
+//////////////////////////////////////////////////
+
+export type ItemType = "word" | "phrase" | "sentence";
+
+export interface RawItem {
+  id: number;
+  "l-EN": string;
+  "l-TR": string;
+  type: ItemType;
+}
+
+export class LanguageItemData {
+  private raw: RawItem;
+  constructor(raw: RawItem) {
+    this.raw = raw;
+  }
+  getType(): ItemType { return this.raw.type; }
+  getLanguageEN(): string { return this.raw["l-EN"]; }
+  getLanguageTR(): string { return this.raw["l-TR"]; }
+}
+
+
+
+//////////////////////////////////////////////////
+// UTIL FUNCTIONS
+//////////////////////////////////////////////////
+
+export function normalizeTurkish(s: string): string {
+  return s
+    .replace(/ğ/g, "g").replace(/Ğ/g, "G")
+    .replace(/ü/g, "u").replace(/Ü/g, "U")
+    .replace(/ş/g, "s").replace(/Ş/g, "S")
+    .replace(/ı/g, "i").replace(/İ/g, "I")
+    .replace(/ö/g, "o").replace(/Ö/g, "O")
+    .replace(/ç/g, "c").replace(/Ç/g, "C");
+}
+
+
+//////////////////////////////////////////////////
 // STREAK FUNCTIONS
 //////////////////////////////////////////////////
 
@@ -31,7 +71,7 @@ export function updateStreak() {
   localStorage.setItem("streakNum", String(streakNum));
   localStorage.setItem("streakLastDate", TODAY_DATE);
   setStreakFreezed(false);
-  // streakAnimationStart(true);
+  // streakAnimationStart(true);  // TODO: do animation
 }
 
 export function getStreak() {

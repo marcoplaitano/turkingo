@@ -15,12 +15,6 @@ function shuffle(arr) {
     return arr.sort(() => Math.random() - 0.5);
 }
 
-// Substitute "strange" turkish alphabet letters with QWERTY ones.
-function normalizeTurkish(str) {
-    const map = { "ç": "c", "Ç": "C", "ğ": "g", "Ğ": "G", "ı": "i", "İ": "i", "ö": "o", "Ö": "O", "ş": "s", "Ş": "S", "ü": "u", "Ü": "U" };
-    return str.split("").map(c => map[c] || c).join("").toLowerCase();
-}
-
 // Calculate levenshtein distance between 2 words.
 function levenshtein(a, b) {
     const matrix = Array(b.length + 1).fill().map(() => Array(a.length + 1).fill(0));
@@ -61,49 +55,3 @@ function getEndMessage(MESSAGES_DATA, mistakes, skips, total) {
     if (ratioMistake <= 0.7) return pickRandomMessage(MESSAGES_DATA.lesson_poor);
     else return pickRandomMessage(MESSAGES_DATA.lesson_terrible);
 }
-
-
-//////////////////////////////////////////////////
-// EXERCISE CLASS
-//////////////////////////////////////////////////
-
-class LanguageItemData {
-    constructor(data) {
-        this.data = data;
-        this.langEN = getLanguageValue(data["l-EN"]);
-        this.langTR = getLanguageValue(data["l-TR"]);
-        this.type = data["type"];
-    }
-
-    getLanguageTR() {
-        return this.langTR;
-    }
-
-    getLanguageEN() {
-        return this.langEN;
-    }
-
-    getType() {
-        return this.type;
-    }
-
-    getTranslation(phrase) {
-        return phrase === this.langEN ? this.langTR : this.langEN;
-    }
-}
-
-
-//////////////////////////////////////////////////
-// GLOBAL VARIABLES
-//////////////////////////////////////////////////
-
-// Just need this as an Enum.
-const ExerciseResult = {
-    CORRECT: "correct",
-    FAILED: "failed",
-    SKIPPED: "skipped"
-};
-
-const DB_TABLE_NAME = "languageData";
-const { createClient } = supabase;
-const DB_CLIENT = createClient("https://scclxzppjhmznnyvfsdv.supabase.co", "sb_publishable_GVkXjWkNi-yZTN-FSzytXQ_9tXTcoyn");

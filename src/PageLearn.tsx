@@ -1,41 +1,11 @@
 import '../style/PageLearn.css'
 
 import { useState, useEffect, useCallback } from "react";
-import { DB_CLIENT, DB_TABLE_NAME } from "./globals";
+import { DB_CLIENT, DB_TABLE_NAME, LanguageItemData, normalizeTurkish } from "./globals";
+import type { RawItem, ItemType } from "./globals";
 
-// ── Types ────────────────────────────────────────────────────────────────────
-
-type ItemType = "word" | "phrase" | "sentence";
-
-interface RawItem {
-  id: number;
-  "l-EN": string;
-  "l-TR": string;
-  type: ItemType;
-}
-
-class LanguageItemData {
-  private raw: RawItem;
-  constructor(raw: RawItem) {
-    this.raw = raw;
-  }
-  getType(): ItemType { return this.raw.type; }
-  getLanguageEN(): string { return this.raw["l-EN"]; }
-  getLanguageTR(): string { return this.raw["l-TR"]; }
-}
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
-
-// Mirror the normalizeTurkish() helper from util.js — fold Turkish chars to ASCII
-function normalizeTurkish(s: string): string {
-  return s
-    .replace(/ğ/g, "g").replace(/Ğ/g, "G")
-    .replace(/ü/g, "u").replace(/Ü/g, "U")
-    .replace(/ş/g, "s").replace(/Ş/g, "S")
-    .replace(/ı/g, "i").replace(/İ/g, "I")
-    .replace(/ö/g, "o").replace(/Ö/g, "O")
-    .replace(/ç/g, "c").replace(/Ç/g, "C");
-}
 
 function matchesSearch(query: string, item: LanguageItemData): boolean {
   if (!query) return true;

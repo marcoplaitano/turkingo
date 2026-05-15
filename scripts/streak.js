@@ -1,5 +1,3 @@
-const MAX_STREAK_FREEZES = 3;
-
 export function updateStreak() {
     // Only update streak once per day.
     if (getStreakDate() === TODAY_DATE)
