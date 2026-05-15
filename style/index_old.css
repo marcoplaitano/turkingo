@@ -1,0 +1,238 @@
+html, body {
+  height: 100%;
+}
+body {
+  display: flex;
+  flex-direction: column;
+}
+header {
+  flex-shrink: 0;
+}
+main {
+  flex: 1;
+  overflow-y: auto;
+}
+@media screen and (min-height:700px) {
+  main {
+    margin-top: 6rem;
+  }
+}
+
+footer {
+  margin-top: 0;
+  flex-shrink: 0;
+}
+
+.app {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  overflow-y: auto;
+}
+
+.app h2 {
+  margin: 0.8rem 0 2rem;
+}
+
+
+/* ***** STREAK ***** */
+.fire-freezed {
+  filter: hue-rotate(190deg) saturate(1.5);
+}
+.title-streak-container {
+  display: flex;
+  justify-content: space-between;
+}
+#streak {
+  display: flex;
+  align-items: center;
+}
+
+
+/* ***** QUESTION ***** */
+#question {
+  margin-bottom: 1.2rem;
+}
+
+
+/* ***** INPUT FIELD ***** */
+input {
+  background-color: var(--color-background);
+  color: var(--color-text);
+  font-size: inherit;
+  outline: none;
+  border-radius: 10px;
+  border: 1px solid var(--color-text2);
+}
+input:focus {
+  outline: none;
+  border-color: var(--color-accent);
+}
+
+
+/* ***** INPUT FIELD ***** */
+#hint {
+  text-align: center;
+  margin: 1rem 0 2rem;
+}
+
+
+/* ***** BUTTONS ***** */
+main button {
+  font-size: inherit;
+  display: block;
+  /* margin: 0.2rem 0 1rem; */
+  padding: 12px;
+  border: none;
+  border-radius: 10px;
+  background: var(--color-accent);
+  color: var(--color-background);
+  cursor: pointer;
+  transition: 0.1s;
+}
+
+main button:hover {
+  filter: brightness(85%);
+}
+main button:disabled:hover {
+    filter: none;
+}
+
+#answers > div {
+  display: flex;
+  gap: 8px;
+}
+#answers {
+  flex-wrap: wrap;
+  justify-content: center;
+}
+#answers > div button {
+  flex: 1 1 120px;   /* grow | shrink | preferred width */
+  white-space: normal;
+  word-break: break-word;
+  text-align: center;
+}
+
+
+/* ***** GUESS TRANSLATION BUTTONS ***** */
+.btn-guess {
+  width: 100%;
+  margin-bottom: 1rem;
+}
+.btn-guess.correct {
+  background: var(--color-green) !important;
+  opacity: 0.8;
+}
+.btn-guess.wrong {
+  background: var(--color-red) !important;
+  opacity: 0.8;
+}
+
+
+/* ***** NEXT/DELETE BUTTONS ***** */
+.app #buttons {
+  width: 70%;
+  margin-top: 2.4rem;
+  display: flex;
+  gap: 8px;
+}
+.app #buttons button {
+  width: 100%;
+  color: var(--color-skip-btn-fg);
+  background: var(--color-skip-btn-bg);
+}
+
+.btn-next.correct {
+  color: var(--color-background) !important;
+  background: var(--color-green) !important;
+}
+.btn-next.wrong {
+  color: var(--color-background) !important;
+  background: var(--color-red) !important;
+}
+
+
+/* ***** MATCH PAIRS BUTTONS ***** */
+.btn-match {
+  width: 100%;
+  margin-bottom: 1rem;
+}
+.btn-match.correct {
+  background: var(--color-green) !important;
+  opacity: 0.8;
+}
+
+.btn-match.wrong {
+  background: var(--color-red) !important;
+  opacity: 0.8;
+}
+
+.selected {
+  outline: 2px solid var(--color-accent);
+  filter: brightness(82%);
+}
+
+
+/* ***** FEEDBACK ***** */
+#feedback {
+  margin-top: 1.2rem;
+  font-weight: bold;
+}
+
+
+/* ***** PROGRESS BAR ***** */
+#bottom-menu-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+}
+
+#progress-and-skip-container {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  gap: 16px;
+}
+
+#progress-container {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+}
+
+#progress-bar {
+  width: 60%;
+  max-width: 400px;
+  background-color: var(--color-skip-btn-bg);
+  border-radius: 5px;
+  margin-top: auto;
+  margin-bottom: auto;
+  height: 2rem;
+  overflow: hidden;
+  display: flex;
+  gap: 3px;
+}
+
+.progress-bar-segment {
+  border-radius: 3px;
+}
+
+
+/* ***** SKIP BUTTON ***** */
+#btn-skip {
+  font-size: 2.4rem;
+  color: var(--color-skip-btn-fg);
+  background: var(--color-skip-btn-bg);
+  border: none;
+  border-radius: 10px;
+  padding: 0 12px 4px;
+  display: block;
+  margin-left: auto;
+}
+#btn-skip:enabled:hover {
+  filter: brightness(85%);
+  cursor: pointer;
+}
