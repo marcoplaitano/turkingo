@@ -26,7 +26,7 @@ input[type="radio"] {
   display: grid;
   place-content: center;
   cursor: pointer;
-  margin-right: 0.4rem;
+  margin-right: 0.5rem;
 }
 input[type="radio"]::before {
   content: "";
@@ -47,7 +47,7 @@ input[type="radio"]:checked::before {
   background: var(--color-skip-btn-bg);
   border: none;
   border-radius: 10px;
-  padding: 8px 12px;
+  padding: 1.2rem 4.4rem;
   display: block;
   margin: 1.2rem auto;
 }
