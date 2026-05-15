@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 
 <head>
@@ -27,75 +27,17 @@
 
   <meta name="theme-color" content="#EFF1F5" media="(prefers-color-scheme: light)">
   <meta name="theme-color" content="#1E1E2E" media="(prefers-color-scheme: dark)">
-  <link rel="stylesheet" href="/style/style.css">
-  <link rel="stylesheet" href="/style/index.css">
-  <link rel="stylesheet" href="/style/streak_animation.css">
   <script type="text/javascript" src="/scripts/theme.js"></script>
   <title>TürKingo</title>
 </head>
 
-<body id="top">
-  <header id="banner">
-    <div class="title-streak-container">
-      <h1><a href="/" translate="no" title="TürKingo">TürKingo</a></h1>
-      <p id="streak">
-        <span class="fire-icon">🔥</span>
-        Streak: <span id="streak-num">0</span>
-      </p>
-    </div>
-    <nav>
-      <a class="navbar-item" id="navbar-curr-page">Home</a>
-      <a class="navbar-item" href="/scoreboard/">Scores</a>
-      <a class="navbar-item" href="/learn/">Learn</a>
-      <a class="navbar-item" href="/about/">About</a>
-    </nav>
-  </header>
-
-  <main>
-    <div class="app">
-      <h2 id="title">Loading...</h2>
-      <p id="question"></p>
-      <p id="hint" style="display: none;"></p>
-      <div id="answers"></div>
-      <div id="buttons"></div>
-      <p id="feedback"></p>
-    </div>
-  </main>
-
-  <div id="overlay-container">
-    <div id="overlay">
-      <span class="fire-icon">🔥</span>
-      <div class="text">
-        <span id="overlay-num">0</span>
-        <span id="overlay-label">days streak</span>
-      </div>
-    </div>
-  </div>
-
-  <div id="bottom-menu-container">
-    <div id="progress-and-skip-container">
-      <div id="progress-container">
-        <div id="progress-bar"></div>
-        <span id="progress-label"></span>
-      </div>
-      <button id="btn-skip" aria-label="Skip exercise" title="Skip exercise" onclick="skipExercise()">»</button>
-    </div>
-  </div>
-
+<body>
+  <div id="root"></div>
+  <script type="module" src="/src/main.tsx"></script>
   <footer>
-    <hr>
+    <hr />
     <p><span translate="no">© 2026 Marco Plaitano</span></p>
   </footer>
 </body>
-
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
-<script type="text/javascript" src="/scripts/util.js"></script>
-<script type="text/javascript" src="/scripts/exercises/translation.js"></script>
-<script type="text/javascript" src="/scripts/exercises/match-translation.js"></script>
-<script type="text/javascript" src="/scripts/exercises/match-pairs.js"></script>
-<script type="text/javascript" src="/scripts/exercises/reoder-sentence.js"></script>
-<script type="text/javascript" src="/scripts/exercises/fill-blanks.js"></script>
-<script type="text/javascript" src="/scripts/streak.js"></script>
-<script type="text/javascript" src="/scripts/main.js"></script>
 
 </html>

@@ -68,13 +68,6 @@ body {
   flex-direction: column;
   min-height: 100vh;
 }
-/* ***** BACKGROUND GRADIENT COLOR ***** */
-/* body {
-  min-height: 100vh;
-  min-height: -webkit-fill-available;
-  min-height: 100dvh;
-  background: linear-gradient(135deg, var(--color-background) 0%, var(--color-red) 500%);
-} */
 
 h1 { font-size: 1.64em; }
 h2 { font-size: 1.4em; }
@@ -107,47 +100,6 @@ main hr {
 }
 
 
-/* ***** HEADER ***** */
-header#banner {
-  display: block;
-  justify-content: space-between;
-  margin: 2rem 0 3.2rem;
-}
-header#banner h1 {
-  display: inline-block;
-  font-size: 1.4em;
-  margin: 0;
-  background: linear-gradient(to right, var(--color-accent), var(--color-red));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  color: transparent;
-}
-header#banner h1 a {
-  color: var(--color-text);
-  text-decoration: none;
-}
-header#banner nav {
-  display: flex;
-  align-items: center;
-  margin-top: 0.4rem;
-}
-header#banner nav a {
-  color: var(--color-text2);
-  text-decoration: underline;
-  text-decoration-color: var(--color-text2-underline);
-  text-decoration-thickness: 1px;
-  margin: 0;
-}
-header#banner nav a:not(:last-of-type) {
-  margin-right: 1.6rem;
-}
-header#banner nav a#navbar-curr-page {
-  text-decoration: none;
-  cursor: default;
-}
-
-
 /* ***** LINKS ***** */
 a {
   cursor: pointer;
@@ -170,13 +122,6 @@ main a[href^="http"]:not([href*="turkingo.netlify.app"]):not(#random-post-link):
   margin-right: 0.2em;
 }
 
-header#banner h1 a:hover,
-header#banner h1 a:focus {
-  text-decoration: none;
-}
-header#banner h1 a:visited {
-  text-decoration: none;
-}
 main p a,
 main p a::after {
   text-decoration: underline;
@@ -234,14 +179,10 @@ main p.post-info + p {
   margin-top: 0;
 }
 
-.feedback {
-  margin-top: 15px;
-}
-
 
 /* ***** FOOTER ***** */
 /* Stretch main to fill all remaining space towards the bottom of the page. */
-main {
+#root {
   flex: 1;
 }
 footer {
@@ -257,35 +198,13 @@ footer hr {
 footer p {
   color: var(--color-text2);
 }
-footer a {
-  color: var(--color-text2);
-  text-decoration: underline;
-  text-decoration-color: var(--color-text2-underline);
-  text-decoration-thickness: 1px;
-}
-#btn-theme {
-  cursor: pointer;
-  background: none;
-  border: none;
-  margin: 0;
-  padding: 0;
-  font-family: inherit;
-  font-size: inherit;
-  color: var(--color-text2);
-  text-decoration: underline;
-  text-decoration-thickness: 1px;
-  text-underline-offset: 3px;
-  text-decoration-color: var(--color-text2-underline);
-}
+
 
 
 /* ***** DESKTOP VERSION ***** */
 @media screen and (min-width:770px) {
   body {
     width: 750px;
-  }
-  header#banner {
-    line-height: 1.4;
   }
 }
 

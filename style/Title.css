@@ -1,0 +1,24 @@
+.title-streak-container {
+  display: flex;
+  justify-content: space-between;
+}
+
+h1.title {
+  display: inline-block;
+  font-size: 1.4em;
+  margin: 0;
+  background: linear-gradient(to right, var(--color-accent), var(--color-red));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: transparent;
+}
+
+/* ***** STREAK ***** */
+.fire-freezed {
+  filter: hue-rotate(190deg) saturate(1.5);
+}
+#streak {
+  display: flex;
+  align-items: center;
+}

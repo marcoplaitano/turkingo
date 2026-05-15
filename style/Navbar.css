@@ -1,0 +1,30 @@
+header {
+  display: block;
+  justify-content: space-between;
+  margin: 2rem 0 3.2rem;
+}
+header nav {
+  display: flex;
+  align-items: center;
+  margin-top: 0.4rem;
+}
+header nav a {
+  color: var(--color-text2);
+  text-decoration: underline;
+  text-decoration-color: var(--color-text2-underline);
+  text-decoration-thickness: 1px;
+  margin: 0;
+}
+header nav a:not(:last-of-type) {
+  margin-right: 1.6rem;
+}
+header nav a.navbar-curr-page {
+  text-decoration: none;
+  cursor: default;
+}
+
+@media screen and (min-width:770px) {
+  header {
+    line-height: 1.4;
+  }
+}

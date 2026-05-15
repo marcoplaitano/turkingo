@@ -1,6 +1,4 @@
-const MAX_STREAK_FREEZES = 3;
-
-function updateStreak() {
+export function updateStreak() {
     // Only update streak once per day.
     if (getStreakDate() === TODAY_DATE)
         return;
@@ -11,36 +9,36 @@ function updateStreak() {
     streakAnimationStart(true);
 }
 
-function getStreak() {
+export function getStreak() {
     return parseInt(localStorage.getItem("streakNum")) || 0;
 }
 
-function getStreakDate() {
+export function getStreakDate() {
     return localStorage.getItem("streakLastDate");
 }
 
-function resetStreak() {
+export function resetStreak() {
     localStorage.setItem("streakNum", 0);
     localStorage.removeItem("streakLastDate");
 }
 
-function getNumFreezes() {
+export function getNumFreezes() {
     return parseInt(localStorage.getItem("streakFreezes")) || 0;
 }
 
-function increaseStreakFreezes() {
+export function increaseStreakFreezes() {
     const currNumStreakFreezes = getNumFreezes();
     if (currNumStreakFreezes < MAX_STREAK_FREEZES)
         localStorage.setItem("streakFreezes", currNumStreakFreezes + 1);
 }
 
-function decreaseStreakFreezes() {
+export function decreaseStreakFreezes() {
     const currNumStreakFreezes = getNumFreezes();
     if (currNumStreakFreezes > 0)
         localStorage.setItem("streakFreezes", currNumStreakFreezes - 1);
 }
 
-function setStreakFreezed(freezed) {
+export function setStreakFreezed(freezed) {
     sessionStorage.setItem("freezed", freezed);
     document.querySelectorAll(".fire-icon").forEach(element => {
         if (freezed)
@@ -50,14 +48,14 @@ function setStreakFreezed(freezed) {
     });
 }
 
-function isStreakFreezed() {
+export function isStreakFreezed() {
     const isFreezed = sessionStorage.getItem("freezed");
     if (!isFreezed)
         return false;
     return isFreezed === "true";
 }
 
-function useStreakFreeze() {
+export function useStreakFreeze() {
     setStreakFreezed(true);
     decreaseStreakFreezes();
 }

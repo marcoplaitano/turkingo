@@ -36,18 +36,6 @@ footer {
 }
 
 
-/* ***** STREAK ***** */
-.fire-freezed {
-  filter: hue-rotate(190deg) saturate(1.5);
-}
-.title-streak-container {
-  display: flex;
-  justify-content: space-between;
-}
-#streak {
-  display: flex;
-  align-items: center;
-}
 
 
 /* ***** QUESTION ***** */
@@ -172,6 +160,7 @@ main button:disabled:hover {
   outline: 2px solid var(--color-accent);
   filter: brightness(82%);
 }
+
 
 
 /* ***** FEEDBACK ***** */
