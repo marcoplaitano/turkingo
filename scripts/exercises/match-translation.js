@@ -21,7 +21,6 @@ class ExerciseMatchTranslation {
     do() {
         return new Promise((resolve) => {
             this.checkBtn = document.createElement("button");
-            this.input = document.createElement("input");
             document.getElementById("title").textContent = "Match the translation";
 
             const options = shuffle([this.answer, ...this.wrongGuesses]);

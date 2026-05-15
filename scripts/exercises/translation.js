@@ -1,7 +1,8 @@
 class ExerciseTranslation {
     constructor(INPUT_DATA) {
         this.data = new LanguageItemData(randomItem(INPUT_DATA));
-        this.question = Math.random() > 0.5 ? this.data.getLanguageEN() : this.data.getLanguageTR();
+        this.toTurkish = Math.random() > 0.5;
+        this.question = this.toTurkish ? this.data.getLanguageEN() : this.data.getLanguageTR();
         this.answer = this.data.getTranslation(this.question).trim().toLowerCase();
     }
 
@@ -25,6 +26,7 @@ class ExerciseTranslation {
             };
 
             this.input.placeholder = "Type...";
+            this.input.lang = this.toTurkish ? "tr" : "en";
 
             this.input.addEventListener("keydown", e => {
                 if (e.key === "Enter") {

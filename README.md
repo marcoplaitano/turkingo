@@ -28,6 +28,9 @@ Asked a LLM model to give some examples that I then collected in JSON format for
 
 ### Website
 
++ input field to add new elements to the input data  
+    need database
+
 ### Exercises
 
 + new exercise type: given a word form the plural

@@ -170,16 +170,6 @@ main a[href^="http"]:not([href*="turkingo.netlify.app"]):not(#random-post-link):
   margin-right: 0.2em;
 }
 
-a:hover,
-a:focus,
-a:hover::after,
-a:focus::after {
-  text-decoration: underline;
-  text-decoration-thickness: 1px;
-}
-a:visited {
-  text-decoration: none;
-}
 header#banner h1 a:hover,
 header#banner h1 a:focus {
   text-decoration: none;
@@ -190,6 +180,8 @@ header#banner h1 a:visited {
 main p a,
 main p a::after {
   text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
 }
 
 

@@ -202,10 +202,10 @@ async function startLesson() {
 }
 
 async function endLesson() {
+    saveLessonScore();
     updateStreak();
     showStreak();
     await showEndLessonScreen();
-    saveLessonScore();
     resetLessonProgress();
 }
 
@@ -249,8 +249,8 @@ async function cycleExercises() {
         const randomExercise = types[Math.floor(Math.random() * types.length)];
         EXERCISE = new randomExercise(INPUT_DATA);
         // EXERCISE = new ExerciseTranslation(INPUT_DATA);
-        // EXERCISE = new ExerciseTranslationWithGuesses(INPUT_DATA);
-        // EXERCISE = new ExerciseMatching(INPUT_DATA);
+        // EXERCISE = new ExerciseMatchTranslation(INPUT_DATA);
+        // EXERCISE = new ExerciseMatchPairs(INPUT_DATA);
         // EXERCISE = new ExerciseFillBlanks(INPUT_DATA);
         // EXERCISE = new ExerciseReorderSentence(INPUT_DATA);
         await EXERCISE.do();
