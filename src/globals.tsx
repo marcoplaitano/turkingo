@@ -1,3 +1,11 @@
+import { createClient } from '@supabase/supabase-js'
+
+const SUPABASE_URL = "https://scclxzppjhmznnyvfsdv.supabase.co"; //import.meta.env.VITE_SUPABASE_URL as string;
+const SUPABASE_ANON_KEY = "sb_publishable_GVkXjWkNi-yZTN-FSzytXQ_9tXTcoyn"; // import.meta.env.VITE_SUPABASE_ANON_KEY as string;
+export const DB_TABLE_NAME = "languageData"; // import.meta.env.VITE_DB_TABLE_NAME as string ?? "";
+
+export const DB_CLIENT = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
 // Just need this as an Enum.
 export const ExerciseResult = {
   CORRECT: "correct",
@@ -8,11 +16,6 @@ export const ExerciseResult = {
 export const MAX_STREAK_FREEZES = 3;
 
 export const TODAY_DATE = new Date().toISOString().split('T')[0]; // "YYYY-MM-DD"
-
-export const DB_TABLE_NAME = "languageData";
-// export const { createClient } = supabase;
-// export const DB_CLIENT = createClient("https://scclxzppjhmznnyvfsdv.supabase.co", "sb_publishable_GVkXjWkNi-yZTN-FSzytXQ_9tXTcoyn");
-
 
 
 

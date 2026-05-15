@@ -1,74 +1,233 @@
-import { useState } from "react";
+import '../style/PageLearn.css'
 
-export default function PageLearn() {
-  const [showNoResults, setShowNoResults] = useState(false);
-  const [showAddResult, setShowAddResult] = useState(false);
+import { useState, useEffect, useCallback } from "react";
+import { DB_CLIENT, DB_TABLE_NAME } from "./globals";
 
-  function search() {
+// ── Types ────────────────────────────────────────────────────────────────────
 
+type ItemType = "word" | "phrase" | "sentence";
+
+interface RawItem {
+  id: number;
+  "l-EN": string;
+  "l-TR": string;
+  type: ItemType;
+}
+
+class LanguageItemData {
+  private raw: RawItem;
+  constructor(raw: RawItem) {
+    this.raw = raw;
   }
+  getType(): ItemType { return this.raw.type; }
+  getLanguageEN(): string { return this.raw["l-EN"]; }
+  getLanguageTR(): string { return this.raw["l-TR"]; }
+}
 
-  function addData() {
+// ── Helpers ──────────────────────────────────────────────────────────────────
 
-  }
+// Mirror the normalizeTurkish() helper from util.js — fold Turkish chars to ASCII
+function normalizeTurkish(s: string): string {
+  return s
+    .replace(/ğ/g, "g").replace(/Ğ/g, "G")
+    .replace(/ü/g, "u").replace(/Ü/g, "U")
+    .replace(/ş/g, "s").replace(/Ş/g, "S")
+    .replace(/ı/g, "i").replace(/İ/g, "I")
+    .replace(/ö/g, "o").replace(/Ö/g, "O")
+    .replace(/ç/g, "c").replace(/Ç/g, "C");
+}
+
+function matchesSearch(query: string, item: LanguageItemData): boolean {
+  if (!query) return true;
+  const en = normalizeTurkish(item.getLanguageEN().toLowerCase());
+  const tr = normalizeTurkish(item.getLanguageTR().toLowerCase());
+  return en.includes(query) || tr.includes(query);
+}
+
+// ── Sub-components ───────────────────────────────────────────────────────────
+
+interface ItemTableProps {
+  title: string;
+  items: LanguageItemData[];
+  query: string;
+}
+
+function ItemTable({ title, items, query }: ItemTableProps) {
+  const visible = items.filter((item) => matchesSearch(query, item));
+  if (visible.length === 0) return null;
 
   return (
-    <>
-      <main>
-        <article>
-          <h1>Learn</h1>
+    <section className="section">
+      <h3>{title}</h3>
+      <div className="list-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>English</th>
+              <th>Turkish</th>
+            </tr>
+          </thead>
+          <tbody>
+            {visible.map((item, i) => (
+              <tr key={i} className="entry">
+                <td className="l-en">{item.getLanguageEN()}</td>
+                <td className="l-tr">{item.getLanguageTR()}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </section>
+  );
+}
 
-          <h2>Add new data</h2>
-          <div className="add-item-container">
-            <input type="text" id="input-en" placeholder="English..." />
-            <input type="text" id="input-tr" placeholder="Turkish..." />
-            <div className="radio-container">
-              <label className="radio-item"><input type="radio" name="choice" value="word" />Word</label>
-              <label className="radio-item"><input type="radio" name="choice" value="phrase" />Phrase</label>
-              <label className="radio-item"><input type="radio" name="choice" value="sentence" />Sentence</label>
-            </div>
-            <button className="btn" id="btn-add" onClick={addData}>Add</button>
-            {showAddResult && <p id="add-result-p"></p>}
+
+
+export default function PageLearn() {
+  const [data, setData] = useState<LanguageItemData[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState<string | null>(null);
+
+  const [inputEN, setInputEN] = useState("");
+  const [inputTR, setInputTR] = useState("");
+  const [itemType, setItemType] = useState<ItemType | null>(null);
+  const [addResult, setAddResult] = useState<string | null>(null);
+
+  const [query, setQuery] = useState("");
+
+  // ── Data loading ──────────────────────────────────────────────────────────
+
+  const loadData = useCallback(async () => {
+    setLoading(true);
+    setLoadError(null);
+    try {
+      const res = await DB_CLIENT.from(DB_TABLE_NAME).select("*");
+      if (res.status !== 200) throw new Error(res.error?.message ?? "DB error");
+      setData((res.data as RawItem[]).map((r) => new LanguageItemData(r)));
+    } catch (err) {
+      setLoadError(String(err));
+    } finally {
+      setLoading(false);
+    }
+  }, [DB_CLIENT]);
+
+  useEffect(() => { loadData(); }, [loadData]);
+
+  // ── Add item ──────────────────────────────────────────────────────────────
+
+  async function handleAdd() {
+    const en = inputEN.trim().toLowerCase();
+    const tr = inputTR.trim().toLowerCase();
+
+    if (!itemType || !en || !tr) {
+      setAddResult("Missing data! Not added.");
+      return;
+    }
+
+    const alreadyExists = data.some(
+      (d) => d.getLanguageEN() === en && d.getLanguageTR() === tr
+    );
+    if (alreadyExists) {
+      setAddResult("Item already in the database!");
+      return;
+    }
+
+    const id = data.length + 1;
+    const item: RawItem = { id, "l-EN": en, "l-TR": tr, type: itemType };
+    await DB_CLIENT.from(DB_TABLE_NAME).insert(item);
+    setAddResult(`Added ${itemType} '${en}' → '${tr}'.`);
+    setInputEN("");
+    setInputTR("");
+    setItemType(null);
+    await loadData();
+  }
+
+  // ── Filtered search ───────────────────────────────────────────────────────
+
+  const normalizedQuery = normalizeTurkish(query.toLowerCase());
+
+  const words     = data.filter((d) => d.getType() === "word");
+  const phrases   = data.filter((d) => d.getType() === "phrase");
+  const sentences = data.filter((d) => d.getType() === "sentence");
+
+  const noResults =
+    normalizedQuery.length > 0 &&
+    [...words, ...phrases, ...sentences].every(
+      (item) => !matchesSearch(normalizedQuery, item)
+    );
+
+  // ── Render ────────────────────────────────────────────────────────────────
+
+  return (
+    <main>
+      <article>
+        <h1>Learn</h1>
+
+        {/* ── Add new data ── */}
+        <h2>Add new data</h2>
+        <div className="add-item-container">
+          <input
+            type="text"
+            id="input-en"
+            placeholder="English..."
+            autoComplete="off"
+            value={inputEN}
+            onChange={(e) => setInputEN(e.target.value)}
+          />
+          <input
+            type="text"
+            id="input-tr"
+            placeholder="Turkish..."
+            autoComplete="off"
+            value={inputTR}
+            onChange={(e) => setInputTR(e.target.value)}
+          />
+
+          <div className="radio-container">
+            {(["word", "phrase", "sentence"] as ItemType[]).map((t) => (
+              <label key={t} className="radio-item">
+                <input
+                  type="radio"
+                  name="choice"
+                  value={t}
+                  checked={itemType === t}
+                  onChange={() => setItemType(t)}
+                />
+                {t.charAt(0).toUpperCase() + t.slice(1)}
+              </label>
+            ))}
           </div>
 
-          <h2>Search data</h2>
-          <div className="search-container">
-            <input type="text" maxLength={40} placeholder="Search..." autoComplete="off" onChange={search} id="search-input" />
-          </div>
+          <button className="btn" id="btn-add" onClick={handleAdd}>Add</button>
 
-          {showNoResults && <p id="no-result-p">No results.</p>}
+          {addResult && <p id="add-result-p">{addResult}</p>}
+        </div>
 
-          <div className="section">
-            <h3>Words</h3>
-            <div className="list-wrapper">
-              <table id="list-words">
-                <thead><tr><th>English</th><th>Turkish</th></tr></thead>
-                <tbody className="list" id="list-words-body"></tbody>
-              </table>
-            </div>
-          </div>
+        {/* ── Search ── */}
+        <h2>Search data</h2>
+        <div className="search-container">
+          <input
+            type="text"
+            maxLength={40}
+            placeholder="Search..."
+            autoComplete="off"
+            id="search-input"
+            value={query}
+            disabled={loading}
+            onChange={(e) => { setAddResult(null); setQuery(e.target.value); }}
+            onKeyDown={(e) => { if (e.key === "Enter") e.currentTarget.blur(); }}
+          />
+        </div>
 
-          <div className="section">
-            <h3>Phrases</h3>
-            <div className="list-wrapper">
-              <table id="list-phrases">
-                <thead><tr><th>English</th><th>Turkish</th></tr></thead>
-                <tbody className="list" id="list-phrases-body"></tbody>
-              </table>
-            </div>
-          </div>
+        {/* ── Status messages ── */}
+        {loadError && <p className="error-p">{loadError}</p>}
+        {noResults && <p id="no-result-p">No results.</p>}
 
-          <div className="section">
-            <h3>Sentences</h3>
-            <div className="list-wrapper">
-              <table id="list-sentences">
-                <thead><tr><th>English</th><th>Turkish</th></tr></thead>
-                <tbody className="list" id="list-sentences-body"></tbody>
-              </table>
-            </div>
-          </div>
-        </article>
-      </main>
-    </>
+        {/* ── Lists ── */}
+        <ItemTable title="Words"     items={words}     query={normalizedQuery} />
+        <ItemTable title="Phrases"   items={phrases}   query={normalizedQuery} />
+        <ItemTable title="Sentences" items={sentences} query={normalizedQuery} />
+      </article>
+    </main>
   );
 }
