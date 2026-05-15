@@ -1,4 +1,8 @@
+import '../style/Navbar.css'
+
 import { NavLink } from 'react-router-dom';
+
+import Title from './Title';
 
 export default function Navbar() {
   const navItems = [
@@ -10,9 +14,10 @@ export default function Navbar() {
 
   return (
     <header>
+      <Title/>
       <nav>
         {navItems.map((item) => (
-          <NavLink key={item.name} to={item.href} className={({ isActive }) => `navbar-item${isActive ? ' navbar-item-active' : ''}`}>
+          <NavLink key={item.name} to={item.href} className={({ isActive }) => `navbar-item${isActive ? ' navbar-curr-page' : ''}`}>
             {item.name}
           </NavLink>
         ))}

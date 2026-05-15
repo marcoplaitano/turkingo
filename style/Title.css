@@ -1,3 +1,8 @@
+.title-streak-container {
+  display: flex;
+  justify-content: space-between;
+}
+
 h1.title {
   display: inline-block;
   font-size: 1.4em;
@@ -7,4 +12,13 @@ h1.title {
   -webkit-text-fill-color: transparent;
   background-clip: text;
   color: transparent;
+}
+
+/* ***** STREAK ***** */
+.fire-freezed {
+  filter: hue-rotate(190deg) saturate(1.5);
+}
+#streak {
+  display: flex;
+  align-items: center;
 }

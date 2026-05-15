@@ -1,6 +1,5 @@
-import Navbar from './NavBar'
+import Navbar from './Navbar.tsx'
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Title from './Title';
 import { lazy, Suspense } from "react";
 
 const PageHome = lazy(() => import("./PageHome.tsx"));
@@ -11,7 +10,6 @@ const PageAbout = lazy(() => import("./PageAbout.tsx"));
 export default function App() {
   return (
     <>
-      <Title />
       <BrowserRouter>
         <Navbar />
         <Suspense fallback={<main>Loading...</main>}>
