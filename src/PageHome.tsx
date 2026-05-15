@@ -3,6 +3,8 @@ import '../style/streak_animation.css'
 
 import { useState } from "react";
 
+import { ExerciseTranslation } from './ExerciseTranslation';
+
 export default function PageHome() {
   const [showHint, setShowHint] = useState(false);
 
@@ -14,12 +16,13 @@ export default function PageHome() {
     <>
       <main>
         <div className="app">
-          <h2 id="title">Loading...</h2>
+          {/* <h2 id="title">Loading...</h2>
           <p id="question"></p>
           {showHint && <p id="hint"></p>}
           <div id="answers"></div>
           <div id="buttons"></div>
-          <p id="feedback"></p>
+          <p id="feedback"></p> */}
+          <ExerciseTranslation />
         </div>
       </main>
 
