@@ -334,11 +334,17 @@ let startedRevision = false;
 
 async function init() {
     showStreak();
-    const [langRes, endMsgRes] = await Promise.all([
-        fetch("/data/language_data.json"),
-        fetch("/data/messages.json"),
-    ]);
-    INPUT_DATA = await langRes.json();
+
+    const db_data = await DB_CLIENT.from(DB_TABLE_NAME).select("*");
+    if (db_data.status !== 200) {
+        console.log("STATUS:", db_data.status);
+        console.log("ERROR:", db_data.error);
+        console.log("STATUS TEXT:", db_data.statusText);
+        return;
+    }
+    INPUT_DATA = db_data.data;
+
+    const endMsgRes = await fetch("data/messages.json");
     MESSAGES_DATA = await endMsgRes.json();
     await startLesson();
 }

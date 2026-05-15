@@ -103,3 +103,7 @@ const ExerciseResult = {
     FAILED: "failed",
     SKIPPED: "skipped"
 };
+
+const DB_TABLE_NAME = "languageData";
+const { createClient } = supabase;
+const DB_CLIENT = createClient("https://scclxzppjhmznnyvfsdv.supabase.co", "sb_publishable_GVkXjWkNi-yZTN-FSzytXQ_9tXTcoyn");

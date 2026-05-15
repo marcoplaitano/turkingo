@@ -48,6 +48,21 @@
     <article>
       <h1>Learn</h1>
 
+      <h2>Add new data</h2>
+      <div class="add-item-container">
+        <input type="text" id="input-en" placeholder="English...">
+        <input type="text" id="input-tr" placeholder="Turkish...">
+        <div class="radio-container">
+          <label class="radio-item"><input type="radio" name="choice" value="word">Word</label>
+          <label class="radio-item"><input type="radio" name="choice" value="phrase">Phrase</label>
+          <label class="radio-item"><input type="radio" name="choice" value="sentence">Sentence</label>
+        </div>
+        <button class="btn" id="btn-add" onclick="addData()">Add</button>
+        <p id="add-result-p" style="display: none;"></p>
+      </div>
+
+
+      <h2>Search data</h2>
       <div class="search-container">
         <input type="text" maxlength="40" placeholder="Search..." autocomplete="off" oninput="search()" id="search-input">
       </div>
@@ -92,6 +107,7 @@
   </footer>
 </body>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
 <script type="text/javascript" src="/scripts/util.js"></script>
 <script type="text/javascript" src="/scripts/learn.js"></script>
 

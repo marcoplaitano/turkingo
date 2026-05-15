@@ -194,8 +194,10 @@ input {
   border-radius: 8px;
   border: 1px solid #cccccc;
 }
-input:disabled {
-  cursor: default;
+input:disabled,
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.4;
 }
 
 ::placeholder {
@@ -204,13 +206,6 @@ input:disabled {
 }
 ::-ms-input-placeholder {
   color: var(--color-placeholder);
-}
-
-
-/* ***** BUTTON ***** */
-button:disabled {
-  opacity: 0.4;
-  cursor: default;
 }
 
 
