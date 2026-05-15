@@ -9,13 +9,16 @@ export const MAX_STREAK_FREEZES = 3;
 
 export const TODAY_DATE = new Date().toISOString().split('T')[0]; // "YYYY-MM-DD"
 
-
 export const DB_TABLE_NAME = "languageData";
 // export const { createClient } = supabase;
 // export const DB_CLIENT = createClient("https://scclxzppjhmznnyvfsdv.supabase.co", "sb_publishable_GVkXjWkNi-yZTN-FSzytXQ_9tXTcoyn");
 
 
 
+
+//////////////////////////////////////////////////
+// STREAK FUNCTIONS
+//////////////////////////////////////////////////
 
 export function updateStreak() {
   // Only update streak once per day.

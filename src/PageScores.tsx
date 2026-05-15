@@ -1,106 +1,90 @@
+import '../style/PageScores.css'
+
 import { MAX_STREAK_FREEZES, getStreak, getNumFreezes } from './globals'
 
-export default function PageScores() {
-//   let lastDate = null;
+interface Score {
+  date: string;
+  correct: number;
+  failed: number;
+  skipped: number;
+}
 
-//   function formatDate(dateStr: string) {
-//     const date = new Date(dateStr);
-//     const formatted = date.toLocaleDateString("en-GB", {
-//       day: "2-digit",
-//       month: "short",
-//       year: "numeric"
-//     });
-//     return formatted;
-//   }
+function formatDate(dateStr: string) {
+  return new Date(dateStr).toLocaleDateString("en-GB", {
+    day: "2-digit",
+    month: "short",
+    year: "numeric"
+  });
+}
 
-//   function readScores() {
-//     return JSON.parse(localStorage.getItem("lessonScores") || "") || [];
-//   }
+function readScores(): Score[] {
+  try {
+    return JSON.parse(localStorage.getItem("lessonScores") || "[]") || [];
+  } catch {
+    return [];
+  }
+}
 
-//   function createEntryBar(correct: number, failed: number, skipped: number) {
-//     const bar = document.createElement("div");
-//     bar.className = "scorebar";
-//     const total = correct + failed + skipped;
-//     const correctWidth = (correct / total) * 100;
-//     const failedWidth = (failed / total) * 100;
-//     const skippedWidth = (skipped / total) * 100;
-//     if (correctWidth > 0) {
-//       const correctPart = document.createElement("div");
-//       correctPart.className = "scorebar-correct";
-//       correctPart.style.width = `${correctWidth}%`;
-//       bar.appendChild(correctPart);
-//     }
-//     if (failedWidth > 0) {
-//       const failedPart = document.createElement("div");
-//       failedPart.className = "scorebar-failed";
-//       failedPart.style.width = `${failedWidth}%`;
-//       bar.appendChild(failedPart);
-//     }
-//     if (skippedWidth > 0) {
-//       const skippedPart = document.createElement("div");
-//       skippedPart.className = "scorebar-skipped";
-//       skippedPart.style.width = `${skippedWidth}%`;
-//       bar.appendChild(skippedPart);
-//     }
-//     return bar;
-//   }
-
-//   function createEntry(correct: number, failed: number, skipped: number) {
-//     const entry = document.createElement("div");
-//     entry.className = "scoreboard-entry";
-//     const bar = createEntryBar(correct, failed, skipped);
-//     entry.appendChild(bar);
-//     const text = document.createElement("p");
-//     const textCorrect = document.createElement("span");
-//     textCorrect.textContent = `${correct}`;
-//     textCorrect.className = "scoreboard-text-correct";
-//     const textFailed = document.createElement("span");
-//     textFailed.textContent = `${failed}`;
-//     textFailed.className = "scoreboard-text-failed";
-//     const textSkipped = document.createElement("span");
-//     textSkipped.textContent = `${skipped}`;
-//     textSkipped.className = "scoreboard-text-skipped";
-//     text.appendChild(textCorrect);
-//     text.appendChild(document.createTextNode(" "));
-//     text.appendChild(textFailed);
-//     text.appendChild(document.createTextNode("  "));
-//     text.appendChild(textSkipped);
-//     entry.appendChild(text);
-//     return entry;
-//   }
-
-//   function showScoreboard() {
-//     const scores = readScores();
-//     const scoreboard = document.getElementById("scoreboard");
-//     if (scores.length === 0)
-//       return;
-//     scoreboard.innerHTML = "";
-
-//     scores.forEach(score => {
-//       if (score.date !== lastDate) {
-//         lastDate = score.date;
-//         const dateHeader = document.createElement("h3");
-//         dateHeader.textContent = formatDate(score.date);
-//         scoreboard.appendChild(dateHeader);
-//       }
-//       const entry = createEntry(score.correct, score.failed, score.skipped);
-//       scoreboard.appendChild(entry);
-//     });
-//   }
+function EntryBar({ correct, failed, skipped }: { correct: number; failed: number; skipped: number }) {
+  const total = correct + failed + skipped;
   return (
-    <>
-      <main>
-        <article>
-          <h1>Scores</h1>
-          <h2>Streak</h2>
-          <p>Complete at least one lesson per day to increase your streak.<br />
-            Right now, your streak is 🔥{getStreak()}.</p>
-          <p>For every lesson completed with an accuracy {'>'}=70%, you earn a streak freeze.<br />
-            Right now, you have <span className="fire-freezed">🔥</span>{getNumFreezes()}/{MAX_STREAK_FREEZES} freezes left.</p>
+    <div className="scorebar">
+      {correct > 0 && <div className="scorebar-correct" style={{ width: `${(correct / total) * 100}%` }} />}
+      {failed > 0  && <div className="scorebar-failed"  style={{ width: `${(failed  / total) * 100}%` }} />}
+      {skipped > 0 && <div className="scorebar-skipped" style={{ width: `${(skipped / total) * 100}%` }} />}
+    </div>
+  );
+}
 
-          <h2>Scoreboard</h2>
-          <div id="scoreboard">Complete a lesson to see your scores here.</div>
-        </article>
-      </main></>
+function Entry({ correct, failed, skipped }: { correct: number; failed: number; skipped: number }) {
+  return (
+    <div className="scoreboard-entry">
+      <EntryBar correct={correct} failed={failed} skipped={skipped} />
+      <p>
+        <span className="scoreboard-text-correct">{correct}</span>
+        {" "}
+        <span className="scoreboard-text-failed">{failed}</span>
+        {"  "}
+        <span className="scoreboard-text-skipped">{skipped}</span>
+      </p>
+    </div>
+  );
+}
+
+function Scoreboard({ scores }: { scores: Score[] }) {
+  if (scores.length === 0)
+    return <p>Complete a lesson to see your scores here.</p>;
+
+  const items: React.ReactNode[] = [];
+  let lastDate: string | null = null;
+  scores.forEach((score, i) => {
+    if (score.date !== lastDate) {
+      lastDate = score.date;
+      items.push(<h3 key={`date-${score.date}`}>{formatDate(score.date)}</h3>);
+    }
+    items.push(<Entry key={i} correct={score.correct} failed={score.failed} skipped={score.skipped} />);
+  });
+  return <div id="scoreboard">{items}</div>;
+}
+
+export default function PageScores() {
+  const scores = readScores();
+  return (
+    <main>
+      <article>
+        <h1>Scores</h1>
+        <h2>Streak</h2>
+        <p>
+          Complete at least one lesson per day to increase your streak.<br />
+          Right now, your streak is 🔥{getStreak()}.
+        </p>
+        <p>
+          For every lesson completed with an accuracy &gt;=70%, you earn a streak freeze.<br />
+          Right now, you have <span className="fire-freezed">🔥</span>{getNumFreezes()}/{MAX_STREAK_FREEZES} freezes left.
+        </p>
+        <h2>Scoreboard</h2>
+        <Scoreboard scores={scores} />
+      </article>
+    </main>
   );
 }

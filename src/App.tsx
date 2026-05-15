@@ -12,12 +12,12 @@ export default function App() {
     <>
       <BrowserRouter>
         <Navbar />
-        <Suspense fallback={<main>Loading...</main>}>
+        <Suspense fallback={<main></main>}>
           <Routes>
-            <Route path="/" element={<PageHome />} />
-            <Route path="/scores/" element={<PageScores />} />
-            <Route path="/learn/" element={<PageLearn />} />
-            <Route path="/about/" element={<PageAbout />} />
+            <Route path="/"         element={<PageHome />} />
+            <Route path="/scores/"  element={<PageScores />} />
+            <Route path="/learn/"   element={<PageLearn />} />
+            <Route path="/about/"   element={<PageAbout />} />
           </Routes>
         </Suspense>
       </BrowserRouter>

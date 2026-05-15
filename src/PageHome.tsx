@@ -1,4 +1,5 @@
 import '../style/PageHome.css'
+import '../style/streak_animation.css'
 
 import { useState } from "react";
 
