@@ -190,7 +190,7 @@ export default function PageLearn() {
         </div>
 
         {/* ── Status messages ── */}
-        {loadError && <p className="error-p">{loadError}</p>}
+        {loadError && <p className="p-error">{loadError}</p>}
         {noResults && <p id="no-result-p">No results.</p>}
 
         {/* ── Lists ── */}

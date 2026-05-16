@@ -1,38 +1,47 @@
 import { useState, useRef, useEffect } from "react";
 import { LanguageItemData, randomItem, normalizeTurkish, levenshtein } from "./globals";
-import type {ExerciseResultType} from './globals';
 
-interface Props {
+interface PropsExerciseTranslation {
+  key_: number;
   inputData: LanguageItemData[];
-  onDone: (result: ExerciseResultType, showAnswer: () => string) => void;
+  onCheck: (result: boolean) => void;
 }
 
-export function ExerciseTranslation({ inputData, onDone }: Props) {
+export default function ExerciseTranslation({ key_, inputData, onCheck }: PropsExerciseTranslation) {
   const [checked, setChecked] = useState(false);
+  const [correct, setCorrect] = useState(false);
   const [userInput, setUserInput] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const exerciseRef = useRef(() => {
+  const exerciseRef = useRef<{
+    question: string;
+    answer: string;
+    toTurkish: boolean;
+  } | null>(null);
+
+  if (!exerciseRef.current) {
     const data = randomItem(inputData);
     const toTurkish = Math.random() > 0.5;
     const question = toTurkish ? data.getLanguageEN() : data.getLanguageTR();
     const answer = data.getTranslation(question).trim().toLowerCase();
-    return { question, answer, toTurkish };
-  });
-  const { question, answer, toTurkish } = exerciseRef.current();
+    exerciseRef.current = { question, answer, toTurkish };
+  }
+  const { question, answer, toTurkish } = exerciseRef.current;
 
   useEffect(() => {
     inputRef.current?.focus();
   }, []);
 
-  const check = () => {
-    if (userInput.trim() === "" || checked) return;
-    setChecked(true);
+  function check() {
+    if (userInput.trim() === "" || checked)
+      return;
     const norm = normalizeTurkish(userInput.trim().toLowerCase());
     const normAns = normalizeTurkish(answer);
     const dist = levenshtein(norm, normAns);
-    const isCorrect = dist === 0 || dist === 1;
-    onDone(isCorrect ? "correct" : "failed", () => answer);
+    const isCorrect = dist === 0 || dist === 1; // TODO: check this
+    setCorrect(isCorrect);
+    setChecked(true);
+    onCheck(isCorrect);
   };
 
   return (
@@ -43,7 +52,7 @@ export function ExerciseTranslation({ inputData, onDone }: Props) {
         <input
           ref={inputRef}
           className={`translation-input ${checked ? (normalizeTurkish(userInput.trim().toLowerCase()) === normalizeTurkish(answer) || levenshtein(normalizeTurkish(userInput.trim().toLowerCase()), normalizeTurkish(answer)) === 1 ? "input-correct" : "input-wrong") : ""}`}
-          placeholder="Type your translation..."
+          placeholder="Type..."
           lang={toTurkish ? "tr" : "en"}
           value={userInput}
           disabled={checked}
@@ -54,13 +63,18 @@ export function ExerciseTranslation({ inputData, onDone }: Props) {
       {!checked && (
         <div className="exercise-buttons">
           <button
-            className="btn-check"
+            className="btn btn-check"
             disabled={userInput.trim() === ""}
             onClick={check}
           >
             Check
           </button>
         </div>
+      )}
+      {checked && !correct && (
+        <p className="exercise-feedback">
+          {answer}
+        </p>
       )}
     </div>
   );
