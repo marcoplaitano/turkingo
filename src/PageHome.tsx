@@ -7,6 +7,7 @@ import type { RawItem } from "./globals";
 import { ExerciseResult } from "./globals";
 
 import ExerciseTranslation from './ExerciseTranslation';
+import ExerciseMatchPairs from './ExerciseMatchPairs';
 import ButtonNext from './ButtonNext.tsx';
 import ButtonSkip from './ButtonSkip.tsx';
 import ProgressBar from './ProgressBar.tsx';
@@ -70,7 +71,8 @@ export default function PageHome() {
       <>
         <main>
           <div className="app">
-            {data?.length > 0 && <ExerciseTranslation key={exerciseKey} inputData={data} onCheck={setResult} skipped={skipped} />}
+            {/* {data?.length > 0 && <ExerciseTranslation key={exerciseKey} inputData={data} onCheck={setResult} skipped={skipped} />} */}
+            {data?.length > 0 && <ExerciseMatchPairs key={exerciseKey} inputData={data} onCheck={setResult} />}
             {result !== null && <ButtonNext status={result} onNext={nextExercise} />}
           </div>
         </main>
