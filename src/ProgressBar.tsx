@@ -5,11 +5,11 @@ import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { ExerciseResult, ExerciseResultID, NUM_EXERCISES_PER_LESSON } from './globals';
 
 interface PropsProgressBar {
-  refreshId: number;
+  exerciseNum: number;
   status: ExerciseResult | null;
 }
 
-export default function ProgressBar({ refreshId, status }: PropsProgressBar) {
+export default function ProgressBar({ exerciseNum, status }: PropsProgressBar) {
   const progressBarRef = useRef<HTMLDivElement | null>(null);
   const [segWidth, setSegWidth] = useState(0);
   const [STATUSES, addStatus] = useState<ExerciseResult[]>([]);
@@ -17,9 +17,11 @@ export default function ProgressBar({ refreshId, status }: PropsProgressBar) {
   const PROGRESS_BAR_GAP = 3 * (NUM_EXERCISES_PER_LESSON - 1);
 
   useEffect(() => {
-    if (status !== null)
+    if (exerciseNum === 0)
+      addStatus([]);
+    if (status !== null && exerciseNum > 0)
       addStatus(prev => [...prev, status]);
-  }, [refreshId]);
+  }, [exerciseNum]);
 
   useLayoutEffect(() => {
     const updateSegWidth = () => {

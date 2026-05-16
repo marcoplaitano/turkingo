@@ -2,7 +2,7 @@ import '../style/PageHome.css'
 import '../style/streak_animation.css'
 
 import { useState, useEffect, useCallback } from "react";
-import { DB_CLIENT, DB_TABLE_NAME, LanguageItemData } from "./globals";
+import { DB_CLIENT, DB_TABLE_NAME, LanguageItemData, NUM_EXERCISES_PER_LESSON, updateStreak } from "./globals";
 import type { RawItem } from "./globals";
 import { ExerciseResult } from "./globals";
 
@@ -11,6 +11,7 @@ import ExerciseMatchPairs from './ExerciseMatchPairs';
 import ButtonNext from './ButtonNext.tsx';
 import ButtonSkip from './ButtonSkip.tsx';
 import ProgressBar from './ProgressBar.tsx';
+import EndOfLesson from './EndOfLesson.tsx';
 
 export default function PageHome() {
   const [data, setData] = useState<LanguageItemData[]>();
@@ -19,7 +20,8 @@ export default function PageHome() {
   const [result, setResult] = useState<ExerciseResult | null>(null);
   const [skipped, setSkipped] = useState<boolean>(false);
   const [progress, setProgress] = useState<ExerciseResult | null>(null);
-  const [exerciseKey, setExerciseKey] = useState(0);
+  const [exerciseNum, setExerciseNum] = useState<number>(0);
+  const [lessonEnded, setLessonEnded] = useState<boolean>(false);
 
   // ── Data loading ──────────────────────────────────────────────────────────
 
@@ -38,7 +40,26 @@ export default function PageHome() {
     }
   }, [DB_CLIENT]);
 
-  useEffect(() => { loadData(); }, [loadData]);
+  useEffect(() => { 
+    loadData(); 
+  }, [loadData]);
+
+  useEffect(() => {
+    if (exerciseNum === NUM_EXERCISES_PER_LESSON) {
+      // TODO: Save lesson scores
+      updateStreak();
+      // TODO: Show streak animation
+      setLessonEnded(true);
+    }
+  }, [exerciseNum]);
+
+  useEffect(() => {
+    if (lessonEnded === false) {
+      setExerciseNum(0);
+      setLessonEnded(false);
+    }
+  }, [lessonEnded]);
+
 
   function skipExercise() {
     setSkipped(true);
@@ -49,7 +70,7 @@ export default function PageHome() {
     setSkipped(false);
     setProgress(result);
     setResult(null);
-    setExerciseKey((k) => k + 1);
+    setExerciseNum((k) => k + 1);
   }
 
   if (loadError) {
@@ -66,13 +87,20 @@ export default function PageHome() {
       </>
     );
   }
+  else if (lessonEnded) {
+    return (
+      <>
+      <EndOfLesson onDone={setLessonEnded}/>
+      </>
+    );
+  }
   else {
     return (
       <>
         <main>
           <div className="app">
-            {/* {data?.length > 0 && <ExerciseTranslation key={exerciseKey} inputData={data} onCheck={setResult} skipped={skipped} />} */}
-            {data?.length > 0 && <ExerciseMatchPairs key={exerciseKey} inputData={data} onCheck={setResult} />}
+            {/* {data?.length > 0 && <ExerciseTranslation key={exerciseNum} inputData={data} onCheck={setResult} skipped={skipped} />} */}
+            {data?.length > 0 && <ExerciseMatchPairs key={exerciseNum} inputData={data} onCheck={setResult} />}
             {result !== null && <ButtonNext status={result} onNext={nextExercise} />}
           </div>
         </main>
@@ -89,7 +117,7 @@ export default function PageHome() {
 
         <div id="bottom-menu-container">
           <div id="progress-and-skip-container">
-            <ProgressBar refreshId={exerciseKey} status={progress} />
+            <ProgressBar exerciseNum={exerciseNum} status={progress} />
             <ButtonSkip enabled={result === null} onSkip={skipExercise}/>
           </div>
         </div>
