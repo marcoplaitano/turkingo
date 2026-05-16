@@ -1,13 +1,13 @@
 import { useState, useRef, useEffect } from "react";
-import { LanguageItemData, randomItem, normalizeTurkish, levenshtein } from "./globals";
+import { LanguageItemData, randomItem, normalizeTurkish, levenshtein, ExerciseResult } from "./globals";
 
 interface PropsExerciseTranslation {
-  key_: number;
   inputData: LanguageItemData[];
-  onCheck: (result: boolean) => void;
+  onCheck: (result: ExerciseResult) => void;
+  skipped: boolean;
 }
 
-export default function ExerciseTranslation({ key_, inputData, onCheck }: PropsExerciseTranslation) {
+export default function ExerciseTranslation({ inputData, onCheck, skipped }: PropsExerciseTranslation) {
   const [checked, setChecked] = useState(false);
   const [correct, setCorrect] = useState(false);
   const [userInput, setUserInput] = useState("");
@@ -41,7 +41,7 @@ export default function ExerciseTranslation({ key_, inputData, onCheck }: PropsE
     const isCorrect = dist === 0 || dist === 1; // TODO: check this
     setCorrect(isCorrect);
     setChecked(true);
-    onCheck(isCorrect);
+    onCheck(isCorrect && ExerciseResult.CORRECT || ExerciseResult.FAILED);
   };
 
   return (
@@ -60,7 +60,7 @@ export default function ExerciseTranslation({ key_, inputData, onCheck }: PropsE
           onKeyDown={(e) => { if (e.key === "Enter") check(); }}
         />
       </div>
-      {!checked && (
+      {!checked && !skipped && (
         <div className="exercise-buttons">
           <button
             className="btn btn-check"
@@ -71,7 +71,7 @@ export default function ExerciseTranslation({ key_, inputData, onCheck }: PropsE
           </button>
         </div>
       )}
-      {checked && !correct && (
+      {((checked && !correct) || skipped) && (
         <p className="exercise-feedback">
           {answer}
         </p>

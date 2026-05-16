@@ -1,0 +1,6 @@
+.btn-next#correct {
+    background-color: var(--color-green);
+}
+.btn-next#failed {
+    background-color: var(--color-red);
+}

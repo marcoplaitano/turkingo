@@ -4,6 +4,7 @@ import '../style/streak_animation.css'
 import { useState, useEffect, useCallback } from "react";
 import { DB_CLIENT, DB_TABLE_NAME, LanguageItemData } from "./globals";
 import type { RawItem } from "./globals";
+import { ExerciseResult } from "./globals";
 
 import ExerciseTranslation from './ExerciseTranslation';
 import ButtonNext from './ButtonNext.tsx';
@@ -14,7 +15,9 @@ export default function PageHome() {
   const [data, setData] = useState<LanguageItemData[]>();
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState<string | null>(null);
-  const [result, setResult] = useState<boolean | null>(null);
+  const [result, setResult] = useState<ExerciseResult | null>(null);
+  const [skipped, setSkipped] = useState<boolean>(false);
+  const [progress, setProgress] = useState<ExerciseResult | null>(null);
   const [exerciseKey, setExerciseKey] = useState(0);
 
   // ── Data loading ──────────────────────────────────────────────────────────
@@ -37,11 +40,13 @@ export default function PageHome() {
   useEffect(() => { loadData(); }, [loadData]);
 
   function skipExercise() {
-    setResult(null);
-    setExerciseKey((k) => k + 1);
+    setSkipped(true);
+    setResult(ExerciseResult.SKIPPED);
   }
 
   function nextExercise() {
+    setSkipped(false);
+    setProgress(result);
     setResult(null);
     setExerciseKey((k) => k + 1);
   }
@@ -65,8 +70,8 @@ export default function PageHome() {
       <>
         <main>
           <div className="app">
-            {data?.length > 0 && <ExerciseTranslation key={exerciseKey} inputData={data} onCheck={setResult} />}
-            {result !== null && <ButtonNext correct={result} onNext={nextExercise} />}
+            {data?.length > 0 && <ExerciseTranslation key={exerciseKey} inputData={data} onCheck={setResult} skipped={skipped} />}
+            {result !== null && <ButtonNext status={result} onNext={nextExercise} />}
           </div>
         </main>
 
@@ -82,8 +87,8 @@ export default function PageHome() {
 
         <div id="bottom-menu-container">
           <div id="progress-and-skip-container">
-            <ProgressBar currNum={exerciseKey} result={result} />
-            <ButtonSkip onSkip={skipExercise}/>
+            <ProgressBar refreshId={exerciseKey} status={progress} />
+            <ButtonSkip enabled={result === null} onSkip={skipExercise}/>
           </div>
         </div>
       </>

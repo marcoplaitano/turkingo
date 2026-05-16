@@ -1,15 +1,17 @@
 import '../style/ButtonNext.css'
 
+import { ExerciseResult, ExerciseResultID } from './globals';
+
 interface PropsButtonNext {
-  correct: boolean;
+  status: ExerciseResult;
   onNext: () => void;
 }
 
-export default function ButtonNext({correct, onNext}: PropsButtonNext) {
+export default function ButtonNext({status, onNext}: PropsButtonNext) {
   return (
     <button
       className="btn btn-next"
-      id={correct && "correct" || "failed"}
+      id={ExerciseResultID[status]}
       onClick={() => onNext()}
     >
       Next

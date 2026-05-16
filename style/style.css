@@ -183,6 +183,8 @@ main p.post-info + p {
 /* ***** FOOTER ***** */
 /* Stretch main to fill all remaining space towards the bottom of the page. */
 #root {
+  display: flex;
+  flex-direction: column;
   flex: 1;
 }
 footer {

@@ -1,0 +1,32 @@
+#progress-container {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+}
+
+#progress-bar {
+  width: 60%;
+  max-width: 400px;
+  background-color: var(--color-skip-btn-bg);
+  border-radius: 5px;
+  margin-top: auto;
+  margin-bottom: auto;
+  height: 2rem;
+  overflow: hidden;
+  display: flex;
+  gap: 3px;
+}
+
+.progress-bar-segment {
+  border-radius: 3px;
+}
+.progress-bar-segment#correct {
+  background-color: var(--color-green);
+}
+.progress-bar-segment#failed {
+  background-color: var(--color-red);
+}
+.progress-bar-segment#skipped {
+  background-color: var(--color-text2);
+}

@@ -10,6 +10,8 @@ export const MAX_STREAK_FREEZES = 3;
 
 export const TODAY_DATE = new Date().toISOString().split('T')[0]; // "YYYY-MM-DD"
 
+export const NUM_EXERCISES_PER_LESSON = 10;
+
 
 
 //////////////////////////////////////////////////
@@ -24,7 +26,12 @@ export const ExerciseResult = {
   SKIPPED: "skipped"
 } as const;
 // Create a type from the object values
-export type ExerciseResultType = typeof ExerciseResult[keyof typeof ExerciseResult];
+export type ExerciseResult = typeof ExerciseResult[keyof typeof ExerciseResult];
+export const ExerciseResultID = {
+  [ExerciseResult.CORRECT]: "correct",
+  [ExerciseResult.FAILED]: "failed",
+  [ExerciseResult.SKIPPED]: "skipped"
+};
 
 export interface RawItem {
   id: number;

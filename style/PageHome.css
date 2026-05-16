@@ -170,7 +170,7 @@ main button:disabled:hover {
 }
 
 
-/* ***** PROGRESS BAR ***** */
+/* ***** PROGRESS BAR & SKIP ***** */
 #bottom-menu-container {
   display: flex;
   flex-direction: column;
@@ -183,45 +183,4 @@ main button:disabled:hover {
   align-items: center;
   width: 100%;
   gap: 16px;
-}
-
-#progress-container {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  flex: 1;
-}
-
-#progress-bar {
-  width: 60%;
-  max-width: 400px;
-  background-color: var(--color-skip-btn-bg);
-  border-radius: 5px;
-  margin-top: auto;
-  margin-bottom: auto;
-  height: 2rem;
-  overflow: hidden;
-  display: flex;
-  gap: 3px;
-}
-
-.progress-bar-segment {
-  border-radius: 3px;
-}
-
-
-/* ***** SKIP BUTTON ***** */
-#btn-skip {
-  font-size: 2.4rem;
-  color: var(--color-skip-btn-fg);
-  background: var(--color-skip-btn-bg);
-  border: none;
-  border-radius: 10px;
-  padding: 0 12px 4px;
-  display: block;
-  margin-left: auto;
-}
-#btn-skip:enabled:hover {
-  filter: brightness(85%);
-  cursor: pointer;
 }
