@@ -1,7 +1,7 @@
 import '../../style/Exercise.css'
 
 import { useState, useEffect, useRef } from "react";
-import { LanguageItemData, shuffle, getLanguageValue, ExerciseResult } from '../globals';
+import { LanguageItemData, shuffle, ExerciseResult } from '../globals';
 
 interface PropsExerciseMatchPairs {
   inputData: LanguageItemData[];
@@ -20,7 +20,7 @@ export default function MatchPairsExercise({ inputData, onCheck, skipped }: Prop
     rightWords: any;
     correct: Record<string, string>;
   } | null>(null);
-  
+
   // Disable input and buttons if skipped
   useEffect(() => {
     if (!exerciseRef.current)
@@ -33,10 +33,10 @@ export default function MatchPairsExercise({ inputData, onCheck, skipped }: Prop
 
   if (!exerciseRef.current) {
     const s = shuffle([...inputData]).filter((i) => i.getType() !== "sentence").slice(0, 4);
-    const leftWords = s.map((i) => getLanguageValue(i.getLanguageTR()));
-    const rightWords = shuffle(s.map((i) => getLanguageValue(i.getLanguageEN())));
+    const leftWords = s.map((i) => i.getLanguageTR());
+    const rightWords = shuffle(s.map((i) => i.getLanguageEN()));
     const correct: Record<string, string> = {};
-    s.forEach((i) => { correct[getLanguageValue(i.getLanguageTR())] = getLanguageValue(i.getLanguageEN()); });
+    s.forEach((i) => { correct[i.getLanguageTR()] = i.getLanguageEN(); });
     exerciseRef.current = { sample: s, leftWords, rightWords, correct };
   }
   const { leftWords, rightWords, correct } = exerciseRef.current;

@@ -2,7 +2,7 @@ import '../../style/PageHome.css'
 import '../../style/streak_animation.css'
 
 import { useState, useEffect, useCallback } from "react";
-import { DB_CLIENT, DB_TABLE_NAME, LanguageItemData, NUM_EXERCISES_PER_LESSON, updateStreak } from "../globals.tsx";
+import { DB_CLIENT, DB_TABLE_NAME, getStreak, LanguageItemData, NUM_EXERCISES_PER_LESSON, updateStreak } from "../globals.tsx";
 import type { RawItem } from "../globals.tsx";
 import { ExerciseResult } from "../globals.tsx";
 
@@ -13,7 +13,11 @@ import ButtonSkip from '../Elements/ButtonSkip.tsx';
 import ProgressBar from '../Elements/ProgressBar.tsx';
 import EndOfLesson from '../Elements/EndOfLesson.tsx';
 
-export default function PageHome() {
+interface PropsPageHome {
+  setStreak: any;
+}
+
+export default function PageHome({setStreak} : PropsPageHome) {
   const [data, setData] = useState<LanguageItemData[]>();
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState<string | null>(null);
@@ -26,11 +30,12 @@ export default function PageHome() {
   // ── Data loading ──────────────────────────────────────────────────────────
 
   const loadData = useCallback(async () => {
+    setStreak(getStreak());
     setLoading(true);
     setLoadError(null);
     try {
       const res = await DB_CLIENT.from(DB_TABLE_NAME).select("*");
-      if (res.status !== 200) 
+      if (res.status !== 200)
         throw new Error(res.error?.message ?? "DB error");
       setData((res.data as RawItem[]).map((r) => new LanguageItemData(r)));
     } catch (err) {
@@ -40,14 +45,15 @@ export default function PageHome() {
     }
   }, [DB_CLIENT]);
 
-  useEffect(() => { 
-    loadData(); 
+  useEffect(() => {
+    loadData();
   }, [loadData]);
 
   useEffect(() => {
     if (exerciseNum === NUM_EXERCISES_PER_LESSON) {
       // TODO: Save lesson scores
       updateStreak();
+      setStreak(getStreak());
       // TODO: Show streak animation
       setLessonEnded(true);
     }
@@ -79,7 +85,7 @@ export default function PageHome() {
         <p className="p-error">{loadError}</p>
       </>
     );
-  } 
+  }
   else if (loading) {
     return (
       <>

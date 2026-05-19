@@ -67,12 +67,6 @@ export function normalizeTurkish(s: string): string {
     .replace(/ç/g, "c").replace(/Ç/g, "C");
 }
 
-// TODO: REMOVE. (used when i had array values instead of strings)
-export function getLanguageValue(val: string | { value: string; alt?: string[] }): string {
-  if (typeof val === "string") return val;
-  return val.value;
-}
-
 export function shuffle<T>(arr: T[]): T[] {
   const a = [...arr];
   for (let i = a.length - 1; i > 0; i--) {

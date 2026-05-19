@@ -4,7 +4,11 @@ import { NavLink } from 'react-router-dom';
 
 import Title from './Title';
 
-export default function Navbar() {
+interface PropsNavbar {
+  streak: number;
+}
+
+export default function Navbar({streak} : PropsNavbar) {
   const navItems = [
     { name: 'Home', href: '/' },
     { name: 'Scores', href: '/scores/' },
@@ -14,7 +18,7 @@ export default function Navbar() {
 
   return (
     <header>
-      <Title/>
+      <Title streak={streak} />
       <nav>
         {navItems.map((item) => (
           <NavLink key={item.name} to={item.href} className={({ isActive }) => `navbar-item${isActive ? ' navbar-curr-page' : ''}`}>
