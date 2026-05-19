@@ -10,7 +10,7 @@ export const MAX_STREAK_FREEZES = 3;
 
 export const TODAY_DATE = new Date().toISOString().split('T')[0]; // "YYYY-MM-DD"
 
-export const NUM_EXERCISES_PER_LESSON = 10;
+export const NUM_EXERCISES_PER_LESSON = 2;
 
 
 
@@ -137,8 +137,8 @@ export function getEndMessage(
 //////////////////////////////////////////////////
 
 export function updateStreak(): void {
-  if (getStreakDate() === TODAY_DATE)
-    return;
+  // if (getStreakDate() === TODAY_DATE)  // TODO: uncomment
+  //   return;
   const streakNum = getStreak() + 1;
   setStreak(streakNum);
   setStreakDate(TODAY_DATE);
@@ -202,6 +202,7 @@ export function useStreakFreeze(): void {
   decreaseStreakFreezes();
 }
 
+// TODO: call on app start to initialize the streak and check if it has to be reset or freezed.
 export function initStreak(): { streakNum: number; wasFreezed: boolean } {
   const yesterday = new Date();
   yesterday.setDate(yesterday.getDate() - 1);
@@ -211,8 +212,10 @@ export function initStreak(): { streakNum: number; wasFreezed: boolean } {
   if (lastDate === null) {
     resetStreak();
   } else if (lastDate < yesterdayStr) {
-    if (getNumFreezes() > 0) useStreakFreeze();
-    else if (!isStreakFreezed()) resetStreak();
+    if (getNumFreezes() > 0)
+      useStreakFreeze();
+    else if (!isStreakFreezed())
+      resetStreak();
   }
 
   return { streakNum: getStreak(), wasFreezed: isStreakFreezed() };

@@ -1,8 +1,8 @@
-import '../style/ProgressBar.css'
+import '../../style/ProgressBar.css'
 
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 
-import { ExerciseResult, ExerciseResultID, NUM_EXERCISES_PER_LESSON } from './globals';
+import { ExerciseResult, ExerciseResultID, NUM_EXERCISES_PER_LESSON } from '../globals';
 
 interface PropsProgressBar {
   exerciseNum: number;

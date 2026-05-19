@@ -1,26 +1,36 @@
-import '../style/Exercise.css'
+import '../../style/Exercise.css'
 
-import { useState, useRef } from "react";
-import { LanguageItemData, shuffle, getLanguageValue, ExerciseResult } from './globals';
+import { useState, useEffect, useRef } from "react";
+import { LanguageItemData, shuffle, getLanguageValue, ExerciseResult } from '../globals';
 
 interface PropsExerciseMatchPairs {
   inputData: LanguageItemData[];
   onCheck: (result: ExerciseResult) => void;
+  skipped: boolean;
 }
 
 type Side = "left" | "right";
 
 interface Selection { word: string; side: Side }
 
-export default function MatchPairsExercise({ inputData, onCheck }: PropsExerciseMatchPairs) {
+export default function MatchPairsExercise({ inputData, onCheck, skipped }: PropsExerciseMatchPairs) {
   const exerciseRef = useRef<{
     sample: any;
     leftWords: any;
     rightWords: any;
     correct: Record<string, string>;
   } | null>(null);
-
   
+  // Disable input and buttons if skipped
+  useEffect(() => {
+    if (!exerciseRef.current)
+      return;
+    const buttons = document.querySelectorAll(".btn-match") as NodeListOf<HTMLButtonElement>;
+    buttons.forEach((btn) => {
+      btn.disabled = skipped;
+    });
+  }, [skipped]);
+
   if (!exerciseRef.current) {
     const s = shuffle([...inputData]).filter((i) => i.getType() !== "sentence").slice(0, 4);
     const leftWords = s.map((i) => getLanguageValue(i.getLanguageTR()));

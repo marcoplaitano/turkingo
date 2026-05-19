@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { LanguageItemData, randomItem, normalizeTurkish, levenshtein, ExerciseResult } from "./globals";
+import { LanguageItemData, randomItem, normalizeTurkish, levenshtein, ExerciseResult } from "../globals";
 
 interface PropsExerciseTranslation {
   inputData: LanguageItemData[];
@@ -31,6 +31,12 @@ export default function ExerciseTranslation({ inputData, onCheck, skipped }: Pro
   useEffect(() => {
     inputRef.current?.focus();
   }, []);
+
+  // Disable input and buttons if skipped
+  useEffect(() => {
+    if (inputRef.current)
+      inputRef.current.disabled = skipped;
+  }, [skipped]);
 
   function check() {
     if (userInput.trim() === "" || checked)

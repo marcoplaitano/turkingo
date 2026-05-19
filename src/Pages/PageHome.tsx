@@ -1,17 +1,17 @@
-import '../style/PageHome.css'
-import '../style/streak_animation.css'
+import '../../style/PageHome.css'
+import '../../style/streak_animation.css'
 
 import { useState, useEffect, useCallback } from "react";
-import { DB_CLIENT, DB_TABLE_NAME, LanguageItemData, NUM_EXERCISES_PER_LESSON, updateStreak } from "./globals";
-import type { RawItem } from "./globals";
-import { ExerciseResult } from "./globals";
+import { DB_CLIENT, DB_TABLE_NAME, LanguageItemData, NUM_EXERCISES_PER_LESSON, updateStreak } from "../globals.tsx";
+import type { RawItem } from "../globals.tsx";
+import { ExerciseResult } from "../globals.tsx";
 
-import ExerciseTranslation from './ExerciseTranslation';
-import ExerciseMatchPairs from './ExerciseMatchPairs';
-import ButtonNext from './ButtonNext.tsx';
-import ButtonSkip from './ButtonSkip.tsx';
-import ProgressBar from './ProgressBar.tsx';
-import EndOfLesson from './EndOfLesson.tsx';
+import ExerciseTranslation from '../Exercises/ExerciseTranslation.tsx';
+import ExerciseMatchPairs from '../Exercises/ExerciseMatchPairs.tsx';
+import ButtonNext from '../Elements/ButtonNext.tsx';
+import ButtonSkip from '../Elements/ButtonSkip.tsx';
+import ProgressBar from '../Elements/ProgressBar.tsx';
+import EndOfLesson from '../Elements/EndOfLesson.tsx';
 
 export default function PageHome() {
   const [data, setData] = useState<LanguageItemData[]>();
@@ -100,7 +100,7 @@ export default function PageHome() {
         <main>
           <div className="app">
             {/* {data?.length > 0 && <ExerciseTranslation key={exerciseNum} inputData={data} onCheck={setResult} skipped={skipped} />} */}
-            {data?.length > 0 && <ExerciseMatchPairs key={exerciseNum} inputData={data} onCheck={setResult} />}
+            {data?.length > 0 && <ExerciseMatchPairs key={exerciseNum} inputData={data} onCheck={setResult} skipped={skipped} />}
             {result !== null && <ButtonNext status={result} onNext={nextExercise} />}
           </div>
         </main>

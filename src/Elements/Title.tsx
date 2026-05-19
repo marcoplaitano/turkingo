@@ -1,6 +1,6 @@
-import '../style/Title.css'
+import '../../style/Title.css'
 
-import { getStreak, isStreakFreezed } from './globals';
+import { getStreak, isStreakFreezed } from '../globals';
 
 export default function Title() {
   return (

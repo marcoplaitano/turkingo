@@ -1,6 +1,6 @@
-import '../style/PageScores.css'
+import '../../style/PageScores.css'
 
-import { MAX_STREAK_FREEZES, getStreak, getNumFreezes } from './globals'
+import { MAX_STREAK_FREEZES, getStreak, getNumFreezes } from '../globals'
 
 interface Score {
   date: string;

@@ -1,6 +1,6 @@
-import '../style/ButtonNext.css'
+import '../../style/ButtonNext.css'
 
-import { ExerciseResult, ExerciseResultID } from './globals';
+import { ExerciseResult, ExerciseResultID } from '../globals';
 
 interface PropsButtonNext {
   status: ExerciseResult;

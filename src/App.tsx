@@ -1,11 +1,11 @@
-import Navbar from './Navbar.tsx'
+import Navbar from './Elements/Navbar.tsx'
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { lazy, Suspense } from "react";
 
-const PageHome = lazy(() => import("./PageHome.tsx"));
-const PageScores = lazy(() => import("./PageScores.tsx"));
-const PageLearn = lazy(() => import("./PageLearn.tsx"));
-const PageAbout = lazy(() => import("./PageAbout.tsx"));
+const PageHome = lazy(() => import("./Pages/PageHome.tsx"));
+const PageScores = lazy(() => import("./Pages/PageScores.tsx"));
+const PageLearn = lazy(() => import("./Pages/PageLearn.tsx"));
+const PageAbout = lazy(() => import("./Pages/PageAbout.tsx"));
 
 export default function App() {
   return (
