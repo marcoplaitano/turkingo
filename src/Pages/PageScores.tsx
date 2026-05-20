@@ -1,4 +1,4 @@
-import '../../style/PageScores.css'
+import '../style/PageScores.css'
 
 import { MAX_STREAK_FREEZES, getStreak, getNumFreezes } from '../globals'
 

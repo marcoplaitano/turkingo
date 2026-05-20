@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import '../../style/Title.css'
+import '../style/Title.css'
 
 import { getStreak, isStreakFreezed } from '../globals';
 

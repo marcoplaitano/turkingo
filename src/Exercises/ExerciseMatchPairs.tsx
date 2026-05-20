@@ -1,4 +1,4 @@
-import '../../style/Exercise.css'
+import '../style/Exercise.css'
 
 import { useState, useEffect, useRef } from "react";
 import { LanguageItemData, shuffle, ExerciseResult } from '../globals';

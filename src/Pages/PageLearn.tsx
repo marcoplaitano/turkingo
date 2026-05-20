@@ -1,4 +1,4 @@
-import '../../style/PageLearn.css'
+import '../style/PageLearn.css'
 
 import { useState, useEffect, useCallback } from "react";
 import { DB_CLIENT, DB_TABLE_NAME, LanguageItemData, normalizeTurkish } from "../globals";

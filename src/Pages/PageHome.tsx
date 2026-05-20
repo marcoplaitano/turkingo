@@ -1,5 +1,5 @@
-import '../../style/PageHome.css'
-import '../../style/streak_animation.css'
+import '../style/PageHome.css'
+import '../style/streak_animation.css'
 
 import { useState, useEffect, useCallback } from "react";
 import { DB_CLIENT, DB_TABLE_NAME, getStreak, LanguageItemData, NUM_EXERCISES_PER_LESSON, updateStreak } from "../globals.tsx";

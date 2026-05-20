@@ -1,4 +1,4 @@
-import '../../style/ButtonSkip.css'
+import '../style/ButtonSkip.css'
 
 interface PropsButtonSkip {
   enabled: boolean;

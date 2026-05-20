@@ -1,4 +1,4 @@
-import '../../style/ButtonNext.css'
+import '../style/ButtonNext.css'
 
 import { ExerciseResult, ExerciseResultID } from '../globals';
 

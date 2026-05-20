@@ -1,4 +1,4 @@
-import '../../style/ProgressBar.css'
+import '../style/ProgressBar.css'
 
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 
