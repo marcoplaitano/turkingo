@@ -1,0 +1,372 @@
+type|l-EN|id|l-TR
+word|hello|1|merhaba
+word|yes|2|evet
+word|no|3|hayır
+word|good morning|4|günaydın
+word|please|5|lütfen
+word|thanks|6|teşekkürler
+word|water|7|su
+word|food|8|yemek
+word|bread|9|ekmek
+word|milk|10|süt
+word|coffee|11|kahve
+word|tea|12|çay
+word|apple|13|elma
+word|orange|14|portakal
+word|banana|15|muz
+word|grape|16|üzüm
+word|chicken|17|tavuk
+word|fish|18|balık
+word|egg|19|yumurta
+word|cheese|20|peynir
+word|butter|21|tereyağı
+word|sugar|22|şeker
+word|salt|23|tuz
+word|oil|24|yağ
+word|rice|25|pirinç
+word|fruit|26|meyve
+word|tomato|27|domates
+word|onion|28|soğan
+word|garlic|29|sarımsak
+word|pepper|30|biber
+word|pasta|31|makarna
+word|soup|32|çorba
+word|salad|33|salata
+word|potato|34|patates
+word|dessert|35|tatlı
+word|cake|36|pasta
+word|biscuit|37|bisküvi
+word|chocolate|38|çikolata
+word|strawberry|39|çilek
+word|cherry|40|kiraz
+word|peach|41|şeftali
+word|pear|42|armut
+word|watermelon|43|karpuz
+word|melon|44|kavun
+word|lemon|45|limon
+word|yoghurt|46|yoğurt
+word|zero|47|sıfır
+word|one|48|bir
+word|two|49|iki
+word|three|50|üç
+word|four|51|dört
+word|five|52|beş
+word|six|53|altı
+word|seven|54|yedi
+word|eight|55|sekiz
+word|nine|56|dokuz
+word|ten|57|on
+word|twenty|58|yirmi
+word|fifty|59|elli
+word|hundred|60|yüz
+word|thousand|61|bin
+word|red|62|kırmızı
+word|blue|63|mavi
+word|green|64|yeşil
+word|yellow|65|sarı
+word|black|66|siyah
+word|white|67|beyaz
+word|orange|68|turuncu
+word|purple|69|mor
+word|pink|70|pembe
+word|brown|71|kahverengi
+word|grey|72|gri
+word|mother|73|anne
+word|father|74|baba
+word|sister|75|kız kardeş
+word|brother|76|erkek kardeş
+word|grandmother|79|anneanne
+word|grandfather|81|dede
+word|son|82|oğul
+word|daughter|83|kız
+word|husband|84|eş
+word|husband|85|koca
+word|wife|86|eş
+word|wife|87|karı
+word|spouse|88|eş
+word|friend|89|arkadaş
+word|boyfriend|90|erkek arkadaş
+word|girlfriend|91|kız arkadaş
+word|child|92|çocuk
+word|baby|93|bebek
+word|man|94|adam
+word|woman|95|kadın
+word|boy|96|erkek çocuk
+word|girl|97|kız çocuk
+word|day|98|gün
+word|today|99|bugün
+word|yesterday|100|dün
+word|tomorrow|101|yarın
+word|morning|102|sabah
+word|evening|103|akşam
+word|night|104|gece
+word|week|105|hafta
+word|month|106|ay
+word|year|107|yıl
+word|hour|108|saat
+word|minute|109|dakika
+word|monday|110|pazartesi
+word|tuesday|111|salı
+word|wednesday|112|çarşamba
+word|thursday|113|perşembe
+word|friday|114|cuma
+word|saturday|115|cumartesi
+word|sunday|116|pazar
+word|house|117|ev
+word|street|118|sokak
+word|city|119|şehir
+word|school|120|okul
+word|hospital|121|hastane
+word|market|122|pazar
+word|airport|123|havalimanı
+word|train station|124|tren istasyonu
+word|bus stop|125|otobüs durağı
+word|car|126|araba
+word|bus|127|otobüs
+word|train|128|tren
+word|plane|129|uçak
+word|boat|130|tekne
+word|ticket|131|bilet
+word|passport|132|pasaport
+word|hotel|133|otel
+word|restaurant|134|restoran
+word|happy|135|mutlu
+word|sad|136|üzgün
+word|angry|137|kızgın
+word|tired|138|yorgun
+word|hungry|139|aç
+word|i am hungry|140|acıktım
+word|thirsty|141|susuz
+word|cold|142|soğuk
+word|hot|143|sıcak
+word|big|144|büyük
+word|small|145|küçük
+word|new|146|yeni
+word|old|147|eski
+word|good|148|iyi
+word|bad|149|kötü
+word|fast|150|hızlı
+word|slow|151|yavaş
+word|easy|152|kolay
+word|difficult|153|zor
+word|beautiful|154|güzel
+word|ugly|155|çirkin
+word|dog|156|köpek
+word|cat|157|kedi
+word|bird|158|kuş
+word|horse|159|at
+word|cow|160|inek
+word|sheep|161|koyun
+word|lion|162|aslan
+word|elephant|163|fil
+word|book|164|kitap
+word|pen|165|kalem
+word|phone|166|telefon
+word|computer|167|bilgisayar
+word|television|168|televizyon
+word|music|169|müzik
+word|movie|170|film
+word|sport|171|spor
+word|money|172|para
+word|price|173|fiyat
+word|work|174|iş
+word|name|175|isim
+word|time|176|zaman
+word|place|177|yer
+word|love|178|aşk
+word|life|179|hayat
+word|bear|180|ayı
+word|always|181|her zaman
+word|never|182|hiçbir zaman
+word|together|183|birlikte
+word|alone|184|yalnız
+word|maybe|185|belki
+word|very|186|çok
+word|also|187|ayrıca
+word|only|188|sadece
+word|first|189|birinci
+word|second|190|ikinci
+word|third|191|üçüncü
+word|last|192|son
+word|next|193|sonraki
+word|previous|194|önceki
+word|same|195|aynı
+word|different|196|farklı
+word|correct|197|doğru
+word|wrong|198|yanlış
+word|free|199|ücretsiz
+word|expensive|200|pahalı
+word|cheap|201|ucuz
+word|delicious|202|lezzetli
+word|bridge|203|köprü
+word|square|204|meydan
+word|mosque|205|cami
+word|castle|206|kale
+word|museum|207|müze
+word|guitar|208|gitar
+word|piano|209|piyano
+word|concert|210|konser
+word|theatre|211|tiyatro
+word|cinema|212|sinema
+word|party|213|parti
+word|wedding|214|düğün
+word|funeral|215|cenaze
+word|birthday|216|doğum günü
+word|newspaper|217|gazete
+word|aunt|218|hala
+word|uncle|219|amca
+word|cousin|220|kuzen
+word|nephew|221|yeğen
+word|niece|222|yeğen kız
+word|neighbour|223|komşu
+word|stranger|224|yabancı
+word|colleague|225|meslektaş
+word|boss|226|patron
+word|customer|227|müşteri
+word|tourist|228|turist
+word|pilot|229|pilot
+word|chef|230|şef
+word|waiter|231|garson
+word|lawyer|232|avukat
+word|doctor|233|doktor
+word|teacher|234|öğretmen
+word|student|235|öğrenci
+word|engineer|236|mühendis
+word|architect|237|mimar
+word|farmer|238|çiftçi
+word|painter|239|ressam
+word|writer|240|yazar
+word|singer|241|şarkıcı
+word|actor|242|aktör
+word|president|243|başkan
+word|police|244|polis
+word|civil servant|245|memur
+word|photography|246|fotoğrafçılık
+word|never mind|247|boşver
+phrase|goodbye|248|hoşça kal
+phrase|good evening|249|iyi akşamlar
+phrase|good night|250|iyi geceler
+phrase|sorry|251|özür dilerim
+phrase|thank you very much|252|çok teşekkür ederim
+phrase|you're welcome|253|rica ederim
+phrase|excuse me|254|affedersiniz
+phrase|how are you|255|nasılsınız
+phrase|i am fine|256|iyiyim
+phrase|nice to meet you|257|memnun oldum
+phrase|see you later|258|görüşürüz
+phrase|good luck|259|iyi şanslar
+phrase|happy birthday|260|doğum günün kutlu olsun
+phrase|of course|261|tabii ki
+phrase|no problem|262|sorun değil
+phrase|i know|263|biliyorum
+phrase|i don't know|264|bilmiyorum
+phrase|i understand|265|anlıyorum
+phrase|i don't understand|266|anlamıyorum
+phrase|speak slowly please|267|yavaş konuşun lütfen
+phrase|can you repeat that|268|tekrar eder misiniz
+phrase|how much is this|269|bu ne kadar
+phrase|my boyfriend|270|erkek arkadaşım
+phrase|my girlfriend|271|kız arkadaşım
+phrase|how far is it|272|ne kadar uzakta
+phrase|i am sick|273|hastayım
+phrase|i am lost|274|kayboldum
+phrase|i need help|275|yardıma ihtiyacım var
+phrase|what time is it|276|saat kaç
+phrase|last week|277|geçen hafta
+phrase|next week|278|gelecek hafta
+phrase|last year|279|geçen yıl
+phrase|next year|280|gelecek yıl
+phrase|all day|281|tüm gün
+phrase|every day|282|her gün
+phrase|i think so|283|sanırım öyle
+phrase|right now|284|şu an
+phrase|step by step|285|adım adım
+phrase|day by day|286|gün geçtikçe
+phrase|little by little|287|yavaş yavaş
+phrase|get well soon|288|geçmiş olsun
+phrase|bon appetit|289|afiyet olsun
+phrase|have a safe trip|290|iyi yolculuklar
+phrase|mobile phone|291|cep telefonu
+phrase|phone number|292|telefon numarası
+phrase|email address|293|e-posta adresi
+phrase|social media|294|sosyal medya
+phrase|charging cable|295|şarj kablosu
+phrase|good idea|296|iyi fikir
+phrase|bad idea|297|kötü fikir
+phrase|well done|298|aferin
+phrase|keep going|299|devam et
+phrase|almost there|300|neredeyse bitti
+phrase|take care|301|kendine iyi bak
+phrase|calm down|302|sakin ol
+phrase|hurry up|303|acele et
+phrase|long time no see|304|çok oldu görüşmedik
+phrase|miss you|305|seni özledim
+phrase|i agree|306|katılıyorum
+phrase|i disagree|307|katılmıyorum
+phrase|i am not sure|308|emin değilim
+phrase|i hope so|309|umarım öyle
+phrase|good for you|310|senin için iyi
+phrase|as soon as possible|311|en kısa sürede
+phrase|the day after tomorrow|312|öbür gün
+phrase|the day before yesterday|313|evvelsi gün
+phrase|spring break|314|bahar tatili
+phrase|summer holiday|315|yaz tatili
+phrase|winter break|316|kış tatili
+phrase|school holiday|317|okul tatili
+phrase|sooner or later|318|er ya da geç
+phrase|so far so good|319|şimdiye kadar iyi
+phrase|no worries|320|sorun değil
+phrase|don't worry|321|merak etme
+phrase|be careful|322|dikkatli ol
+sentence|i am learning turkish|323|türkçe öğreniyorum
+sentence|what is your name|324|adın ne
+sentence|my name is marco|325|benim adım marco
+sentence|where are you from|326|nerelisiniz
+sentence|i am from italy|327|italya'dan geliyorum
+sentence|i live in istanbul|328|istanbul'da yaşıyorum
+sentence|do you speak english|329|ingilizce biliyor musunuz
+sentence|i don't speak turkish well|330|türkçeyi iyi konuşamıyorum
+sentence|how old are you|331|kaç yaşındasınız
+sentence|i am twenty five years old|332|yirmi beş yaşındayım
+sentence|i am very thirsty|333|çok susamış oldum
+sentence|where do you live|334|nerede yaşıyorsunuz
+sentence|i would like a glass of water|335|bir bardak su istiyorum
+sentence|the food was very good|336|yemek çok iyiydi
+sentence|i like turkish food very much|337|türk yemeğini çok seviyorum
+sentence|this city is very beautiful|338|bu şehir çok güzel
+sentence|i want to visit the museum|339|müzeyi ziyaret etmek istiyorum
+sentence|i took many photos today|340|bugün çok fotoğraf çektim
+sentence|we are going to the beach tomorrow|341|yarın plaja gidiyoruz
+sentence|the sea is very cold today|342|bugün deniz çok soğuk
+sentence|i am studying at university|343|üniversitede okuyorum
+sentence|my job is teaching|344|mesleğim öğretmenlik
+sentence|i work in an office|345|bir ofiste çalışıyorum
+sentence|i wake up at seven in the morning|346|sabah yedide uyanıyorum
+sentence|i go to work by bus|347|işe otobüsle gidiyorum
+sentence|i read a book every night|348|her gece kitap okuyorum
+sentence|i like listening to music|349|müzik dinlemeyi seviyorum
+sentence|she is cooking dinner|350|akşam yemeği pişiriyor
+sentence|i have two brothers and one sister|351|iki erkek kardeşim ve bir kız kardeşim var
+sentence|i come here every summer|352|her yaz buraya geliyorum
+sentence|turkey is a very beautiful country|353|türkiye çok güzel bir ülke
+sentence|istanbul is the largest city in turkey|354|istanbul türkiye'nin en büyük şehridir
+sentence|i want to learn more turkish|355|daha fazla türkçe öğrenmek istiyorum
+sentence|turkish is a difficult but beautiful language|356|türkçe zor ama güzel bir dil
+sentence|i practice turkish every day|357|her gün türkçe pratik yapıyorum
+sentence|drink plenty of water|358|bol su için
+sentence|what is the weather like tomorrow|359|yarın hava nasıl olacak
+sentence|i need to charge my phone|360|telefonumu şarj etmem lazım
+sentence|send me a message when you arrive|361|ulaştığında bana mesaj gönder
+sentence|i have a lot of work today|362|bugün çok işim var
+sentence|my boss is very kind|363|patronum çok nazik
+sentence|i started a new job last month|364|geçen ay yeni bir işe başladım
+sentence|i work from home on fridays|365|cuma günleri evden çalışıyorum
+sentence|let's have lunch together|366|birlikte öğle yemeği yiyelim
+phrase|may your work be easy|367|kolay gelsin
+word|young|368|genç
+sentence|you cook food to me|369|sen bana yemek yaparsın
+word|to me|370|bana
+word|to you|371|sana
+sentence|he reads them a book|372|o onlara bir kitabı okur
+sentence|i read you the newspaper|373|ben sana gazeteyi okurum
+sentence|we read you the newspapers|374|biz size gazeteleri okuruz
