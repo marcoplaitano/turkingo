@@ -31,7 +31,7 @@ const TOAST_CONFIG = {
 
 const ToastContext = createContext(null);
 
-export function ToastProvider({ children, duration = 30500 }) {
+export function ToastProvider({ children, duration = 3500 }) {
   const [toasts, setToasts] = useState([]);
 
   function toast(message, type = "info") {
@@ -103,25 +103,8 @@ function ToastItem({ message, type, duration, onDismiss }) {
       role="alert"
       className={`toast-item toast-${type} ${visible ? "toast-visible" : ""}`}
     >
-      <span className="toast-icon">
-        {cfg.icon}
-      </span>
-
-      <span className="toast-message">
-        {message}
-      </span>
-
-      <button
-        onClick={handleDismiss}
-        aria-label="Dismiss"
-        className="toast-dismiss-button"
-      >
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
-          fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <line x1="18" y1="6" x2="6" y2="18" />
-          <line x1="6" y1="6" x2="18" y2="18" />
-        </svg>
-      </button>
+      <span className="toast-icon">{cfg.icon}</span>
+      <span className="toast-message">{message}</span>
     </div>
   );
 }
