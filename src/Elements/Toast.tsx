@@ -5,24 +5,31 @@ import { createContext, useContext, useState, useEffect, useRef } from "react";
 // ─── config ───────────────────────────────────────────────────────────────────
 
 const TOAST_CONFIG = {
+  noicon: {
+    icon: (<></>)
+  },
   info: {
     icon: (
+      <span className="toast-icon">
       <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
         fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
         <circle cx="12" cy="12" r="10" />
         <line x1="12" y1="8" x2="12" y2="12" />
         <line x1="12" y1="16" x2="12.01" y2="16" />
       </svg>
+      </span>
     ),
   },
   error: {
     icon: (
+      <span className="toast-icon">
       <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
         fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
         <circle cx="12" cy="12" r="10" />
         <line x1="15" y1="9" x2="9" y2="15" />
         <line x1="9" y1="9" x2="15" y2="15" />
       </svg>
+      </span>
     ),
   },
 };
@@ -103,7 +110,7 @@ function ToastItem({ message, type, duration, onDismiss }) {
       role="alert"
       className={`toast-item toast-${type} ${visible ? "toast-visible" : ""}`}
     >
-      <span className="toast-icon">{cfg.icon}</span>
+      {cfg.icon}
       <span className="toast-message">{message}</span>
     </div>
   );

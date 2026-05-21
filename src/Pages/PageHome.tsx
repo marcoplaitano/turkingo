@@ -68,7 +68,7 @@ export default function PageHome({ setStreakTitle }: PropsPageHome) {
   useEffect(() => {
     const { streakNum, wasFreezed } = initStreak();
     if (wasFreezed)
-      toast(`Your streak of ${streakNum} days was frozen!`, "info");
+      toast(`Your streak is frozen!`, "noicon");
     loadData();
   }, [loadData]);
 
@@ -82,7 +82,7 @@ export default function PageHome({ setStreakTitle }: PropsPageHome) {
         if (updated) {
           const newStreakNum = getStreak();
           setStreakTitle(newStreakNum);
-          toast(`You increased your streak to ${newStreakNum}!`, "success");
+          toast(`You increased your streak to 🔥${newStreakNum} days!`, "noicon");
         }
       }
       setLessonEnded(true);

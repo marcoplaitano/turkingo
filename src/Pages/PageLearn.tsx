@@ -91,7 +91,7 @@ export default function PageLearn() {
     const tr = inputTR.trim().toLowerCase();
 
     if (!itemType || !en || !tr) {
-      toast("Missing data! Not added.", "error");
+      toast("Missing data!", "error");
       return;
     }
 
@@ -99,7 +99,7 @@ export default function PageLearn() {
       (d) => d.getLanguageEN() === en && d.getLanguageTR() === tr
     );
     if (alreadyExists) {
-      toast("Item already in the database!", "error");
+      toast("Already exists!", "error");
       return;
     }
 
