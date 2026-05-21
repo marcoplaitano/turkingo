@@ -9,6 +9,7 @@ interface PropsButtonNext {
 
 export default function ButtonNext({status, onNext}: PropsButtonNext) {
   return (
+  <div className="exercise-buttons">
     <button
       className="btn btn-next"
       id={ExerciseResultID[status]}
@@ -16,5 +17,6 @@ export default function ButtonNext({status, onNext}: PropsButtonNext) {
     >
       Next
     </button>
+  </div>
   );
 }

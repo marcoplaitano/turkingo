@@ -16,7 +16,7 @@ h1.title {
 
 /* ***** STREAK ***** */
 .fire-freezed {
-  filter: hue-rotate(190deg) saturate(1.5);
+  filter: hue-rotate(184deg) saturate(1.5);
 }
 #streak {
   display: flex;

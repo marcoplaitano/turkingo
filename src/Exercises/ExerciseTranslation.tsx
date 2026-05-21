@@ -45,18 +45,28 @@ export default function ExerciseTranslation({ inputData, onCheck, skipped }: Pro
     const normAns = normalizeTurkish(answer);
     const dist = levenshtein(norm, normAns);
     const isCorrect = dist === 0;
-    const hasMinorTypo = dist > 0 && dist <= 2;
+    const hasMinorTypo = dist > 0 && dist <= 1;
     setCorrect(isCorrect);
     setChecked(true);
     onCheck((isCorrect || hasMinorTypo) && ExerciseResult.CORRECT || ExerciseResult.FAILED);
   };
 
   return (
+    <>
     <div className="exercise-container">
       <h2 className="exercise-title">Translate</h2>
       <p className="exercise-question">{question}</p>
       <div className="exercise-answers">
+        
+        {((checked && !correct) || skipped)
+        && (
+          <p className="exercise-feedback">
+            {answer}
+          </p>
+        )
+        || (
         <input
+          type="text"
           ref={inputRef}
           className={`translation-input ${checked ? (normalizeTurkish(userInput.trim().toLowerCase()) === normalizeTurkish(answer) || levenshtein(normalizeTurkish(userInput.trim().toLowerCase()), normalizeTurkish(answer)) === 1 ? "input-correct" : "input-wrong") : ""}`}
           placeholder="Type..."
@@ -66,23 +76,21 @@ export default function ExerciseTranslation({ inputData, onCheck, skipped }: Pro
           onChange={(e) => setUserInput(e.target.value)}
           onKeyDown={(e) => { if (e.key === "Enter") check(); }}
         />
+        )
+        }
       </div>
-      {!checked && !skipped && (
-        <div className="exercise-buttons">
-          <button
-            className="btn btn-check"
-            disabled={userInput.trim() === ""}
-            onClick={check}
-          >
-            Check
-          </button>
-        </div>
-      )}
-      {((checked && !correct) || skipped) && (
-        <p className="exercise-feedback">
-          {answer}
-        </p>
-      )}
     </div>
+    {!checked && !skipped && (
+      <div className="exercise-buttons">
+        <button
+          className="btn btn-check"
+          disabled={userInput.trim() === ""}
+          onClick={check}
+        >
+          Check
+        </button>
+      </div>
+    )}
+    </>
   );
 }

@@ -106,7 +106,7 @@ export default function MatchPairsExercise({ inputData, onCheck, skipped }: Prop
   return (
     <div className="exercise-container">
       <h2 className="exercise-title">Match the pairs</h2>
-      <div id='answers'>
+      <div className="exercise-answers">
         <div className='pairs-grid'>
         <div className="match-col">
           {leftWords.map((word: string) => (

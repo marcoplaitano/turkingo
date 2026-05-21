@@ -5,13 +5,15 @@ interface PropsEndOfLesson {
 export default function EndOfLesson({ onDone }: PropsEndOfLesson) {
   return (
     <>
-      <h2>End Of Lesson</h2>
-      <button
-        className="btn btn-next"
-        onClick={() => onDone(false)}
-      >
-        Next
-      </button>
+      <h2>Lesson completed!</h2>
+      <div className="exercise-buttons">
+        <button
+          className="btn btn-next"
+          onClick={() => onDone(false)}
+        >
+          Next lesson
+        </button>
+      </div>
     </>
   );
 }

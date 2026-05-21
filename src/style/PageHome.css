@@ -18,11 +18,6 @@ main {
   }
 }
 
-footer {
-  margin-top: 0;
-  flex-shrink: 0;
-}
-
 .app {
   display: flex;
   flex-direction: column;
@@ -37,13 +32,13 @@ footer {
 
 
 /* ***** NEXT/DELETE BUTTONS ***** */
-.app #buttons {
+.app .exercise-buttons {
   width: 70%;
   margin-top: 2.4rem;
   display: flex;
   gap: 8px;
 }
-.app #buttons button {
+.app .exercise-buttons button {
   width: 100%;
   color: var(--color-skip-btn-fg);
   background: var(--color-skip-btn-bg);
@@ -56,6 +51,7 @@ footer {
   flex-direction: column;
   align-items: center;
   gap: 2rem;
+  margin-bottom: -3.2rem;
 }
 
 #progress-and-skip-container {

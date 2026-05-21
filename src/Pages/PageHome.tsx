@@ -1,7 +1,6 @@
 import '../style/PageHome.css'
-import '../style/streak_animation.css'
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import { DB_CLIENT, DB_TABLE_NAME, getStreak, increaseStreakFreezes, LanguageItemData, NUM_EXERCISES_PER_LESSON, updateStreak, initStreak } from "../globals.tsx";
 import type { RawItem } from "../globals.tsx";
 import { ExerciseResult } from "../globals.tsx";
@@ -9,6 +8,9 @@ import { useToast } from "../Elements/Toast.tsx";
 
 import ExerciseTranslation from '../Exercises/ExerciseTranslation.tsx';
 import ExerciseMatchPairs from '../Exercises/ExerciseMatchPairs.tsx';
+import ExerciseMatchTranslation from '../Exercises/ExerciseMatchTranslation.tsx';
+import ExerciseFillBlanks from '../Exercises/ExerciseFillBlanks.tsx';
+import ExerciseReorderSentence from '../Exercises/ExerciseReorderSentence.tsx';
 import ButtonNext from '../Elements/ButtonNext.tsx';
 import ButtonSkip from '../Elements/ButtonSkip.tsx';
 import ProgressBar from '../Elements/ProgressBar.tsx';
@@ -18,7 +20,7 @@ interface PropsPageHome {
   setStreakTitle: any;
 }
 
-export default function PageHome({setStreakTitle} : PropsPageHome) {
+export default function PageHome({ setStreakTitle }: PropsPageHome) {
   const toast = useToast();
   const [data, setData] = useState<LanguageItemData[]>();
   const [loading, setLoading] = useState(true);
@@ -27,8 +29,23 @@ export default function PageHome({setStreakTitle} : PropsPageHome) {
   const [skipped, setSkipped] = useState<boolean>(false);
   const [progress, setProgress] = useState<ExerciseResult | null>(null);
   const [exerciseNum, setExerciseNum] = useState<number>(0);
-  const [numExercisesCorrect, setNumExerciseCorrect] = useState<number>(0);
+  const [numExercisesCorrect, setNumExercisesCorrect] = useState<number>(0);
+  const [numExercisesSkipped, setNumExercisesSkipped] = useState<number>(0);
   const [lessonEnded, setLessonEnded] = useState<boolean>(false);
+
+  // ── Exercise selection ───────────────────────────────────────────────────
+  const exercises = [
+    ExerciseTranslation,
+    ExerciseMatchPairs,
+    // ExerciseMatchTranslation,
+    // ExerciseFillBlanks,
+    // ExerciseReorderSentence
+  ];
+
+  // Pick once when the component mounts, re-pick when exerciseNum changes
+  const ExerciseComponent = useMemo(() => {
+    return exercises[Math.floor(Math.random() * exercises.length)];
+  }, [exerciseNum]);
 
   // ── Data loading ──────────────────────────────────────────────────────────
 
@@ -49,7 +66,7 @@ export default function PageHome({setStreakTitle} : PropsPageHome) {
   }, [DB_CLIENT]);
 
   useEffect(() => {
-    const {streakNum, wasFreezed} = initStreak();
+    const { streakNum, wasFreezed } = initStreak();
     if (wasFreezed)
       toast(`Your streak of ${streakNum} days was frozen!`, "info");
     loadData();
@@ -60,11 +77,13 @@ export default function PageHome({setStreakTitle} : PropsPageHome) {
       if (numExercisesCorrect / NUM_EXERCISES_PER_LESSON >= 0.7) {
         increaseStreakFreezes();
       }
-      const updated = updateStreak();
-      if (updated) {
-        const newStreakNum = getStreak();
-        setStreakTitle(newStreakNum);
-        toast(`You increased your streak to ${newStreakNum}!`, "success");
+      if (numExercisesSkipped < NUM_EXERCISES_PER_LESSON) {
+        const updated = updateStreak();
+        if (updated) {
+          const newStreakNum = getStreak();
+          setStreakTitle(newStreakNum);
+          toast(`You increased your streak to ${newStreakNum}!`, "success");
+        }
       }
       setLessonEnded(true);
     }
@@ -80,6 +99,7 @@ export default function PageHome({setStreakTitle} : PropsPageHome) {
 
   function skipExercise() {
     setSkipped(true);
+    setNumExercisesSkipped((k) => k + 1);
     setResult(ExerciseResult.SKIPPED);
   }
 
@@ -89,7 +109,7 @@ export default function PageHome({setStreakTitle} : PropsPageHome) {
     setResult(null);
     setExerciseNum((k) => k + 1);
     if (result === ExerciseResult.CORRECT)
-      setNumExerciseCorrect((k) => k + 1);
+      setNumExercisesCorrect((k) => k + 1);
   }
 
   if (loadError) {
@@ -109,7 +129,11 @@ export default function PageHome({setStreakTitle} : PropsPageHome) {
   else if (lessonEnded) {
     return (
       <>
-      <EndOfLesson onDone={setLessonEnded}/>
+        <main>
+          <div className="app">
+            <EndOfLesson onDone={setLessonEnded} />
+          </div>
+        </main>
       </>
     );
   }
@@ -118,26 +142,16 @@ export default function PageHome({setStreakTitle} : PropsPageHome) {
       <>
         <main>
           <div className="app">
-            {/* {data?.length > 0 && <ExerciseTranslation key={exerciseNum} inputData={data} onCheck={setResult} skipped={skipped} />} */}
-            {data?.length > 0 && <ExerciseMatchPairs key={exerciseNum} inputData={data} onCheck={setResult} skipped={skipped} />}
+            {data?.length > 0 && <ExerciseComponent key={exerciseNum} inputData={data} onCheck={setResult} skipped={skipped} />}
+
             {result !== null && <ButtonNext status={result} onNext={nextExercise} />}
           </div>
         </main>
 
-        <div id="overlay-container">
-          <div id="overlay">
-            <span className="fire-icon">🔥</span>
-            <div className="text">
-              <span id="overlay-num">0</span>
-              <span id="overlay-label">days streak</span>
-            </div>
-          </div>
-        </div>
-
         <div id="bottom-menu-container">
           <div id="progress-and-skip-container">
             <ProgressBar exerciseNum={exerciseNum} status={progress} />
-            <ButtonSkip enabled={result === null} onSkip={skipExercise}/>
+            <ButtonSkip enabled={result === null} onSkip={skipExercise} />
           </div>
         </div>
       </>
