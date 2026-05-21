@@ -3,6 +3,7 @@ import '../style/PageLearn.css'
 import { useState, useEffect, useCallback } from "react";
 import { DB_CLIENT, DB_TABLE_NAME, LanguageItemData, normalizeTurkish } from "../globals";
 import type { RawItem, ItemType } from "../globals";
+import { useToast } from "../Elements/Toast.tsx";
 
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
@@ -54,6 +55,7 @@ function ItemTable({ title, items, query }: ItemTableProps) {
 
 
 export default function PageLearn() {
+  const toast = useToast();
   const [data, setData] = useState<LanguageItemData[]>([]);
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState<string | null>(null);
@@ -61,7 +63,6 @@ export default function PageLearn() {
   const [inputEN, setInputEN] = useState("");
   const [inputTR, setInputTR] = useState("");
   const [itemType, setItemType] = useState<ItemType | null>(null);
-  const [addResult, setAddResult] = useState<string | null>(null);
 
   const [query, setQuery] = useState("");
 
@@ -90,7 +91,7 @@ export default function PageLearn() {
     const tr = inputTR.trim().toLowerCase();
 
     if (!itemType || !en || !tr) {
-      setAddResult("Missing data! Not added.");
+      toast("Missing data! Not added.", "error");
       return;
     }
 
@@ -98,14 +99,14 @@ export default function PageLearn() {
       (d) => d.getLanguageEN() === en && d.getLanguageTR() === tr
     );
     if (alreadyExists) {
-      setAddResult("Item already in the database!");
+      toast("Item already in the database!", "error");
       return;
     }
 
     const id = data.length + 1;
     const item: RawItem = { id, "l-EN": en, "l-TR": tr, type: itemType };
     await DB_CLIENT.from(DB_TABLE_NAME).insert(item);
-    setAddResult(`Added ${itemType} '${en}' → '${tr}'.`);
+    toast(`Added ${itemType}`, "info");
     setInputEN("");
     setInputTR("");
     setItemType(null);
@@ -168,8 +169,6 @@ export default function PageLearn() {
           </div>
 
           <button className="btn" id="btn-add" onClick={handleAdd}>Add</button>
-
-          {addResult && <p id="add-result-p">{addResult}</p>}
         </div>
 
 
@@ -183,7 +182,7 @@ export default function PageLearn() {
             id="search-input"
             value={query}
             disabled={loading}
-            onChange={(e) => { setAddResult(null); setQuery(e.target.value); }}
+            onChange={(e) => { setQuery(e.target.value); }}
             onKeyDown={(e) => { if (e.key === "Enter") e.currentTarget.blur(); }}
           />
         </div>

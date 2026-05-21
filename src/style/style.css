@@ -10,6 +10,7 @@
   --color-accent: #7287FD;
   --color-green: #40A02B;
   --color-red: #E64553;
+  --color-red-background: #FCE9EA;
   --color-skip-btn-fg: #7287FD;
   --color-skip-btn-bg: #dce0e8;
   --color-streak-overlay-fg: #EFF1F5;
@@ -24,8 +25,9 @@ html.dark {
   --color-placeholder: #A6ADC8;
   --color-text2-underline: #A6ADC8DD;
   --color-accent: #B4BEFE;
-  --color-green: #a6e3a1;
+  --color-green: #A6E3A1;
   --color-red: #F38BA8;
+  --color-red-background: #FDE8EE;
   --color-skip-btn-fg: #B4BEFE;
   --color-skip-btn-bg: #313244;
   --color-streak-overlay-fg: #CDD6F4;
