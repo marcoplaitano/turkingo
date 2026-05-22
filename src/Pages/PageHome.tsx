@@ -15,6 +15,8 @@ import ButtonNext from '../Elements/ButtonNext.tsx';
 import ButtonSkip from '../Elements/ButtonSkip.tsx';
 import ProgressBar from '../Elements/ProgressBar.tsx';
 import EndOfLesson from '../Elements/EndOfLesson.tsx';
+import ErrorDiv from '../Elements/ErrorDiv.tsx';
+import LoadingDiv from '../Elements/LoadingDiv.tsx';
 
 interface PropsPageHome {
   setStreakTitle: any;
@@ -68,7 +70,7 @@ export default function PageHome({ setStreakTitle }: PropsPageHome) {
   useEffect(() => {
     const wasFreezed = initStreak();
     if (wasFreezed)
-      toast(`Your streak is frozen!`, "noicon");
+      toast(`Your streak is frozen!`, "streak");
     loadData();
   }, [loadData]);
 
@@ -82,7 +84,7 @@ export default function PageHome({ setStreakTitle }: PropsPageHome) {
         if (updated) {
           const newStreakNum = getStreak();
           setStreakTitle(newStreakNum);
-          toast(`Streak increased to 🔥${newStreakNum} days!`, "noicon");
+          toast(`Streak increased to 🔥${newStreakNum} days!`, "streak");
         }
       }
       setLessonEnded(true);
@@ -116,16 +118,12 @@ export default function PageHome({ setStreakTitle }: PropsPageHome) {
 
   if (loadError) {
     return (
-      <>
-        <p className="p-error">{loadError}</p>
-      </>
+      <ErrorDiv message="Failed to load data!" details={loadError} />
     );
   }
   else if (loading) {
     return (
-      <>
-        <p className="p-loading">Loading...</p>
-      </>
+      <LoadingDiv />
     );
   }
   else if (lessonEnded) {
@@ -139,26 +137,25 @@ export default function PageHome({ setStreakTitle }: PropsPageHome) {
       </>
     );
   }
-  else {
-    return (
-      <>
-        <main>
-          <div className="app">
-            {data && data.length > 0 && (
-                <ExerciseComponent key={exerciseNum} inputData={data} onCheck={setResult} skipped={skipped} />
-              )
-            }
-            {result !== null && <ButtonNext status={result} onNext={nextExercise} />}
-          </div>
-        </main>
 
-        <div id="bottom-menu-container">
-          <div id="progress-and-skip-container">
-            <ProgressBar exerciseNum={exerciseNum} status={progress} />
-            <ButtonSkip enabled={result === null} onSkip={skipExercise} />
-          </div>
+  return (
+    <>
+      <main>
+        <div className="app">
+          {data && data.length > 0 && (
+              <ExerciseComponent key={exerciseNum} inputData={data} onCheck={setResult} skipped={skipped} />
+            )
+          }
+          {result !== null && <ButtonNext status={result} onNext={nextExercise} />}
         </div>
-      </>
-    );
-  }
+      </main>
+
+      <div id="bottom-menu-container">
+        <div id="progress-and-skip-container">
+          <ProgressBar exerciseNum={exerciseNum} status={progress} />
+          <ButtonSkip enabled={result === null} onSkip={skipExercise} />
+        </div>
+      </div>
+    </>
+  );
 }

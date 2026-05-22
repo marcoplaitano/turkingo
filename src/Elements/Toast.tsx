@@ -34,8 +34,9 @@ interface ToastItemProps {
 // ─── config ───────────────────────────────────────────────────────────────────
 
 const TOAST_CONFIG = {
-  noicon: {
-    icon: (<></>)
+  streak: {
+    icon: (<></>),
+    delay: 1000,
   },
   info: {
     icon: (
@@ -48,6 +49,7 @@ const TOAST_CONFIG = {
       </svg>
       </span>
     ),
+    delay: 0,
   },
   error: {
     icon: (
@@ -60,6 +62,7 @@ const TOAST_CONFIG = {
       </svg>
       </span>
     ),
+    delay: 0,
   },
 };
 
@@ -116,20 +119,26 @@ function ToastStack({ toasts, onDismiss }: ToastStackProps) {
 
 function ToastItem({ message, type, duration, onDismiss }: ToastItemProps) {
   const [visible, setVisible] = useState(false);
-  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const showTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const dismissTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const cfg = TOAST_CONFIG[type as keyof typeof TOAST_CONFIG] ?? TOAST_CONFIG.info;
+  const SHOW_DELAY = cfg.delay;
 
   useEffect(() => {
-    const raf = requestAnimationFrame(() => setVisible(true));
-    timerRef.current = setTimeout(handleDismiss, duration);
+    showTimerRef.current = setTimeout(() => {
+      setVisible(true);
+      dismissTimerRef.current = setTimeout(handleDismiss, duration);
+    }, SHOW_DELAY);
+
     return () => {
-      cancelAnimationFrame(raf);
-      if (timerRef.current) clearTimeout(timerRef.current);
+      if (showTimerRef.current) clearTimeout(showTimerRef.current);
+      if (dismissTimerRef.current) clearTimeout(dismissTimerRef.current);
     };
   }, []);
 
   function handleDismiss() {
-    if (timerRef.current) clearTimeout(timerRef.current);
+    if (showTimerRef.current) clearTimeout(showTimerRef.current);
+    if (dismissTimerRef.current) clearTimeout(dismissTimerRef.current);
     setVisible(false);
     setTimeout(onDismiss, 350); // wait for slide-out before unmounting
   }

@@ -4,6 +4,8 @@ import { useState, useEffect, useCallback } from "react";
 import { DB_CLIENT, DB_TABLE_NAME, LanguageItemData, normalizeTurkish } from "../globals";
 import type { RawItem, ItemType } from "../globals";
 import { useToast } from "../Elements/Toast.tsx";
+import ErrorDiv from '../Elements/ErrorDiv.tsx';
+import LoadingDiv from '../Elements/LoadingDiv.tsx';
 
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
@@ -129,6 +131,17 @@ export default function PageLearn() {
 
   // ── Render ────────────────────────────────────────────────────────────────
 
+  if (loadError) {
+    return (
+      <ErrorDiv message="Failed to load data!" details={loadError} />
+    )
+  }
+  else if (loading) {
+    return (
+      <LoadingDiv />
+    );
+  }
+
   return (
     <main>
       <article>
@@ -187,7 +200,6 @@ export default function PageLearn() {
           />
         </div>
 
-        {loadError && <p className="p-error">{loadError}</p>}
         {noResults && <p id="no-result-p">No results.</p>}
 
         <ItemTable title="Words"     items={words}     query={normalizedQuery} />

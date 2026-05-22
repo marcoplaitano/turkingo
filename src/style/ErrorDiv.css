@@ -1,0 +1,15 @@
+.Error {
+  margin-top: 20px;
+  padding: 0 2rem;
+}
+
+.Error p {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: var(--color-red);
+}
+
+.Error #icon {
+  font-size: 1.6em;
+}
