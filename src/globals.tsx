@@ -137,6 +137,8 @@ export function getStreakDate(): string | null {
 export function resetStreak(): void {
   localStorage.setItem("streakNum", "0");
   localStorage.removeItem("streakLastDate");
+  setStreakFreezed(false);
+  sessionStorage.removeItem("freezeDate");
 }
 
 export function getNumFreezes(): number {
@@ -159,6 +161,14 @@ export function isStreakFreezed(): boolean {
   return sessionStorage.getItem("freezed") === "true";
 }
 
+export function getFreezeDate(): string | null {
+  return sessionStorage.getItem("freezeDate");
+}
+
+export function setFreezeDate(date: string) {
+  sessionStorage.setItem("freezeDate", date);
+}
+
 export function setStreakFreezed(freezed: boolean): void {
   sessionStorage.setItem("freezed", String(freezed));
   document.querySelectorAll(".fire-icon").forEach(element => {
@@ -171,6 +181,7 @@ export function setStreakFreezed(freezed: boolean): void {
 
 export function useStreakFreeze(): void {
   setStreakFreezed(true);
+  setFreezeDate(TODAY_DATE);
   decreaseStreakFreezes();
 }
 
@@ -178,13 +189,18 @@ export function initStreak(): boolean {
   const yesterday = new Date();
   yesterday.setDate(yesterday.getDate() - 1);
   const yesterdayStr = yesterday.toISOString().split("T")[0];
-  const lastDate = getStreakDate();
+  const lastStreakDate = getStreakDate();
+  const lastFreezeDate = getFreezeDate();
 
-  if (lastDate === null) {
+  if (lastStreakDate === null) {
     resetStreak();
-  } else if (lastDate < yesterdayStr) {
-    if (getNumFreezes() > 0)
-      useStreakFreeze();
+  } else if (lastStreakDate < yesterdayStr) {
+    if (lastFreezeDate === null || lastFreezeDate < TODAY_DATE) {
+      if (getNumFreezes() > 0)
+        useStreakFreeze();
+      else
+        resetStreak();
+    }
     else if (!isStreakFreezed())
       resetStreak();
   }
