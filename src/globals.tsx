@@ -47,6 +47,7 @@ export class LanguageItemData {
   constructor(raw: RawItem) {
     this.raw = raw;
   }
+  getId(): number { return this.raw.id; }
   getType(): ItemType { return this.raw.type; }
   getLanguageEN(): string { return this.raw["l-EN"]; }
   getLanguageTR(): string { return this.raw["l-TR"]; }

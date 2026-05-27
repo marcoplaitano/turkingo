@@ -74,8 +74,9 @@ export default function PageLearn() {
     setLoading(true);
     setLoadError(null);
     try {
-      const res = await DB_CLIENT.from(DB_TABLE_NAME).select("*");
-      if (res.status !== 200) throw new Error(res.error?.message ?? "DB error");
+      const res = await DB_CLIENT.from(DB_TABLE_NAME).select("*", { count: "exact" });
+      if (res.status !== 200)
+        throw new Error(res.error?.message ?? "DB error");
       setData((res.data as RawItem[]).map((r) => new LanguageItemData(r)));
     } catch (err) {
       setLoadError(String(err));
@@ -105,9 +106,14 @@ export default function PageLearn() {
       return;
     }
 
-    const id = data.length + 1;
-    const item: RawItem = { id, "l-EN": en, "l-TR": tr, type: itemType };
-    await DB_CLIENT.from(DB_TABLE_NAME).insert(item);
+    const id = (data.at(-1)?.getId() ?? 0) + 1;
+    const item: RawItem = { id, "l-EN": en, "l-TR": tr, "type": itemType };
+    const res = await DB_CLIENT.from(DB_TABLE_NAME).insert(item);
+    if (res.status !== 201) {
+      toast("Failed to add item!", "error");
+      console.log("DB add error:", res.status, res.error);
+      return;
+    }
     toast(`Added ${itemType}`, "info");
     setInputEN("");
     setInputTR("");
@@ -119,8 +125,8 @@ export default function PageLearn() {
 
   const normalizedQuery = normalizeTurkish(query.toLowerCase());
 
-  const words     = data.filter((d) => d.getType() === "word");
-  const phrases   = data.filter((d) => d.getType() === "phrase");
+  const words = data.filter((d) => d.getType() === "word");
+  const phrases = data.filter((d) => d.getType() === "phrase");
   const sentences = data.filter((d) => d.getType() === "sentence");
 
   const noResults =
@@ -202,8 +208,8 @@ export default function PageLearn() {
 
         {noResults && <p id="no-result-p">No results.</p>}
 
-        <ItemTable title="Words"     items={words}     query={normalizedQuery} />
-        <ItemTable title="Phrases"   items={phrases}   query={normalizedQuery} />
+        <ItemTable title="Words" items={words} query={normalizedQuery} />
+        <ItemTable title="Phrases" items={phrases} query={normalizedQuery} />
         <ItemTable title="Sentences" items={sentences} query={normalizedQuery} />
       </article>
     </main>
