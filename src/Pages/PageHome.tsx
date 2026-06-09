@@ -131,7 +131,7 @@ export default function PageHome({ setStreakTitle }: PropsPageHome) {
       <>
         <main>
           <div className="app">
-            <EndOfLesson numExercisesCorrect={numExercisesCorrect} numExercisesSkipped={numExercisesSkipped} onDone={setLessonEnded} />
+            <EndOfLesson onDone={setLessonEnded} />
           </div>
         </main>
       </>

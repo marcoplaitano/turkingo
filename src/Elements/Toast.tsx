@@ -36,7 +36,7 @@ interface ToastItemProps {
 const TOAST_CONFIG = {
   streak: {
     icon: (<></>),
-    delay: 1000,
+    delay: 800,
   },
   info: {
     icon: (

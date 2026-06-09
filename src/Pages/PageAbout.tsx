@@ -1,6 +1,10 @@
 import { getStreak, getNumFreezes, MAX_STREAK_FREEZES, getStreakDate } from "../globals";
 
 export default function PageAbout() {
+  const streak = getStreak();
+  const streakDate = getStreakDate();
+  const numFreezes = getNumFreezes();
+
   return (
     <>
       <main>
@@ -13,11 +17,11 @@ export default function PageAbout() {
           <h2>Streak</h2>
           <p>
             Complete at least one lesson per day to increase your streak.<br />
-            Right now, your streak is 🔥{getStreak()} (last updated on {getStreakDate()}).
+            Right now, your streak is 🔥{streak}{streakDate && " (last updated on " + streakDate + ")"}.
           </p>
           <p>
             For every lesson completed with an accuracy &gt;=70%, you earn a streak freeze.<br />
-            Right now, you have <span className="fire-freezed">🔥</span>{getNumFreezes()}/{MAX_STREAK_FREEZES} freezes left.
+            Right now, you have <span className="fire-freezed">🔥</span>{numFreezes}/{MAX_STREAK_FREEZES} freezes left.
           </p>
 
           <h2>Input data</h2>
