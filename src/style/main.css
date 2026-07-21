@@ -1,0 +1,292 @@
+/* ***** VARIABLES ***** */
+:root {
+  --font-sans-serif: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --color-background: #F8F9FA;
+  --color-text: #3A3F55;
+  --color-text2: #72778F;
+  --color-placeholder: #ADB5BD;
+  --color-accent: #7287FD;
+  --color-accent-bg: #F1F3FF;
+  --color-shadow-accent: rgba(114, 135, 253, 0.12);
+  --color-accent-active: #546AE6;
+  --color-shadow-accent-active: rgba(84, 106, 230, 0.12);
+  --color-red: #FF6B6B;
+  --color-red-bg: #FFF0F2;
+  --color-red-border: #FCDFE4;
+  --color-green: #5CC397;
+  --color-border: #CED4DA;
+  --color-button-bg: #F1F3F5;
+  --color-action-button-bg: var(--color-accent);
+  --color-action-button-fg: white;
+  --shadow-action-button: 0 4px 6px rgba(114, 135, 253, 0.25);
+  --shadow-action-button-correct: 0 4px 6px rgba(92, 195, 151, 0.25);
+  --shadow-action-button-fail: 0 4px 6px rgba(255, 107, 107, 0.25);
+  --color-skip-btn-fg: var(--color-accent); /* TODO: style */ 
+  --color-skip-btn-bg: #dce0e8; /* TODO: style */ 
+  --color-streak-overlay-fg: #EFF1F5; /* TODO: style */ 
+  --color-toast-info-bg: var(--color-background);
+  --color-toast-info-border: var(--color-accent);
+  --color-toast-info-icon: var(--color-accent);
+  --color-toast-error-bg: #FCE9EA; /* TODO: style */ 
+  --color-toast-error-border: var(--color-red);
+  --color-toast-error-icon: var(--color-red);
+  --border-radius: 8px;
+  --fire-freezed-filter: hue-rotate(185deg) saturate(1.5);
+}
+html.dark {
+  --color-background: #141622;
+  --color-text: #F1F3F5;
+  --color-text2: #9DA3BF;
+  --color-placeholder: #5A5E75;
+  --color-accent: #7287FD;
+  --color-accent-bg: #1B1E36;
+  --color-shadow-accent: rgba(114, 135, 253, 0.25);
+  --color-accent-active: #546AE6;
+  --color-shadow-accent-active: rgba(84, 106, 230, 0.2);
+  --color-red: #FF7B7B;
+  --color-red-bg: rgba(255, 107, 107, 0.1);
+  --color-red-border: rgba(255, 107, 107, 0.25);
+  --color-green: #66D4A5;
+  --color-border: #2D3142;
+  --color-button-bg: #232635;
+  --color-skip-btn-fg: #B4BEFE;
+  --color-skip-btn-bg: #313244;
+  --color-streak-overlay-fg: #CDD6F4;
+  --color-toast-info-bg: var(--color-background);
+  --color-toast-info-border: var(--color-accent);
+  --color-toast-info-icon: var(--color-accent);
+  --color-toast-error-bg: #1E1E2E;
+  --color-toast-error-border: var(--color-red);
+  --color-toast-error-icon: var(--color-red);
+}
+
+
+/* ***** MAIN ***** */
+*,
+*:before,
+*:after {
+  box-sizing: border-box;
+}
+
+html {
+  height: 100%;
+  font-size: 62.5%;
+  font-family: var(--font-sans-serif);
+  text-rendering: optimizeLegibility;
+  scroll-behavior: smooth;
+  -moz-text-size-adjust: none;
+  -webkit-text-size-adjust: none;
+  text-size-adjust: none;
+}
+/* Disable smooth scrolling if reduced motion is active */
+@media (prefers-reduced-motion:reduce) {
+  html {scroll-behavior: auto;}
+}
+
+body {
+  font-size: 1.8rem;
+  color: var(--color-text);
+  background-color: var(--color-background);
+  width: 100%;
+  max-width: 480px;
+  margin: 0 auto;
+  line-height: 1.6;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+h1 {
+  margin: 0;
+  font-size: 1.64em;
+}
+
+h2 {
+  font-size: 1.4em;
+  margin: 2rem 0 0;
+}
+
+h3 {
+  font-size: 1.2em;
+  line-height: 1;
+  margin: 2.4rem 0 1.2rem;
+}
+
+
+
+/* ***** LINKS ***** */
+a {
+  cursor: pointer;
+  color: var(--color-accent);
+  text-decoration: none;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}
+
+a:active {
+  filter: brightness(80%);
+}
+
+a:hover,
+a:focus,
+a:hover::after,
+a:focus::after {
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+}
+
+a:visited {
+  text-decoration: none;
+}
+
+main p a,
+main p a::after {
+  text-decoration: underline;
+}
+
+
+/* ***** TEXT & PARAGRAPHS ***** */
+p {
+  text-align: left;
+  margin: 0;
+}
+
+main {
+  line-height: 1.6;
+}
+
+
+/* Stretch main to fill all remaining space towards the bottom of the page. */
+#root {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+
+/* ***** INPUT ***** */
+input {
+  width: 100%;
+  padding: 14px 16px;
+  margin: 0.4rem 0;
+  font-size: 16px;
+  color: var(--color-text);
+  border: 1px solid var(--color-border);
+  border-radius: var(--border-radius);
+  background-color: var(--color-background);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+  box-sizing: border-box;
+  outline: none;
+  transition: border-color 0.15s ease;
+}
+
+input:focus {
+  border-color: var(--color-accent);
+}
+
+input::placeholder {
+  color: var(--color-placeholder);
+}
+
+/* Styling for Disabled Text Inputs */
+input:disabled {
+  background-color: var(--color-button-bg) !important;
+  /* Soft neutral gray background */
+  color: var(--color-placeholder) !important;
+  /* Muted text color */
+  border-color: var(--color-border) !important;
+  /* Lighter border edge */
+  opacity: 0.6;
+  /* Low opacity look */
+  cursor: not-allowed;
+  /* Shows a block circle cursor on desktop */
+
+  /* Overrides iOS Safari default forced inner shadow on disabled fields */
+  -webkit-text-fill-color: var(--color-placeholder);
+}
+
+
+/* ***** BUTTON ***** */
+button {
+  font-size: inherit;
+  display: block;
+  padding: 12px;
+  border: none;
+  border-radius: var(--border-radius);
+  background: var(--color-accent);
+  color: var(--color-background);
+  cursor: pointer;
+  transition: 0.1s;
+  /* Disables default gray webkit overlay on touch */
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Styling for Disabled Buttons */
+button:disabled {
+  background-color: var(--color-skip-btn-bg) !important;
+  color: var(--color-text2) !important;
+  border-color: var(--color-border) !important;
+  opacity: 0.5;
+  cursor: not-allowed;
+  box-shadow: none !important;
+  pointer-events: none;
+  transform: none !important;
+}
+
+/* Ensures custom image/SVG icons inside disabled buttons inherit low opacity */
+button:disabled .icon {
+  filter: grayscale(100%) opacity(0.4) !important;
+}
+
+button:active {
+  background-color: var(--color-shadow-accent);
+  border-color: var(--color-accent);
+  transform: scale(0.99);
+}
+
+.icon {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  filter: opacity(0.7);
+}
+
+.action-button {
+  cursor: pointer;
+  background-color: var(--color-action-button-bg);
+  color: var(--color-action-button-fg);
+  border: none;
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow-action-button);
+  transition: background-color 0.1s ease, transform 0.1s ease;
+}
+
+.action-button:active {
+  background-color: var(--color-accent-active);
+}
+
+
+/* ***** MOBILE VERSION ***** */
+@media screen and (max-width:500px) {
+  body {
+    height: 100%;
+    font-size: 1.7rem;
+    min-height: 100%;
+    padding: 0 2.4rem;
+  }
+
+  main {
+    line-height: 1.65;
+  }
+
+  footer {
+    margin-bottom: 0;
+    padding-bottom: 1.6rem;
+  }
+}
+
+@media screen and (max-width:370px) {
+  body {
+    padding: 0 1.6rem;
+  }
+}

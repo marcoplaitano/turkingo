@@ -1,0 +1,7 @@
+article {
+  margin-top: 2rem;
+}
+
+#fire-freezed {
+  filter: var(--fire-freezed-filter);
+}

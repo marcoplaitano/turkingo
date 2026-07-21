@@ -110,7 +110,7 @@ export default function ExerciseFillBlanks({ inputData, onCheck, skipped }: Prop
           <button
             key={option}
             type="button"
-            disabled={disabled || disabledWords.has(option)}
+            disabled={disabled || disabledWords.has(option) || blanksRemaining === 0}
             onClick={() => handleOptionClick(option)}
           >
             {option}

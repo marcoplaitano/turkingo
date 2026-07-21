@@ -9,7 +9,7 @@
   width: 60%;
   max-width: 400px;
   background-color: var(--color-skip-btn-bg);
-  border-radius: 5px;
+  border-radius: var(--border-radius);
   margin-top: auto;
   margin-bottom: auto;
   height: 2rem;

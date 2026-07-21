@@ -1,4 +1,4 @@
-import './style/style.css'
+import './style/main.css'
 import { createRoot } from 'react-dom/client'
 import App from './App.tsx'
 import { ToastProvider } from "./Elements/Toast";

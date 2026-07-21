@@ -1,3 +1,5 @@
+import '../style/PageAbout.css'
+
 import { getStreak, getNumFreezes, MAX_STREAK_FREEZES, getStreakDate } from "../globals";
 
 export default function PageAbout() {
@@ -9,7 +11,6 @@ export default function PageAbout() {
     <>
       <main>
         <article>
-          <h1>About</h1>
           <p>A no-subscription alternative to Duolingo for English–Turkish language exercises.<br />
             I built it because I wanted to practice more without paying for Premium.</p>
           <p>The source code is available on <a href="https://github.com/marcoplaitano/turkingo">Github</a>.</p>
@@ -21,7 +22,7 @@ export default function PageAbout() {
           </p>
           <p>
             For every lesson completed with an accuracy &gt;=70%, you earn a streak freeze.<br />
-            Right now, you have <span className="fire-freezed">🔥</span>{numFreezes}/{MAX_STREAK_FREEZES} freezes left.
+            Right now, you have <span id="fire-freezed">🔥</span>{numFreezes}/{MAX_STREAK_FREEZES} freezes left.
           </p>
 
           <h2>Input data</h2>

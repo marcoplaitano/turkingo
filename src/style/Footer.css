@@ -1,6 +1,6 @@
 footer {
   max-width: 480px;
-  margin: 40px auto 4px auto;
+  margin: 0 auto 4px auto;
   box-sizing: border-box;
 }
 
@@ -22,7 +22,7 @@ footer>div {
 #footer-logo {
   display: flex;
   align-items: center;
-  gap: 2px;
+  gap: 8px;
   font-weight: 700;
   color: var(--color-text);
 }

@@ -4,8 +4,8 @@ import { useState, useEffect, useCallback } from "react";
 import { DB_CLIENT, DB_TABLE_NAME, LanguageItemData, normalizeTurkish } from "../globals";
 import type { RawItem, ItemType } from "../globals";
 import { useToast } from "../Elements/Toast.tsx";
-import ErrorDiv from '../Elements/ErrorDiv.tsx';
-import LoadingDiv from '../Elements/LoadingDiv.tsx';
+import ErrorComponent from '../Elements/ErrorComponent.tsx';
+import Loader from '../Elements/Loader.tsx';
 
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
@@ -139,20 +139,18 @@ export default function PageLearn() {
 
   if (loadError) {
     return (
-      <ErrorDiv message="Failed to load data!" details={loadError} />
+      <ErrorComponent message="Failed to load data!" details={loadError} />
     )
   }
   else if (loading) {
     return (
-      <LoadingDiv />
+      <Loader text="Loading data..." />
     );
   }
 
   return (
     <main>
       <article>
-        <h1>Learn</h1>
-
         <h2>Add data</h2>
         <div className="add-item-container">
           <input

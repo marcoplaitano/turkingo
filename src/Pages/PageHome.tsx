@@ -15,8 +15,8 @@ import ButtonNext from '../Elements/ButtonNext.tsx';
 import ButtonSkip from '../Elements/ButtonSkip.tsx';
 import ProgressBar from '../Elements/ProgressBar.tsx';
 import EndOfLesson from '../Elements/EndOfLesson.tsx';
-import ErrorDiv from '../Elements/ErrorDiv.tsx';
-import LoadingDiv from '../Elements/LoadingDiv.tsx';
+import ErrorComponent from '../Elements/ErrorComponent.tsx';
+import Loader from '../Elements/Loader.tsx';
 
 interface PropsPageHome {
   setStreakTitle: any;
@@ -118,12 +118,12 @@ export default function PageHome({ setStreakTitle }: PropsPageHome) {
 
   if (loadError) {
     return (
-      <ErrorDiv message="Failed to load data!" details={loadError} />
+      <ErrorComponent message="Failed to load data!" details={loadError} />
     );
   }
   else if (loading) {
     return (
-      <LoadingDiv />
+      <Loader text="Loading data..." />
     );
   }
   else if (lessonEnded) {

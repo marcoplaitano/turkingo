@@ -172,12 +172,13 @@ export function setFreezeDate(date: string) {
 
 export function setStreakFreezed(freezed: boolean): void {
   sessionStorage.setItem("freezed", String(freezed));
-  document.querySelectorAll(".fire-icon").forEach(element => {
-    if (freezed)
-      element.classList.add("fire-freezed");
-    else
-      element.classList.remove("fire-freezed");
-  });
+  const streakDiv = document.getElementById("streak");
+  if (!streakDiv)
+    return;
+  if (freezed)
+    streakDiv.classList.add("freezed");
+  else
+    streakDiv.classList.remove("freezed");
 }
 
 export function useStreakFreeze(): void {
