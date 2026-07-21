@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { LanguageItemData, ExerciseResult, randomItem, shuffle } from "../globals";
+import { LanguageItemData, ExerciseResult, randomItemNotSentence, shuffle } from "../globals";
 
 interface PropsExerciseMatchTranslation {
   inputData: LanguageItemData[];
@@ -9,7 +9,7 @@ interface PropsExerciseMatchTranslation {
 
 export default function ExerciseMatchTranslation({ inputData, onCheck, skipped }: PropsExerciseMatchTranslation) {
   const exercise = useMemo(() => {
-    const item = randomItem(inputData);
+    const item = randomItemNotSentence(inputData);
     const toTurkish = Math.random() > 0.5;
     const question = toTurkish ? item.getLanguageEN() : item.getLanguageTR();
     const answer = item.getTranslation(question);

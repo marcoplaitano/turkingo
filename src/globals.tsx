@@ -83,6 +83,11 @@ export function randomItem(data: LanguageItemData[]): LanguageItemData {
   return data[Math.floor(Math.random() * data.length)];
 }
 
+export function randomItemNotSentence(data: LanguageItemData[]): LanguageItemData {
+  const items = data.filter((i) => i.getType() !== "sentence");
+  return randomItem(items.length > 0 ? items : data);
+}
+
 export function randomSentence(data: LanguageItemData[]): LanguageItemData {
   const sentences = data.filter((i) => i.getType() === "sentence");
   return randomItem(sentences.length > 0 ? sentences : data);
