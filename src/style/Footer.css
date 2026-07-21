@@ -1,0 +1,38 @@
+footer {
+  max-width: 480px;
+  margin: 40px auto 4px auto;
+  box-sizing: border-box;
+}
+
+footer hr {
+  border: 0;
+  height: 1px;
+  background-color: var(--color-border);
+  margin-bottom: 16px;
+}
+
+footer>div {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 14px;
+  color: var(--color-text2);
+}
+
+#footer-logo {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+#footer-logo #icon {
+  width: 18px;
+  height: 18px;
+  display: block;
+}
+
+footer span[translate="no"] {
+  font-variant-numeric: tabular-nums;
+}
