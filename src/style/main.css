@@ -21,17 +21,20 @@
   --shadow-action-button: 0 4px 6px rgba(114, 135, 253, 0.25);
   --shadow-action-button-correct: 0 4px 6px rgba(92, 195, 151, 0.25);
   --shadow-action-button-fail: 0 4px 6px rgba(255, 107, 107, 0.25);
-  --color-skip-btn-fg: var(--color-accent); /* TODO: style */ 
-  --color-skip-btn-bg: #dce0e8; /* TODO: style */ 
-  --color-streak-overlay-fg: #EFF1F5; /* TODO: style */ 
+  --box-shadow-button: 0 2px 4px #0000000a;
+  --color-skip-btn-fg: var(--color-accent);
+  --color-skip-btn-bg: #DCE0E8; /* TODO: style */
   --color-toast-info-bg: var(--color-background);
   --color-toast-info-border: var(--color-accent);
   --color-toast-info-icon: var(--color-accent);
-  --color-toast-error-bg: #FCE9EA; /* TODO: style */ 
+  --color-toast-error-bg: var(--color-red-bg);
   --color-toast-error-border: var(--color-red);
   --color-toast-error-icon: var(--color-red);
   --border-radius: 8px;
   --fire-freezed-filter: hue-rotate(185deg) saturate(1.5);
+  --color-progress-correct: var(--color-green);
+  --color-progress-failed: var(--color-red);
+  --color-progress-skipped: #CBD5E1;
 }
 html.dark {
   --color-background: #141622;
@@ -51,11 +54,10 @@ html.dark {
   --color-button-bg: #232635;
   --color-skip-btn-fg: #B4BEFE;
   --color-skip-btn-bg: #313244;
-  --color-streak-overlay-fg: #CDD6F4;
   --color-toast-info-bg: var(--color-background);
   --color-toast-info-border: var(--color-accent);
   --color-toast-info-icon: var(--color-accent);
-  --color-toast-error-bg: #1E1E2E;
+  --color-toast-error-bg: var(--color-background);
   --color-toast-error-border: var(--color-red);
   --color-toast-error-icon: var(--color-red);
 }
@@ -216,6 +218,7 @@ button {
   border-radius: var(--border-radius);
   background: var(--color-accent);
   color: var(--color-background);
+  box-shadow: var(--box-shadow-button);
   cursor: pointer;
   transition: 0.1s;
   /* Disables default gray webkit overlay on touch */

@@ -1,3 +1,29 @@
+#bottom-menu-container {
+  box-sizing: border-box;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+  margin-bottom: 2rem;
+  
+  padding: 0.85rem 1.25rem;
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: var(--border-radius);
+  box-shadow: var(--box-shadow-button);
+
+  z-index: 100;
+}
+
+#progress-and-skip-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  gap: 32px;
+}
+
 #progress-container {
   display: flex;
   align-items: center;
@@ -6,27 +32,38 @@
 }
 
 #progress-bar {
-  width: 60%;
+  width: 100%;
   max-width: 400px;
-  background-color: var(--color-skip-btn-bg);
+  background-color: var(--color-button-bg);
   border-radius: var(--border-radius);
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.05);
   margin-top: auto;
   margin-bottom: auto;
   height: 2rem;
   overflow: hidden;
   display: flex;
-  gap: 3px;
+  align-items: center;
+  padding: 2px;
+  gap: 4px;
 }
 
 .progress-bar-segment {
-  border-radius: 3px;
+  border-radius: var(--border-radius);
+  height: 100%;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 .progress-bar-segment#correct {
-  background-color: var(--color-green);
+  background-color: var(--color-progress-correct);
 }
 .progress-bar-segment#failed {
-  background-color: var(--color-red);
+  background-color: var(--color-progress-failed);
 }
 .progress-bar-segment#skipped {
-  background-color: var(--color-text2);
+  background-color: var(--color-progress-skipped);
+}
+
+#progress-label {
+  font-weight: 600;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
 }

@@ -33,8 +33,9 @@ main {
 
 /* ***** NEXT/DELETE BUTTONS ***** */
 .app .exercise-buttons {
-  width: 70%;
+  width: 50%;
   margin-top: 2.4rem;
+  padding: 1rem;
   display: flex;
   gap: 8px;
 }
@@ -47,21 +48,5 @@ main {
 .app .exercise-buttons button:active {
   background-color: var(--color-accent-active);
   box-shadow: var(--shadow-action-button);
-}
-
-
-/* ***** PROGRESS BAR & SKIP ***** */
-#bottom-menu-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 2rem;
-  margin-bottom: 2rem;
-}
-
-#progress-and-skip-container {
-  display: flex;
-  align-items: center;
-  width: 100%;
-  gap: 16px;
+  transform: scale(0.99);
 }

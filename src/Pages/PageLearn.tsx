@@ -93,7 +93,11 @@ export default function PageLearn() {
     const en = inputEN.trim().toLowerCase();
     const tr = inputTR.trim().toLowerCase();
 
-    if (!itemType || !en || !tr) {
+    if (!itemType) {
+      toast("Specify type!", "error");
+      return;
+    }
+    if (!en || !tr) {
       toast("Missing data!", "error");
       return;
     }
