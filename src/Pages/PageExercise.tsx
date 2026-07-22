@@ -1,4 +1,4 @@
-import '../style/PageHome.css'
+import '../style/PageExercise.css'
 
 import { useState, useEffect, useCallback, useMemo } from "react";
 import { DB_CLIENT, DB_TABLE_NAME, getStreak, increaseStreakFreezes, LanguageItemData, NUM_EXERCISES_PER_LESSON, updateStreak, initStreak } from "../globals.tsx";
@@ -18,11 +18,11 @@ import EndOfLesson from '../Elements/EndOfLesson.tsx';
 import ErrorComponent from '../Elements/ErrorComponent.tsx';
 import Loader from '../Elements/Loader.tsx';
 
-interface PropsPageHome {
+interface PropsPageExercisee {
   setStreakTitle: any;
 }
 
-export default function PageHome({ setStreakTitle }: PropsPageHome) {
+export default function PageExercisee({ setStreakTitle }: PropsPageExercisee) {
   const toast = useToast();
   const [data, setData] = useState<LanguageItemData[]>();
   const [loading, setLoading] = useState(true);

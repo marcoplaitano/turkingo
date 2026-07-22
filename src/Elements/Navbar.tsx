@@ -10,7 +10,7 @@ interface PropsNavbar {
 
 export default function Navbar({streakTitle} : PropsNavbar) {
   const navItems = [
-    { name: 'Home', href: '/' },
+    { name: 'Exercise', href: '/' },
     { name: 'Learn', href: '/learn/' },
     { name: 'About', href: '/about/' },
   ];
