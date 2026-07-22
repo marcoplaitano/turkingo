@@ -153,6 +153,7 @@ p {
 
 main {
   line-height: 1.6;
+  margin-bottom: 2rem;
 }
 
 
@@ -161,7 +162,6 @@ main {
   display: flex;
   flex-direction: column;
   flex: 1;
-  padding-bottom: 52px;
 }
 
 
@@ -271,18 +271,7 @@ button:active {
 @media screen and (max-width:500px) {
   body {
     height: 100%;
-    font-size: 1.7rem;
-    min-height: 100%;
-    padding: 0 2.4rem;
-  }
-
-  main {
-    line-height: 1.65;
-  }
-
-  footer {
-    margin-bottom: 0;
-    padding-bottom: 1.6rem;
+    padding: 1rem 2.4rem;
   }
 }
 

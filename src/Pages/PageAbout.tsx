@@ -28,6 +28,9 @@ export default function PageAbout() {
           <h2>Input data</h2>
           <p>Asked a LLM model to give some examples that I then collected in a SQL database.<br/>
           The user can also add more data in the Learn page.</p>
+          
+          <h2>Author</h2>
+          <p>Marco Plaitano</p>
         </article>
       </main>
     </>
