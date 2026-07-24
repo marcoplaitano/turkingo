@@ -74,7 +74,7 @@ export default function PageLearn() {
     setLoading(true);
     setLoadError(null);
     try {
-      const res = await DB_CLIENT.from(DB_TABLE_NAME).select("*", { count: "exact" });
+      const res = await DB_CLIENT.from(DB_TABLE_NAME).select("*", { count: "exact" }).order("id", {ascending: true});
       if (res.status !== 200)
         throw new Error(res.error?.message ?? "DB error");
       setData((res.data as RawItem[]).map((r) => new LanguageItemData(r)));
