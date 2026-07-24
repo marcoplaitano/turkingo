@@ -1,6 +1,6 @@
 import '../style/PageLearn.css'
 
-import { useState, useEffect, useCallback } from "react";
+import { useState } from "react";
 import { DB_CLIENT, DB_TABLE_NAME, LanguageItemData, normalizeTurkish } from "../globals";
 import type { RawItem, ItemType } from "../globals";
 import { useToast } from "../Elements/Toast.tsx";
@@ -54,12 +54,14 @@ function ItemTable({ title, items, query }: ItemTableProps) {
   );
 }
 
+interface PropsPageLearn {
+  data: LanguageItemData[];
+  setData: (data: LanguageItemData[]) => void;
+}
 
-
-export default function PageLearn() {
+export default function PageLearn({ data, setData }: PropsPageLearn) {
   const toast = useToast();
-  const [data, setData] = useState<LanguageItemData[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [loadError, setLoadError] = useState<string | null>(null);
 
   const [inputEN, setInputEN] = useState("");
@@ -70,11 +72,12 @@ export default function PageLearn() {
 
   // ── Data loading ──────────────────────────────────────────────────────────
 
-  const loadData = useCallback(async () => {
+  // Used to reload DB table after insertion of new element.
+  async function loadData() {
     setLoading(true);
     setLoadError(null);
     try {
-      const res = await DB_CLIENT.from(DB_TABLE_NAME).select("*", { count: "exact" }).order("id", {ascending: true});
+      const res = await DB_CLIENT.from(DB_TABLE_NAME).select("*", { count: "exact" }).order("id", { ascending: true });
       if (res.status !== 200)
         throw new Error(res.error?.message ?? "DB error");
       setData((res.data as RawItem[]).map((r) => new LanguageItemData(r)));
@@ -83,9 +86,7 @@ export default function PageLearn() {
     } finally {
       setLoading(false);
     }
-  }, [DB_CLIENT]);
-
-  useEffect(() => { loadData(); }, [loadData]);
+  };
 
   // ── Add item ──────────────────────────────────────────────────────────────
 

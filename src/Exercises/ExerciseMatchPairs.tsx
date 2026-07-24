@@ -15,9 +15,9 @@ interface Selection { word: string; side: Side }
 
 export default function MatchPairsExercise({ inputData, onCheck, skipped }: PropsExerciseMatchPairs) {
   const exerciseRef = useRef<{
-    sample: any;
-    leftWords: any;
-    rightWords: any;
+    sample: LanguageItemData[];
+    leftWords: string[];
+    rightWords: string[];
     correct: Record<string, string>;
   } | null>(null);
 
@@ -108,31 +108,31 @@ export default function MatchPairsExercise({ inputData, onCheck, skipped }: Prop
       <h2 className="exercise-title">Match the pairs</h2>
       <div className="exercise-answers">
         <div className='pairs-grid'>
-        <div className="match-col">
-          {leftWords.map((word: string) => (
-            <button
-              key={word}
-              className={btnClass(word, "left")}
-              disabled={disabled.has(word)}
-              onClick={() => handleClick(word, "left")}
-            >
-              {word}
-            </button>
-          ))}
+          <div className="match-col">
+            {leftWords.map((word: string) => (
+              <button
+                key={word}
+                className={btnClass(word, "left")}
+                disabled={disabled.has(word)}
+                onClick={() => handleClick(word, "left")}
+              >
+                {word}
+              </button>
+            ))}
+          </div>
+          <div className="match-col">
+            {rightWords.map((word: string) => (
+              <button
+                key={word}
+                className={btnClass(word, "right")}
+                disabled={disabled.has(word)}
+                onClick={() => handleClick(word, "right")}
+              >
+                {word}
+              </button>
+            ))}
+          </div>
         </div>
-        <div className="match-col">
-          {rightWords.map((word: string) => (
-            <button
-              key={word}
-              className={btnClass(word, "right")}
-              disabled={disabled.has(word)}
-              onClick={() => handleClick(word, "right")}
-            >
-              {word}
-            </button>
-          ))}
-        </div>
-      </div>
       </div>
     </div>
   );
