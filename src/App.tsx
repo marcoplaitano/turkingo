@@ -44,7 +44,7 @@ export default function App() {
           <Routes>
             {!loadError && !loading && <Route path="/" element={<PageExercise setStreakTitle={setStreakTitle} data={data} />} />}
             {!loadError && !loading && <Route path="/learn/" element={<PageLearn data={data} setData={setData} />} />}
-            <Route path="/about/" element={<PageAbout />} />
+            {!loading && <Route path="/about/" element={<PageAbout />} />}
           </Routes>
         </Suspense>
       </BrowserRouter>
