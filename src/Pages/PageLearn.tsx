@@ -142,7 +142,13 @@ export default function PageLearn({ data, setData }: PropsPageLearn) {
 
   // ── Render ────────────────────────────────────────────────────────────────
 
-  if (loadError) {
+  if (data.length === 0) {
+    return (
+      <ErrorComponent message="No input data!" details="Either the database is empty or there was an error during retrieval." />
+    );
+  }
+
+  else if (loadError) {
     return (
       <ErrorComponent message="Failed to load data!" details={loadError} />
     )

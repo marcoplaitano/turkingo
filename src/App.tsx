@@ -1,7 +1,7 @@
 import Navbar from './Elements/Navbar.tsx'
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { lazy, Suspense, useCallback, useEffect, useState } from "react";
-import { DB_CLIENT, DB_TABLE_NAME, LanguageItemData, type RawItem } from './globals.tsx';
+import { DB_CLIENT, DB_TABLE_NAME, getStreak, LanguageItemData, type RawItem } from './globals.tsx';
 import Loader from './Elements/Loader.tsx';
 import ErrorComponent from './Elements/ErrorComponent.tsx';
 
@@ -10,7 +10,7 @@ const PageLearn = lazy(() => import("./Pages/PageLearn.tsx"));
 const PageAbout = lazy(() => import("./Pages/PageAbout.tsx"));
 
 export default function App() {
-  const [streakTitle, setStreakTitle] = useState<number>(0);
+  const [streakTitle, setStreakTitle] = useState<number>(getStreak());
   const [data, setData] = useState<LanguageItemData[]>([]);
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState<string | null>(null);

@@ -195,14 +195,14 @@ export function useStreakFreeze(): void {
 export function initStreak(): boolean {
   const yesterday = new Date();
   yesterday.setDate(yesterday.getDate() - 1);
-  const yesterdayStr = yesterday.toISOString().split("T")[0];
+  const yesterdayDate = yesterday.toISOString().split("T")[0];
   const lastStreakDate = getStreakDate();
   const lastFreezeDate = getFreezeDate();
 
   if (lastStreakDate === null) {
     resetStreak();
-  } else if (lastStreakDate < yesterdayStr) {
-    if (lastFreezeDate === null || lastFreezeDate < TODAY_DATE) {
+  } else if (lastStreakDate < yesterdayDate) {
+    if (lastFreezeDate === null || (lastFreezeDate < TODAY_DATE && lastFreezeDate >= yesterdayDate)) {
       if (getNumFreezes() > 0)
         useStreakFreeze();
       else

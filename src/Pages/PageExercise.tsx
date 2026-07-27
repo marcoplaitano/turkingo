@@ -14,6 +14,7 @@ import ButtonNext from '../Elements/ButtonNext.tsx';
 import ButtonSkip from '../Elements/ButtonSkip.tsx';
 import ProgressBar from '../Elements/ProgressBar.tsx';
 import EndOfLesson from '../Elements/EndOfLesson.tsx';
+import ErrorComponent from '../Elements/ErrorComponent.tsx';
 
 interface PropsPageExercise {
   setStreakTitle: (streakNum: number) => void;
@@ -93,15 +94,19 @@ export default function PageExercise({ setStreakTitle, data }: PropsPageExercise
       setNumExercisesCorrect((k) => k + 1);
   }
 
-  if (lessonEnded) {
+  if (data.length === 0) {
     return (
-      <>
-        <main>
-          <div className="app">
-            <EndOfLesson onDone={setLessonEnded} />
-          </div>
-        </main>
-      </>
+      <ErrorComponent message="No input data!" details="Either the database is empty or there was an error during retrieval." />
+    );
+  }
+
+  else if (lessonEnded) {
+    return (
+      <main>
+        <div className="app">
+          <EndOfLesson onDone={setLessonEnded} />
+        </div>
+      </main>
     );
   }
 
