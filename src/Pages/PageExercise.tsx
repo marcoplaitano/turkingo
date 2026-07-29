@@ -1,7 +1,7 @@
 import '../style/PageExercise.css'
 
 import { useState, useEffect, useMemo } from "react";
-import { getStreak, increaseStreakFreezes, LanguageItemData, NUM_EXERCISES_PER_LESSON, updateStreak, initStreak } from "../globals.tsx";
+import { getStreak, increaseStreakFreezes, LanguageItemData, NUM_EXERCISES_PER_LESSON, updateStreak } from "../globals.tsx";
 import { ExerciseResult } from "../globals.tsx";
 import { useToast } from "../Elements/Toast.tsx";
 
@@ -44,13 +44,6 @@ export default function PageExercise({ setStreakTitle, data }: PropsPageExercise
   const ExerciseComponent = useMemo(() => {
     return exercises[Math.floor(Math.random() * exercises.length)];
   }, [exerciseNum]);
-
-  // Show frozen streak toast when component mounts.
-  useEffect(() => {
-    const wasFreezed = initStreak();
-    if (wasFreezed)
-      toast(`Your streak is frozen!`, "streak");
-  }, []);
 
   useEffect(() => {
     if (exerciseNum === NUM_EXERCISES_PER_LESSON) {

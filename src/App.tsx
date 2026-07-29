@@ -1,15 +1,17 @@
 import Navbar from './Elements/Navbar.tsx'
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { lazy, Suspense, useCallback, useEffect, useState } from "react";
-import { DB_CLIENT, DB_TABLE_NAME, getStreak, LanguageItemData, type RawItem } from './globals.tsx';
+import { DB_CLIENT, DB_TABLE_NAME, getStreak, initStreak, LanguageItemData, type RawItem } from './globals.tsx';
 import Loader from './Elements/Loader.tsx';
 import ErrorComponent from './Elements/ErrorComponent.tsx';
+import { useToast } from "./Elements/Toast.tsx";
 
 const PageExercise = lazy(() => import("./Pages/PageExercise.tsx"));
 const PageLearn = lazy(() => import("./Pages/PageLearn.tsx"));
 const PageAbout = lazy(() => import("./Pages/PageAbout.tsx"));
 
 export default function App() {
+  const toast = useToast();
   const [streakTitle, setStreakTitle] = useState<number>(getStreak());
   const [data, setData] = useState<LanguageItemData[]>([]);
   const [loading, setLoading] = useState(true);
@@ -33,6 +35,13 @@ export default function App() {
   }, [DB_CLIENT]);
 
   useEffect(() => { loadData(); }, [loadData]);
+
+  // Show frozen streak toast when component mounts.
+  useEffect(() => {
+    const wasFreezed = initStreak();
+    if (wasFreezed)
+      toast(`Your streak is frozen!`, "streak");
+  }, []);
 
   // ── Render ────────────────────────────────────────────────────────────────
 
