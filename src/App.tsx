@@ -36,11 +36,12 @@ export default function App() {
 
   useEffect(() => { loadData(); }, [loadData]);
 
-  // Show frozen streak toast when component mounts.
+  // Init streak count.
   useEffect(() => {
     const wasFreezed = initStreak();
     if (wasFreezed)
-      toast(`Your streak is frozen!`, "streak");
+      toast("Your streak is frozen!", "streak");
+    setStreakTitle(getStreak());
   }, []);
 
   // ── Render ────────────────────────────────────────────────────────────────

@@ -89,7 +89,7 @@ export default function PageExercise({ setStreakTitle, data }: PropsPageExercise
 
   if (data.length === 0) {
     return (
-      <ErrorComponent message="No input data!" details="Either the database is empty or there was an error during retrieval." />
+      <ErrorComponent message="No input data!" details="Either the database is empty or it failed to load." />
     );
   }
 
