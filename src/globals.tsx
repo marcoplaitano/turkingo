@@ -144,39 +144,41 @@ export function resetStreak(): void {
   localStorage.setItem("streakNum", "0");
   localStorage.removeItem("streakLastDate");
   setStreakFreezed(false);
-  sessionStorage.removeItem("freezeDate");
+  localStorage.removeItem("freezeDate");
 }
 
 export function getNumFreezes(): number {
   return parseInt(localStorage.getItem("streakFreezes") ?? "0") || 0;
 }
 
-export function increaseStreakFreezes(): void {
+export function increaseStreakFreezes(delta: number = 1): void {
   const curr = getNumFreezes();
-  if (curr < MAX_STREAK_FREEZES)
-    localStorage.setItem("streakFreezes", String(curr + 1));
+  if (curr + delta <= MAX_STREAK_FREEZES)
+    localStorage.setItem("streakFreezes", String(curr + delta));
 }
 
-export function decreaseStreakFreezes(): void {
+export function decreaseStreakFreezes(delta: number = 1): void {
   const curr = getNumFreezes();
-  if (curr > 0)
-    localStorage.setItem("streakFreezes", String(curr - 1));
+  if (curr - delta > 0)
+    localStorage.setItem("streakFreezes", String(curr - delta));
+  else
+    localStorage.setItem("streakFreezes", "0");
 }
 
 export function isStreakFreezed(): boolean {
-  return sessionStorage.getItem("freezed") === "true";
+  return localStorage.getItem("freezed") === "true";
 }
 
 export function getFreezeDate(): string | null {
-  return sessionStorage.getItem("freezeDate");
+  return localStorage.getItem("freezeDate");
 }
 
 export function setFreezeDate(date: string) {
-  sessionStorage.setItem("freezeDate", date);
+  localStorage.setItem("freezeDate", date);
 }
 
 export function setStreakFreezed(freezed: boolean): void {
-  sessionStorage.setItem("freezed", String(freezed));
+  localStorage.setItem("freezed", String(freezed));
   const streakDiv = document.getElementById("streak");
   if (!streakDiv)
     return;
@@ -186,31 +188,43 @@ export function setStreakFreezed(freezed: boolean): void {
     streakDiv.classList.remove("freezed");
 }
 
-export function useStreakFreeze(): void {
+export function useStreakFreeze(howMany: number = 1): void {
   setStreakFreezed(true);
   setFreezeDate(TODAY_DATE);
-  decreaseStreakFreezes();
+  decreaseStreakFreezes(howMany);
 }
 
 export function initStreak(): boolean {
-  const yesterday = new Date();
-  yesterday.setDate(yesterday.getDate() - 1);
-  const yesterdayDate = yesterday.toISOString().split("T")[0];
   const lastStreakDate = getStreakDate();
   const lastFreezeDate = getFreezeDate();
 
+  // Never completed a lesson until now so there's no streak.
   if (lastStreakDate === null) {
     resetStreak();
-  } else if (lastStreakDate < yesterdayDate) {
-    if (lastFreezeDate === null || (lastFreezeDate < TODAY_DATE && lastFreezeDate >= yesterdayDate)) {
-      if (getNumFreezes() > 0)
-        useStreakFreeze();
-      else
-        resetStreak();
-    }
-    else if (!isStreakFreezed())
+    return isStreakFreezed();
+  }
+
+  // Get yesterday date
+  const yesterday = new Date();
+  yesterday.setDate(yesterday.getDate() - 1);
+  const yesterdayDate = yesterday.toISOString().split("T")[0];
+
+  if (lastStreakDate < yesterdayDate) {
+    // Count how many days have passed since the last freeze (or streak)
+    // If I have enough freezes left, i use them and freeze
+    const beginDate = lastFreezeDate !== null ? lastFreezeDate : lastStreakDate;
+    const numDaysPassed = daysBetween(beginDate, TODAY_DATE);
+    if (numDaysPassed > 0 && numDaysPassed <= getNumFreezes())
+      useStreakFreeze(numDaysPassed);
+    else
       resetStreak();
   }
 
   return isStreakFreezed();
+}
+
+function daysBetween(dateA: string, dateB: string) {
+  const a = new Date(dateA + "T00:00:00Z");
+  const b = new Date(dateB + "T00:00:00Z");
+  return Math.round((b.getTime() - a.getTime()) / (1000 * 60 * 60 * 24));
 }
