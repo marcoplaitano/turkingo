@@ -11,7 +11,7 @@ import Loader from '../Elements/Loader.tsx';
 // ── Helpers ──────────────────────────────────────────────────────────────────
 
 function matchesSearch(query: string, item: LanguageItemData): boolean {
-  if (!query) return true;
+  if (!query) return false;
   const en = normalizeTurkish(item.getLanguageEN().toLowerCase());
   const tr = normalizeTurkish(item.getLanguageTR().toLowerCase());
   return en.includes(query) || tr.includes(query);
@@ -128,7 +128,7 @@ export default function PageLearn({ data, setData }: PropsPageLearn) {
 
   // ── Filtered search ───────────────────────────────────────────────────────
 
-  const normalizedQuery = normalizeTurkish(query.toLowerCase());
+  const normalizedQuery = normalizeTurkish(query.trim().toLowerCase());
 
   const words = data.filter((d) => d.getType() === "word");
   const phrases = data.filter((d) => d.getType() === "phrase");
