@@ -20,18 +20,20 @@ function matchesSearch(query: string, item: LanguageItemData): boolean {
 // ── Sub-components ───────────────────────────────────────────────────────────
 
 interface ItemTableProps {
-  title: string;
   items: LanguageItemData[];
   query: string;
 }
 
-function ItemTable({ title, items, query }: ItemTableProps) {
-  const visible = items.filter((item) => matchesSearch(query, item));
-  if (visible.length === 0) return null;
+function ItemTable({ items, query }: ItemTableProps) {
+  if (query.length === 0) return null;
+
+  const results = items.filter((item) => matchesSearch(query, item));
+
+  if (results.length === 0)
+    return <p id="no-result-p">No results.</p>;
 
   return (
     <section className="section">
-      <h3>{title}</h3>
       <div className="list-wrapper">
         <table>
           <thead>
@@ -41,7 +43,7 @@ function ItemTable({ title, items, query }: ItemTableProps) {
             </tr>
           </thead>
           <tbody>
-            {visible.map((item, i) => (
+            {results.map((item, i) => (
               <tr key={i} className="entry">
                 <td className="l-en">{item.getLanguageEN()}</td>
                 <td className="l-tr">{item.getLanguageTR()}</td>
@@ -130,16 +132,6 @@ export default function PageLearn({ data, setData }: PropsPageLearn) {
 
   const normalizedQuery = normalizeTurkish(query.trim().toLowerCase());
 
-  const words = data.filter((d) => d.getType() === "word");
-  const phrases = data.filter((d) => d.getType() === "phrase");
-  const sentences = data.filter((d) => d.getType() === "sentence");
-
-  const noResults =
-    normalizedQuery.length > 0 &&
-    [...words, ...phrases, ...sentences].every(
-      (item) => !matchesSearch(normalizedQuery, item)
-    );
-
   // ── Render ────────────────────────────────────────────────────────────────
 
   if (data.length === 0) {
@@ -162,6 +154,23 @@ export default function PageLearn({ data, setData }: PropsPageLearn) {
   return (
     <main>
       <article>
+
+        <h2>Search data</h2>
+        <div className="search-container">
+          <input
+            type="text"
+            maxLength={40}
+            placeholder="Search..."
+            autoComplete="off"
+            id="search-input"
+            value={query}
+            disabled={loading}
+            onChange={(e) => { setQuery(e.target.value); }}
+            onKeyDown={(e) => { if (e.key === "Enter") e.currentTarget.blur(); }}
+          />
+        </div>
+        <ItemTable items={data} query={normalizedQuery} />
+
         <h2>Add data</h2>
         <div className="add-item-container">
           <input
@@ -180,7 +189,6 @@ export default function PageLearn({ data, setData }: PropsPageLearn) {
             value={inputTR}
             onChange={(e) => setInputTR(e.target.value)}
           />
-
           <div className="radio-container">
             {(["word", "phrase", "sentence"] as ItemType[]).map((t) => (
               <label key={t} className="radio-item">
@@ -195,31 +203,9 @@ export default function PageLearn({ data, setData }: PropsPageLearn) {
               </label>
             ))}
           </div>
-
           <button className="btn" id="btn-add" onClick={handleAdd}>Add</button>
         </div>
 
-
-        <h2>Search data</h2>
-        <div className="search-container">
-          <input
-            type="text"
-            maxLength={40}
-            placeholder="Search..."
-            autoComplete="off"
-            id="search-input"
-            value={query}
-            disabled={loading}
-            onChange={(e) => { setQuery(e.target.value); }}
-            onKeyDown={(e) => { if (e.key === "Enter") e.currentTarget.blur(); }}
-          />
-        </div>
-
-        {noResults && <p id="no-result-p">No results.</p>}
-
-        <ItemTable title="Words" items={words} query={normalizedQuery} />
-        <ItemTable title="Phrases" items={phrases} query={normalizedQuery} />
-        <ItemTable title="Sentences" items={sentences} query={normalizedQuery} />
       </article>
     </main>
   );
