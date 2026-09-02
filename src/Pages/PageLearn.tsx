@@ -48,7 +48,7 @@ function ItemTable({ items, query }: ItemTableProps) {
   const results = items.filter((item) => matchesSearch(query, item));
 
   if (results.length === 0)
-    return <p id="no-result-p">No results.</p>;
+    return <p id="no-results-p">No results.</p>;
 
   return (
     <section className="section">
@@ -178,7 +178,7 @@ export default function PageLearn({ data, setData }: PropsPageLearn) {
           <input
             type="text"
             maxLength={40}
-            placeholder="Search..."
+            placeholder="Type to start search..."
             autoComplete="off"
             id="search-input"
             value={query}
@@ -186,8 +186,8 @@ export default function PageLearn({ data, setData }: PropsPageLearn) {
             onChange={(e) => { setQuery(e.target.value); }}
             onKeyDown={(e) => { if (e.key === "Enter") e.currentTarget.blur(); }}
           />
+          <ItemTable items={data} query={normalizedQuery} />
         </div>
-        <ItemTable items={data} query={normalizedQuery} />
 
         <h2>Add data</h2>
         <div className="add-item-container">

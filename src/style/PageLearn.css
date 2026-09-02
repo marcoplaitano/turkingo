@@ -1,7 +1,7 @@
 .add-item-container {
   width: 100%;
   margin: 0;
-  padding: 1.2rem 0.4rem;
+  margin: 1rem 0 1.6rem;
   display: flex;
   flex-direction: column;
   gap: 1rem;
@@ -67,7 +67,7 @@
 
 
 .search-container {
-  margin: 1rem 0 1.6rem;
+  margin: 1rem 0 4rem;
 }
 
 
@@ -75,7 +75,7 @@
   border: 1px solid var(--color-border);
   border-radius: var(--border-radius);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
-  margin-bottom: 4rem;
+  margin-top: 1rem;
 }
 
 table {
@@ -107,4 +107,8 @@ tbody td mark {
   background-color: var(--color-background);
   color: var(--color-accent);
   font-weight: 700;
+}
+
+#no-results-p {
+  color: var(--color-red);
 }

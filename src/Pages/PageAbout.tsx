@@ -11,8 +11,7 @@ export default function PageAbout() {
     <>
       <main>
         <article>
-          <p>A no-subscription alternative to Duolingo for English–Turkish language exercises.<br />
-            I built it because I wanted to practice more without paying for Premium.</p>
+          <p>A no-subscription alternative to Duolingo for English–Turkish language exercises.</p>
           <p>The source code is available on <a href="https://github.com/marcoplaitano/turkingo">Github</a>.</p>
 
           <h2>Streak</h2>
@@ -21,14 +20,14 @@ export default function PageAbout() {
             Right now, your streak is 🔥{streak}{streakDate && " (last updated on " + streakDate + ")"}.
           </p>
           <p>
-            For every lesson completed with an accuracy &gt;=70%, you earn a streak freeze.<br />
+            For every lesson completed with less than 3 errors, you earn a streak freeze.<br />
             Right now, you have <span id="fire-freezed">🔥</span>{numFreezes}/{MAX_STREAK_FREEZES} freezes left.
           </p>
 
           <h2>Input data</h2>
-          <p>Asked a LLM model to give some examples that I then collected in a SQL database.<br/>
-          The user can also add more data in the Learn page.</p>
-          
+          <p>Asked a LLM model to give some examples that I then collected in a SQL database.<br />
+            The user can also add more data in the Learn page.</p>
+
           <h2>Author</h2>
           <p>Marco Plaitano</p>
         </article>
