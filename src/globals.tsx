@@ -124,11 +124,11 @@ export function updateStreak(): boolean {
   return true;
 }
 
-export function setStreak(num: number): void {
+function setStreak(num: number): void {
   localStorage.setItem("streakNum", String(num));
 }
 
-export function setStreakDate(date: string): void {
+function setStreakDate(date: string): void {
   localStorage.setItem("streakLastDate", date);
 }
 
@@ -140,15 +140,20 @@ export function getStreakDate(): string | null {
   return localStorage.getItem("streakLastDate");
 }
 
-export function resetStreak(): void {
+function resetStreak(): void {
   localStorage.setItem("streakNum", "0");
   localStorage.removeItem("streakLastDate");
   setStreakFreezed(false);
   localStorage.removeItem("freezeDate");
+  setNumFreezes(0);
 }
 
 export function getNumFreezes(): number {
   return parseInt(localStorage.getItem("streakFreezes") ?? "0") || 0;
+}
+
+function setNumFreezes(num: number) {
+  localStorage.setItem("streakFreezes", String(num));
 }
 
 export function increaseStreakFreezes(delta: number = 1): void {
@@ -157,7 +162,7 @@ export function increaseStreakFreezes(delta: number = 1): void {
     localStorage.setItem("streakFreezes", String(curr + delta));
 }
 
-export function decreaseStreakFreezes(delta: number = 1): void {
+function decreaseStreakFreezes(delta: number = 1): void {
   const curr = getNumFreezes();
   if (curr - delta > 0)
     localStorage.setItem("streakFreezes", String(curr - delta));
@@ -169,15 +174,15 @@ export function isStreakFreezed(): boolean {
   return localStorage.getItem("freezed") === "true";
 }
 
-export function getFreezeDate(): string | null {
+function getFreezeDate(): string | null {
   return localStorage.getItem("freezeDate");
 }
 
-export function setFreezeDate(date: string) {
+function setFreezeDate(date: string) {
   localStorage.setItem("freezeDate", date);
 }
 
-export function setStreakFreezed(freezed: boolean): void {
+function setStreakFreezed(freezed: boolean): void {
   localStorage.setItem("freezed", String(freezed));
   const streakDiv = document.getElementById("streak");
   if (!streakDiv)
@@ -188,7 +193,7 @@ export function setStreakFreezed(freezed: boolean): void {
     streakDiv.classList.remove("freezed");
 }
 
-export function useStreakFreeze(howMany: number = 1): void {
+function useStreakFreeze(howMany: number = 1): void {
   setStreakFreezed(true);
   setFreezeDate(TODAY_DATE);
   decreaseStreakFreezes(howMany);
