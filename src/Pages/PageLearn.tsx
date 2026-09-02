@@ -17,6 +17,24 @@ function matchesSearch(query: string, item: LanguageItemData): boolean {
   return en.includes(query) || tr.includes(query);
 }
 
+function highlightMatch(text: string, query: string): React.ReactNode {
+  if (!query) return text;
+
+  const normalizedText = normalizeTurkish(text.toLowerCase());
+  const normalizedQuery = normalizeTurkish(query.toLowerCase());
+
+  const index = normalizedText.indexOf(normalizedQuery);
+  if (index === -1) return text;
+
+  const start = text.substring(0, index);
+  const match = text.substring(index, index + query.length);
+  const end = text.substring(index + query.length);
+
+  return (
+    <>{start}<mark>{match}</mark>{end}</>
+  );
+}
+
 // ── Sub-components ───────────────────────────────────────────────────────────
 
 interface ItemTableProps {
@@ -45,8 +63,8 @@ function ItemTable({ items, query }: ItemTableProps) {
           <tbody>
             {results.map((item, i) => (
               <tr key={i} className="entry">
-                <td className="l-en">{item.getLanguageEN()}</td>
-                <td className="l-tr">{item.getLanguageTR()}</td>
+                <td className="l-en">{highlightMatch(item.getLanguageEN(), query)}</td>
+                <td className="l-tr">{highlightMatch(item.getLanguageTR(), query)}</td>
               </tr>
             ))}
           </tbody>
