@@ -1,6 +1,5 @@
 .add-item-container {
   width: 100%;
-  margin: 0;
   margin: 1rem 0 1.6rem;
   display: flex;
   flex-direction: column;
@@ -111,4 +110,34 @@ tbody td mark {
 
 #no-results-p {
   color: var(--color-red);
+}
+
+
+
+.download-container {
+  width: 100%;
+  margin: 1rem 0 1.6rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+#btn-download {
+  font-size: inherit;
+  font-weight: 700;
+  background-color: var(--color-action-button-bg);
+  color: var(--color-action-button-fg);
+  box-shadow: var(--shadow-action-button);
+  min-height: 46px;
+  border: none;
+  border-radius: var(--border-radius);
+  display: block;
+  width: 60%;
+  margin: 1.2rem auto;
+  padding: 0.75rem;
+}
+
+#btn-download:enabled:hover {
+  filter: brightness(85%);
+  cursor: pointer;
 }

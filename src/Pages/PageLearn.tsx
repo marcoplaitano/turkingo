@@ -108,6 +108,38 @@ export default function PageLearn({ data, setData }: PropsPageLearn) {
     }
   };
 
+  // ── Data download CSV ──────────────────────────────────────────────────────
+
+  function escapeCsv(value: string | number): string {
+    const str = String(value);
+    return /[",\n]/.test(str) ? `"${str.replace(/"/g, '""')}"` : str;
+  }
+
+  function downloadCsv(items: LanguageItemData[]) {
+    const header = ["id", "english", "turkish", "type"];
+    const rows = items.map((item) => [
+      item.getId(),
+      item.getLanguageEN(),
+      item.getLanguageTR(),
+      item.getType(),
+    ]);
+
+    const csv = [
+      header.join(","), ...rows.map((row) => row.map(escapeCsv).join(",")),
+    ].join("\n");
+
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = "language_data.csv";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  }
+
   // ── Add item ──────────────────────────────────────────────────────────────
 
   async function handleAdd() {
@@ -224,6 +256,12 @@ export default function PageLearn({ data, setData }: PropsPageLearn) {
           <button className="btn" id="btn-add" onClick={handleAdd}>Add</button>
         </div>
 
+        <h2>Download data</h2>
+        <div className="download-container">
+          <button className="btn" id="btn-download" onClick={() => downloadCsv(data)}>
+            Download
+          </button>
+        </div>
       </article>
     </main>
   );
